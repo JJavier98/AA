@@ -12,7 +12,7 @@ print(d)
 e = np.random.choice([0,1,2,3,4,5,6,7,8,9,1,5,6,45,78,98,32,65,156,78,654,15,5], (6), False)
 print(e)
 
-array_cargado = np.loadtxt('/tmp/arrays.txt')
+#array_cargado = np.loadtxt('/tmp/arrays.txt')
 ################################################
 #Hackerrun para hacer ejercicios de programación
 ################################################
