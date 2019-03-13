@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """
 TRABAJO 1. 
-Nombre Estudiante: JJavier Alonso Ramos
+Estudiante: JJavier Alonso Ramos
+
 """
 
 import numpy as np
-import scipy as sc
 import matplotlib.pyplot as plt
 
 np.random.seed(1)
@@ -13,15 +13,15 @@ np.random.seed(1)
 print('EJERCICIO SOBRE LA BUSQUEDA ITERATIVA DE OPTIMOS\n')
 print('Ejercicio 1\n')
 
-#Función
+#Función 1.2 - (np.e**v*u**2-2*v**2*np.e**(-u))**2
 def E(u,v):
     return (np.e**v*u**2-2*v**2*np.e**(-u))**2
 
-#Derivada parcial de E con respecto a u
+#Derivada parcial de E con respecto a u - 2*(np.e**v*u**2-2*v**2*np.e**(-u))*(2*v**2*np.e**(-u)+2*np.e**v*u)
 def dEu(u,v):
     return 2*(np.e**v*u**2-2*v**2*np.e**(-u))*(2*v**2*np.e**(-u)+2*np.e**v*u)
 
-#Derivada parcial de E con respecto a v
+#Derivada parcial de E con respecto a v - 2*(u**2*np.e**v-4*np.e**(-u)*v)*(u**2*np.e**v-2*np.e**(-u)*v**2)
 def dEv(u,v):
     return 2*(u**2*np.e**v-4*np.e**(-u)*v)*(u**2*np.e**v-2*np.e**(-u)*v**2)
 
@@ -29,16 +29,35 @@ def dEv(u,v):
 def gradE(u,v):
     return np.array([dEu(u,v), dEv(u,v)])
 
-def gradient_descent(u,v):
-    #
-    # gradiente descendente
-    # 
-	# Declaramos un error mínimo (epsilon)
-	epsilon = 1e-14
-	# Declaramos un máximo de iteraciones
-	maxIter = 10000000000
-	# Declaramos learning-rate
-	lr = 0.01
+#Función 1.3 - u**2+2*v**2+2*np.sin(2*np.pi*u)*np.sin(2*np.pi*v)
+def F(u,v):
+    return u**2+2*v**2+2*np.sin(2*np.pi*u)*np.sin(2*np.pi*v)
+
+#Derivada parcial de F con respecto a u - 4*np.pi*np.sin(2*np.pi*v)*np.cos(2*np.pi*u)+2*u
+def dFu(u,v):
+    return 4*np.pi*np.sin(2*np.pi*v)*np.cos(2*np.pi*u)+2*u
+
+#Derivada parcial de F con respecto a v - 4*np.pi*np.sin(2*np.pi*u)*np.cos(2*np.pi*v)+4*v
+def dFv(u,v):
+    return 4*np.pi*np.sin(2*np.pi*u)*np.cos(2*np.pi*v)+4*v
+
+#Gradiente de F
+def gradF(u,v):
+    return np.array([dFu(u,v), dFv(u,v)])
+
+
+################################################################################################
+######################################## 1.1 ###################################################
+################################################################################################
+
+def gradient_descent(func,grad,u,v,maxIter,epsilon=np.NINF,learning_rate=0.01):
+	"""
+	Gradiente Descendente
+	Aceptamos como parámetro un punto mínimo (epsilon)
+	Aceptamos como parámetro el número máximo de iteraciones a realizar
+	Aceptamos como parámetro un learning-rate que por defecto será 0.01
+	"""
+
 	#Creamos un contador de iteraciones
 	it = 0
 	#Creamos una lista donde guardar todas las aproximaciones que realiza el algoritmo
@@ -46,64 +65,186 @@ def gradient_descent(u,v):
 
 	"""
 	Realizamos el cálculo de un nuevo punto
-	hasta superar nuestra precisión epsilon
-	o hasta alcanzar el máximo de iteraciones
+		hasta alcanzar nuestro mínimo objetivo(epsilon)
+		o hasta superar el máximo de iteraciones
 	"""
-	while E(u,v) > epsilon and it < maxIter:
-    	#Calculamos las pendientes respecto a u e v
-		_pend = gradE(u,v)
+	while func(u,v) > epsilon and it < maxIter:
+    	# Calculamos las pendientes respecto a u e v
+		_pend = grad(u,v)
 
-		#Calculamos el nuevo punto más próximo al mínimo local
-		u = u - lr*_pend[0]
-		v = v - lr*_pend[1]
+		# Calculamos el nuevo punto más próximo al mínimo local
+		u = u - learning_rate*_pend[0]
+		v = v - learning_rate*_pend[1]
 
-		#Guardamos las coordenadas del punto calculado en una dupla
+		# Guardamos las coordenadas del punto calculado en una dupla
+		# La dupla w solo guardará y devolverá al final de la función el último valor
+		# calculado, es decir, el valor mínimo alcanzado
 		w = [u,v]
-		points2min.append([u,v,E(u, v)])
+		# Almacenamos la "altura" de todos los puntos (u,v) calculados
+		points2min.append(func(u, v))
 
-		#Aumentamos el número de iteraciones realizadas
+		# Aumentamos el número de iteraciones realizadas
 		it = it+1
 
+	# Devolvemos las coordenadas (x,y) del punto mínimo alcanzado
+	# junto con el nº de iteraciones y todos los valores que se han ido recorriendo
 	return w, it, points2min
 
-####################### MAIN #################################
+################################################################################################
+######################################## 1.2 ###################################################
+################################################################################################
+
 #Declaramos el punto inicial
-initial_point = np.array([1.0,1.0])
+initial_point_E = np.array([1.0,1.0])
 
-w, it, points2min = gradient_descent(initial_point[0], initial_point[1])
+"""
+Realizamos el algoritmo del Gradiente Descendiente para la función E partiendo del punto (1,1)
+Como tope de iteraciones indicamos 10000000000
+Como altura mínima a encontrar marcamos 1e-14
+
+En w guardamos las coordenadas (x,y) del punto con z mínimo alcanzado
+En it almacenamos el número de iteraciones que han sido necesarias para calcular w
+En points2min guardamos la secuencia de (x,y) que se ha ido generando hasta llegar a w
+"""
+w, it, points2min = gradient_descent(E,gradE,initial_point_E[0], initial_point_E[1],10000000000,1e-14)
 
 
+# Mostramos por pantalla los datos más relevantes de aplicar el algoritmo a la función E
+print ('Función E')
+print ('Punto inicial: (', initial_point_E[0], ', ', initial_point_E[1], ')' )
 print ('Numero de iteraciones: ', it)
 print ('Coordenadas obtenidas: (', w[0], ', ', w[1],')')
+print ('Valor mínimo en estas coordenadas: ', E(w[0], w[1]), '\n')
 
-# DISPLAY FIGURE
+# Creamos una gráfica con los valores de Z para cada una de las iteraciones
+figura = 'Ejercicio 1.2. Valor de Z en las distintas iteraciones del algoritmo'
+titulo = 'Punto inicial: ('+ str(initial_point_E[0])+ ', '+ str(initial_point_E[1])+ ')'
+subtitulo = 'Función E'
+plt.figure(figura)
+plt.title(titulo)
+plt.suptitle(subtitulo)
+plt.xlabel('iteraciones')
+plt.ylabel('z')
+plt.plot(points2min)
+plt.show()
+
+"""
+Creamos una figura 3D donde pintaremos la función para un conjunto de valores y marcaremos el mínimo encontrado
+	con una estrella roja.
+"""
+# Importamos el módulo para hacer el gráfico 3D
 from mpl_toolkits.mplot3d import Axes3D
+# Tomamos 50 valores entre [-30,30] para la representación del gráfico
 x = np.linspace(-30, 30, 50)
 y = np.linspace(-30, 30, 50)
 X, Y = np.meshgrid(x, y)
+# Calculamos los valores de z para los (x,y) obtenidos antes
 Z = E(X, Y) #E_w([X, Y])
-fig = plt.figure()
+# Creamos la figura 3D y la dibujamos
+figura = 'Ejercicio 1.2. Representacion 3D de la función E'
+fig = plt.figure(figura)
 ax = Axes3D(fig)
 surf = ax.plot_surface(X, Y, Z, edgecolor='none', rstride=1,
                         cstride=1, cmap='jet')
+# Dibujamos el punto mínimo encontrado como una estrella roja
 min_point = np.array([w[0],w[1]])
 min_point_ = min_point[:, np.newaxis]
 ax.plot(min_point_[0], min_point_[1], E(min_point_[0], min_point_[1]), 'r*', c='red')
-#for i in range(len(points2min)):
-	#ax.plot(points2min[i],points2min[i],points2min[i], '.', c='black')
-ax.set(title='Ejercicio 1.2. Función sobre la que se calcula el descenso de gradiente')
+# Ponemos título y nombre a los ejes de la gráfica
+ax.set(title='Punto inicial: (' + str(initial_point_E[0]) + ', ' + str(initial_point_E[1]) + ')')
 ax.set_xlabel('u')
 ax.set_ylabel('v')
 ax.set_zlabel('E(u,v)')
-#Añadimos una barra como leyenda que nos explique los colores del grafo
-#plt.colorbar()
+# Imprimimos por pantalla el resultado
 plt.show()
+
+################################################################################################
+######################################## 1.3 ###################################################
+################################################################################################
+
+# Creamos una tabla donde almacenaremos los distintos resultados del algoritmo dependiendo de nuestro punto de partida
+tabla = []
+# Como primera fila de la tabla ponemos un índice para indicar qué será cada columna que incorporemos después
+tabla.append(['punto inicial','x','y','z'])
+
+# Realizamos el algoritmo para una lista de puntos iniciales
+for initial_point_F in ([0.1,0.1],[1,1],[-0.5,-0.5],[-1,-1]):
+
+	"""
+	Realizamos el algoritmo del Gradiente Descendiente para la función F
+		partiendo desde los puntos ([0.1,0.1],[1,1],[-0.5,-0.5],[-1,-1])
+	Como tope de iteraciones indicamos 50
+
+	En w guardamos las coordenadas (x,y) del punto con z mínimo alcanzado
+	En it almacenamos el número de iteraciones que han sido necesarias para calcular w
+	En points2min guardamos la secuencia de (x,y) que se ha ido generando hasta llegar a w
+	"""
+	w, it, points2min = gradient_descent(F,gradF,initial_point_F[0], initial_point_F[1],50)
+
+	# Incluimos en la tabla los resultados obtenidos
+	tabla.append([tuple(initial_point_F), w[0],w[1],F(w[0], w[1])])
+
+	"""
+	Mostramos por pantalla los datos más relevantes de aplicar el algoritmo a la función F
+		con punto inicial initial_point_F
+	"""
+	print ('Función F')
+	print ('Punto inicial: (', initial_point_F[0], ', ', initial_point_F[1], ')' )
+	print ('Numero de iteraciones: ', it)
+	print ('Coordenadas obtenidas: (', w[0], ', ', w[1],')')
+	print ('Valor mínimo en estas coordenadas: ', F(w[0], w[1]), '\n\n')
+
+	# Creamos una gráfica con los valores de Z para cada una de las iteraciones
+	figura = 'Ejercicio 1.3. Valor de Z en las distintas iteraciones del algoritmo'
+	titulo = 'Punto inicial: ('+ str(initial_point_F[0])+ ', '+ str(initial_point_F[1])+ ')'
+	subtitulo = 'Función F'
+	plt.figure(figura)
+	plt.title(titulo)
+	plt.suptitle(subtitulo)
+	plt.xlabel('iteraciones')
+	plt.ylabel('z')
+	plt.plot(points2min)
+	plt.show()
+
+	"""
+	Creamos una figura 3D donde pintaremos la función para un conjunto de valores y marcaremos el mínimo encontrado
+		con una estrella roja.
+	"""
+	# Importamos el módulo para hacer el gráfico 3D
+	from mpl_toolkits.mplot3d import Axes3D
+	# Tomamos 50 valores entre [-30,30] para la representación del gráfico
+	x = np.linspace(-30, 30, 50)
+	y = np.linspace(-30, 30, 50)
+	X, Y = np.meshgrid(x, y)
+	# Calculamos los valores de z para los (x,y) obtenidos antes
+	Z = E(X, Y) #E_w([X, Y])
+	# Creamos la figura 3D y la dibujamos
+	figura = 'Ejercicio 1.3. Representacion 3D de la función F'
+	fig = plt.figure(figura)
+	ax = Axes3D(fig)
+	surf = ax.plot_surface(X, Y, Z, edgecolor='none', rstride=1,
+	                        cstride=1, cmap='jet')
+	# Dibujamos el punto mínimo encontrado como una estrella roja
+	min_point = np.array([w[0],w[1]])
+	min_point_ = min_point[:, np.newaxis]
+	ax.plot(min_point_[0], min_point_[1], F(min_point_[0], min_point_[1]), 'r*', c='red')
+	# Ponemos título y nombre a los ejes de la gráfica
+	ax.set(title='Punto inicial: (' + str(initial_point_F[0]) + ', ' + str(initial_point_F[1]) + ')')
+	ax.set_xlabel('u')
+	ax.set_ylabel('v')
+	ax.set_zlabel('F(u,v)')
+	# Imprimimos por pantalla el resultado
+	plt.show()
+
+tabla = np.array(tabla)
+shape = (5,4)
+tabla.reshape(shape)
+
+print('   Datos con función F\n\n',tabla,'\n')
 
 input("\n--- Pulsar tecla para continuar ---\n")
 
 #Seguir haciendo el ejercicio...
-
-
 
 
 """

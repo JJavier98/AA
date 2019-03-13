@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module template_trabajo1</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>template_trabajo1</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/jjavier/GII/3%C2%BA/2%C2%BA%20Semestre/AA/PRACTICAS/P1/Template/template_trabajo1.py">/home/jjavier/GII/3º/2º Semestre/AA/PRACTICAS/P1/Template/template_trabajo1.py</a></font></td></tr></table>
+    <p><tt>TRABAJO&nbsp;1.&nbsp;<br>
+Estudiante:&nbsp;JJavier&nbsp;Alonso&nbsp;Ramos</tt></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top><a href="matplotlib.pyplot.html">matplotlib.pyplot</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-E"><strong>E</strong></a>(u, v)</dt><dd><tt>#Función&nbsp;1.2&nbsp;-&nbsp;(np.e**v*u**2-2*v**2*np.e**(-u))**2</tt></dd></dl>
+ <dl><dt><a name="-F"><strong>F</strong></a>(u, v)</dt><dd><tt>#Función&nbsp;1.3&nbsp;-&nbsp;u**2+2*v**2+2*np.sin(2*np.pi*u)*np.sin(2*np.pi*v)</tt></dd></dl>
+ <dl><dt><a name="-dEu"><strong>dEu</strong></a>(u, v)</dt><dd><tt>#Derivada&nbsp;parcial&nbsp;de&nbsp;E&nbsp;con&nbsp;respecto&nbsp;a&nbsp;u&nbsp;-&nbsp;2*(np.e**v*u**2-2*v**2*np.e**(-u))*(2*v**2*np.e**(-u)+2*np.e**v*u)</tt></dd></dl>
+ <dl><dt><a name="-dEv"><strong>dEv</strong></a>(u, v)</dt><dd><tt>#Derivada&nbsp;parcial&nbsp;de&nbsp;E&nbsp;con&nbsp;respecto&nbsp;a&nbsp;v&nbsp;-&nbsp;2*(u**2*np.e**v-4*np.e**(-u)*v)*(u**2*np.e**v-2*np.e**(-u)*v**2)</tt></dd></dl>
+ <dl><dt><a name="-dFu"><strong>dFu</strong></a>(u, v)</dt><dd><tt>#Derivada&nbsp;parcial&nbsp;de&nbsp;F&nbsp;con&nbsp;respecto&nbsp;a&nbsp;u&nbsp;-&nbsp;4*np.pi*np.sin(2*np.pi*v)*np.cos(2*np.pi*u)+2*u</tt></dd></dl>
+ <dl><dt><a name="-dFv"><strong>dFv</strong></a>(u, v)</dt><dd><tt>#Derivada&nbsp;parcial&nbsp;de&nbsp;F&nbsp;con&nbsp;respecto&nbsp;a&nbsp;v&nbsp;-&nbsp;4*np.pi*np.sin(2*np.pi*u)*np.cos(2*np.pi*v)+4*v</tt></dd></dl>
+ <dl><dt><a name="-gradE"><strong>gradE</strong></a>(u, v)</dt><dd><tt>#Gradiente&nbsp;de&nbsp;E</tt></dd></dl>
+ <dl><dt><a name="-gradF"><strong>gradF</strong></a>(u, v)</dt><dd><tt>#Gradiente&nbsp;de&nbsp;F</tt></dd></dl>
+ <dl><dt><a name="-gradient_descent"><strong>gradient_descent</strong></a>(func, grad, u, v, maxIter, epsilon=-inf, learning_rate=0.01)</dt><dd><tt>Gradiente&nbsp;Descendente<br>
+Aceptamos&nbsp;como&nbsp;parámetro&nbsp;un&nbsp;punto&nbsp;mínimo&nbsp;(epsilon)<br>
+Aceptamos&nbsp;como&nbsp;parámetro&nbsp;el&nbsp;número&nbsp;máximo&nbsp;de&nbsp;iteraciones&nbsp;a&nbsp;realizar<br>
+Aceptamos&nbsp;como&nbsp;parámetro&nbsp;un&nbsp;learning-rate&nbsp;que&nbsp;por&nbsp;defecto&nbsp;será&nbsp;0.01</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>X</strong> = array([[-30.        , -28.7755102 , -27.55102041...7.55102041,
+         28.7755102 ,  30.        ]])<br>
+<strong>Y</strong> = array([[-30.        , -30.        , -30.        ...0.        ,
+         30.        ,  30.        ]])<br>
+<strong>Z</strong> = array([[2700.        , 2628.02998751, 2559.05872...05872553,
+        2628.02998751, 2700.        ]])<br>
+<strong>ax</strong> = &lt;mpl_toolkits.mplot3d.axes3d.Axes3D object&gt;<br>
+<strong>fig</strong> = &lt;Figure size 640x480 with 1 Axes&gt;<br>
+<strong>initial_point_E</strong> = array([1., 1.])<br>
+<strong>initial_point_F</strong> = [-1, -1]<br>
+<strong>it</strong> = 50<br>
+<strong>min_point</strong> = array([-1.2180703 , -0.71281195])<br>
+<strong>min_point_</strong> = array([[-1.2180703 ],
+       [-0.71281195]])<br>
+<strong>points2min</strong> = [2.865938215426227, 2.779995555813659, 2.540369965867658, 1.9474671030685997, 1.0654045983317133, 0.6360725111646945, 0.5948139950470164, 0.5933221770700785, 0.5932712830075069, 0.5932694494369963, 0.5932693776321452, 0.5932693744900182, 0.5932693743348765, 0.5932693743263711, 0.5932693743258692, 0.5932693743258379, 0.5932693743258357, 0.5932693743258357, 0.5932693743258357, 0.5932693743258357, ...]<br>
+<strong>shape</strong> = (5, 4)<br>
+<strong>surf</strong> = &lt;mpl_toolkits.mplot3d.art3d.Poly3DCollection object&gt;<br>
+<strong>tabla</strong> = array([['punto inicial', 'x', 'y', 'z'],
+       ...7776,
+        0.5932693743258357]], dtype=object)<br>
+<strong>w</strong> = [-1.2180703013110816, -0.7128119506017776]<br>
+<strong>x</strong> = array([-30.        , -28.7755102 , -27.55102041,... 27.55102041,
+        28.7755102 ,  30.        ])<br>
+<strong>y</strong> = array([-30.        , -28.7755102 , -27.55102041,... 27.55102041,
+        28.7755102 ,  30.        ])</td></tr></table>
+</body></html>
