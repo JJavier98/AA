@@ -83,13 +83,15 @@ def gradient_descent(func,grad,u,v,maxIter,epsilon=np.NINF,learning_rate=0.01):
 		u = u - learning_rate*_pend[0]
 		v = v - learning_rate*_pend[1]
 
-		# Guardamos las coordenadas del punto calculado en una dupla
-		# La dupla w solo guardará y devolverá al final de la función el último valor
-		# calculado, es decir, el valor mínimo alcanzado
+		"""
+		La dupla w guardará y devolverá las coordenas (u,v) del último valor calculado,
+			es decir, el valor mínimo alcanzado
+		points2min almacena todas las coordenadas (u,v) de los puntos que se han ido calculando
+		"""
 		w = [u,v]
+		points2min.append([u,v])
 		# Almacenamos la "altura" de todos los puntos (u,v) calculados
-		new_z = func(u,v)		
-		points2min.append(new_z)
+		new_z = func(u,v)
 
 		if new_z < last_z:
 			last_z = new_z
@@ -130,6 +132,9 @@ print ('Coordenadas obtenidas: (', w[0], ', ', w[1],')')
 print ('Valor mínimo en estas coordenadas: ', E(w[0], w[1]), '\n')
 
 # Creamos una gráfica con los valores de Z para cada una de las iteraciones
+valores_z = []
+for punto in points2min:
+	valores_z.append(E(punto[0], punto[1]))
 figura = 'Ejercicio 1.2. Valor de Z en las distintas iteraciones del algoritmo'
 titulo = 'Punto inicial: ('+ str(initial_point_E[0])+ ', '+ str(initial_point_E[1])+ ')'
 subtitulo = 'Función E'
@@ -138,7 +143,7 @@ plt.title(titulo)
 plt.suptitle(subtitulo)
 plt.xlabel('iteraciones')
 plt.ylabel('z')
-plt.plot(points2min)
+plt.plot(valores_z)
 plt.show()
 
 """
@@ -159,10 +164,23 @@ fig = plt.figure(figura)
 ax = Axes3D(fig)
 surf = ax.plot_surface(X, Y, Z, edgecolor='none', rstride=1,
                         cstride=1, cmap='jet')
-# Dibujamos el punto mínimo encontrado como una estrella roja
+
+"""
+Dibujamos el punto mínimo encontrado como una estrella roja,
+	los puntos intermedios como puntos verdes
+	y el punto inicial como una estrella blanca
+"""
 min_point = np.array([w[0],w[1]])
 min_point_ = min_point[:, np.newaxis]
+ini_point = np.array([initial_point_E[0], initial_point_E[1]])
+ini_point_ = ini_point[:, np.newaxis]
+ax.plot(ini_point_[0], ini_point_[1], E(ini_point_[0], ini_point_[1]), 'r*', c='black')
+for punto in points2min:
+	point = np.array([punto[0], punto[1]])
+	point_ = point[:, np.newaxis]
+	ax.plot(point_[0], point_[1], E(point_[0], point_[1]), '.', c='green')
 ax.plot(min_point_[0], min_point_[1], E(min_point_[0], min_point_[1]), 'r*', c='red')
+
 # Ponemos título y nombre a los ejes de la gráfica
 ax.set(title='Punto inicial: (' + str(initial_point_E[0]) + ', ' + str(initial_point_E[1]) + ')')
 ax.set_xlabel('u')
@@ -178,10 +196,10 @@ plt.show()
 # Creamos una tabla donde almacenaremos los distintos resultados del algoritmo dependiendo de nuestro punto de partida
 tabla = []
 # Como primera fila de la tabla ponemos un índice para indicar qué será cada columna que incorporemos después
-tabla.append(['punto inicial','x','y','z'])
+tabla.append(['punto inicial','u','v','F(u,v)'])
 
 # Realizamos el algoritmo para una lista de puntos iniciales
-for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1]):
+for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 
 	"""
 	Realizamos el algoritmo del Gradiente Descendiente para la función F
@@ -208,6 +226,9 @@ for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1]):
 	print ('Valor mínimo en estas coordenadas: ', F(w[0], w[1]), '\n\n')
 
 	# Creamos una gráfica con los valores de Z para cada una de las iteraciones
+	valores_z = []
+	for punto in points2min:
+		valores_z.append(F(punto[0], punto[1]))
 	figura = 'Ejercicio 1.3. Valor de Z en las distintas iteraciones del algoritmo'
 	titulo = 'Punto inicial: ('+ str(initial_point_F[0])+ ', '+ str(initial_point_F[1])+ ')'
 	subtitulo = 'Función F'
@@ -216,7 +237,7 @@ for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1]):
 	plt.suptitle(subtitulo)
 	plt.xlabel('iteraciones')
 	plt.ylabel('z')
-	plt.plot(points2min)
+	plt.plot(valores_z)
 	plt.show()
 
 	"""
@@ -230,16 +251,27 @@ for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1]):
 	y = np.linspace(-30, 30, 50)
 	X, Y = np.meshgrid(x, y)
 	# Calculamos los valores de z para los (x,y) obtenidos antes
-	Z = F(X, Y) #E_w([X, Y])
+	Z = F(X, Y) #F_w([X, Y])
 	# Creamos la figura 3D y la dibujamos
 	figura = 'Ejercicio 1.3. Representacion 3D de la función F'
 	fig = plt.figure(figura)
 	ax = Axes3D(fig)
 	surf = ax.plot_surface(X, Y, Z, edgecolor='none', rstride=1,
 	                        cstride=1, cmap='jet')
-	# Dibujamos el punto mínimo encontrado como una estrella roja
+	"""
+	Dibujamos el punto mínimo encontrado como una estrella roja,
+		los puntos intermedios como puntos verdes
+		y el punto inicial como una estrella blanca
+	"""
 	min_point = np.array([w[0],w[1]])
 	min_point_ = min_point[:, np.newaxis]
+	ini_point = np.array([initial_point_F[0], initial_point_F[1]])
+	ini_point_ = ini_point[:, np.newaxis]
+	ax.plot(ini_point_[0], ini_point_[1], F(ini_point_[0], ini_point_[1]), 'r*', c='black')
+	for punto in points2min:
+		point = np.array([punto[0], punto[1]])
+		point_ = point[:, np.newaxis]
+		ax.plot(point_[0], point_[1], F(point_[0], point_[1]), '.', c='green')
 	ax.plot(min_point_[0], min_point_[1], F(min_point_[0], min_point_[1]), 'r*', c='red')
 	# Ponemos título y nombre a los ejes de la gráfica
 	ax.set(title='Punto inicial: (' + str(initial_point_F[0]) + ', ' + str(initial_point_F[1]) + ')')
@@ -254,7 +286,7 @@ print('   Tabla de datos con función F\n')
 for i in range(len(tabla)):
 	print(tabla[i])
 
-input("\n--- Pulsar tecla para continuar ---\n")
+input("\n--- Pulsar intro para continuar ---\n")
 
 #Seguir haciendo el ejercicio...
 
