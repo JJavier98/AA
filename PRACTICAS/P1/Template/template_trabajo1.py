@@ -62,13 +62,20 @@ def gradient_descent(func,grad,u,v,maxIter,epsilon=np.NINF,learning_rate=0.01):
 	it = 0
 	#Creamos una lista donde guardar todas las aproximaciones que realiza el algoritmo
 	points2min = []
+	"""
+	Creamos una variable donde guardaremos el último valor de Z obtenido
+		con el fin de acabar el algoritmo si es necesario
+	Creamos también un booleano para indicar la salida del bucle
+	"""
+	continuar = True
+	last_z=np.Inf
 
 	"""
 	Realizamos el cálculo de un nuevo punto
 		hasta alcanzar nuestro mínimo objetivo(epsilon)
 		o hasta superar el máximo de iteraciones
 	"""
-	while func(u,v) > epsilon and it < maxIter:
+	while func(u,v) > epsilon and it < maxIter and continuar:
     	# Calculamos las pendientes respecto a u e v
 		_pend = grad(u,v)
 
@@ -81,7 +88,13 @@ def gradient_descent(func,grad,u,v,maxIter,epsilon=np.NINF,learning_rate=0.01):
 		# calculado, es decir, el valor mínimo alcanzado
 		w = [u,v]
 		# Almacenamos la "altura" de todos los puntos (u,v) calculados
-		points2min.append(func(u, v))
+		new_z = func(u,v)		
+		points2min.append(new_z)
+
+		if new_z < last_z:
+			last_z = new_z
+		else:
+			continuar = False
 
 		# Aumentamos el número de iteraciones realizadas
 		it = it+1
@@ -168,7 +181,7 @@ tabla = []
 tabla.append(['punto inicial','x','y','z'])
 
 # Realizamos el algoritmo para una lista de puntos iniciales
-for initial_point_F in ([0.1,0.1],[1,1],[-0.5,-0.5],[-1,-1]):
+for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1]):
 
 	"""
 	Realizamos el algoritmo del Gradiente Descendiente para la función F
@@ -217,7 +230,7 @@ for initial_point_F in ([0.1,0.1],[1,1],[-0.5,-0.5],[-1,-1]):
 	y = np.linspace(-30, 30, 50)
 	X, Y = np.meshgrid(x, y)
 	# Calculamos los valores de z para los (x,y) obtenidos antes
-	Z = E(X, Y) #E_w([X, Y])
+	Z = F(X, Y) #E_w([X, Y])
 	# Creamos la figura 3D y la dibujamos
 	figura = 'Ejercicio 1.3. Representacion 3D de la función F'
 	fig = plt.figure(figura)
@@ -236,11 +249,10 @@ for initial_point_F in ([0.1,0.1],[1,1],[-0.5,-0.5],[-1,-1]):
 	# Imprimimos por pantalla el resultado
 	plt.show()
 
-tabla = np.array(tabla)
-shape = (5,4)
-tabla.reshape(shape)
 
-print('   Datos con función F\n\n',tabla,'\n')
+print('   Tabla de datos con función F\n')
+for i in range(len(tabla)):
+	print(tabla[i])
 
 input("\n--- Pulsar tecla para continuar ---\n")
 
