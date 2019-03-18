@@ -7,6 +7,7 @@ Estudiante: JJavier Alonso Ramos
 
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 
 np.random.seed(1)
 
@@ -194,9 +195,14 @@ plt.show()
 ################################################################################################
 
 # Creamos una tabla donde almacenaremos los distintos resultados del algoritmo dependiendo de nuestro punto de partida
-tabla = []
+#tabla = []
 # Como primera fila de la tabla ponemos un índice para indicar qué será cada columna que incorporemos después
-tabla.append(['punto inicial','u','v','F(u,v)'])
+###tabla.append(['punto inicial','u','v','F(u,v)'])
+
+columna1 = [[0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]]
+columna2 = []
+columna3 = []
+columna4 = []
 
 # Realizamos el algoritmo para una lista de puntos iniciales
 for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
@@ -213,7 +219,10 @@ for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 	w, it, points2min = gradient_descent(F,gradF,initial_point_F[0], initial_point_F[1],50)
 
 	# Incluimos en la tabla los resultados obtenidos
-	tabla.append([tuple(initial_point_F), w[0],w[1],F(w[0], w[1])])
+	####tabla.append([tuple(initial_point_F), w[0],w[1],F(w[0], w[1])])
+	columna2.append(w[0])
+	columna3.append(w[1])
+	columna4.append(F(w[0],w[1]))
 
 	"""
 	Mostramos por pantalla los datos más relevantes de aplicar el algoritmo a la función F
@@ -281,24 +290,21 @@ for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 	# Imprimimos por pantalla el resultado
 	plt.show()
 
+dict_tabla = {'Initial Point':columna1, 'u':columna2, 'v':columna3, 'F(u,v)':columna4}
+dataframe = pd.DataFrame(dict_tabla)
 
 print('   Tabla de datos con función F\n')
-for i in range(len(tabla)):
-	print(tabla[i])
+print(dataframe)
 
-input("\n--- Pulsar intro para continuar ---\n")
+input("\n--- Pulsar intro para continuar con el ejercicio 2 ---\n")
 
-#Seguir haciendo el ejercicio...
-
-
-"""
 
 ###############################################################################
+###################### EJERCICIO 2 - REGRESIÓN LINEAL##########################
 ###############################################################################
-###############################################################################
-###############################################################################
+
 print('EJERCICIO SOBRE REGRESION LINEAL\n')
-print('Ejercicio 1\n')
+print('Ejercicio 2\n')
 
 label5 = 1
 label1 = -1
@@ -323,12 +329,13 @@ def readData(file_x, file_y):
 	y = np.array(y, np.float64)
 	
 	return x, y
-
+"""
 # Funcion para calcular el error
 def Err(x,y,w):
     return 
 
 # Gradiente Descendente Estocastico
+
 def sgd(?):
     #
     return w
@@ -344,6 +351,9 @@ x, y = readData('datos/X_train.npy', 'datos/y_train.npy')
 # Lectura de los datos para el test
 x_test, y_test = readData('datos/X_test.npy', 'datos/y_test.npy')
 
+print(x)
+
+print(y)
 
 w = sgd(?)
 print ('Bondad del resultado para grad. descendente estocastico:\n')
@@ -360,7 +370,4 @@ def simula_unif(N, d, size):
 	return np.random.uniform(-size,size,(N,d))
 
 #Seguir haciendo el ejercicio...
-
-
-
 """
