@@ -351,6 +351,7 @@ x, y = readData('datos/X_train.npy', 'datos/y_train.npy')
 # Lectura de los datos para el test
 x_test, y_test = readData('datos/X_test.npy', 'datos/y_test.npy')
 
+
 print(x)
 
 print(y)
