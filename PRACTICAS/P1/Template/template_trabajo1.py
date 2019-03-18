@@ -346,6 +346,7 @@ def pseudoinverse(?):
     return w
 
 
+
 # Lectura de los datos de entrenamiento
 x, y = readData('datos/X_train.npy', 'datos/y_train.npy')
 # Lectura de los datos para el test
