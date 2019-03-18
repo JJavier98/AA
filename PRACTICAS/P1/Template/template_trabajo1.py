@@ -287,7 +287,7 @@ for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 	ax.set_xlabel('u')
 	ax.set_ylabel('v')
 	ax.set_zlabel('F(u,v)')
-	# Imprimimos por pantalla el resultado
+		# Imprimimos por pantalla el resultado
 	plt.show()
 
 dict_tabla = {'Initial Point':columna1, 'u':columna2, 'v':columna3, 'F(u,v)':columna4}
@@ -329,7 +329,7 @@ def readData(file_x, file_y):
 	y = np.array(y, np.float64)
 	
 	return x, y
-"""
+	
 # Funcion para calcular el error
 def Err(x,y,w):
     return 
