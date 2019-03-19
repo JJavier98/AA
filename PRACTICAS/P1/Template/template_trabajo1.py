@@ -190,6 +190,8 @@ ax.set_zlabel('E(u,v)')
 # Imprimimos por pantalla el resultado
 plt.show()
 
+input("\n--- Pulsar intro para continuar con el ejercicio 1.3 ---\n")
+
 ################################################################################################
 ######################################## 1.3 ###################################################
 ################################################################################################
@@ -290,6 +292,9 @@ for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 		# Imprimimos por pantalla el resultado
 	plt.show()
 
+
+	input("\n--- Pulsar intro para continuar con el siguiente punto inicial ---\n")
+
 dict_tabla = {'Initial Point':columna1, 'u':columna2, 'v':columna3, 'F(u,v)':columna4}
 dataframe = pd.DataFrame(dict_tabla)
 
@@ -329,7 +334,7 @@ def readData(file_x, file_y):
 	y = np.array(y, np.float64)
 	
 	return x, y
-	
+"""
 # Funcion para calcular el error
 def Err(x,y,w):
     return 
@@ -345,13 +350,10 @@ def pseudoinverse(?):
     #
     return w
 
-
-
 # Lectura de los datos de entrenamiento
 x, y = readData('datos/X_train.npy', 'datos/y_train.npy')
 # Lectura de los datos para el test
 x_test, y_test = readData('datos/X_test.npy', 'datos/y_test.npy')
-
 
 print(x)
 
