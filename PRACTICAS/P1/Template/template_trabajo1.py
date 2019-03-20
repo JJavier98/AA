@@ -334,20 +334,49 @@ def readData(file_x, file_y):
 	y = np.array(y, np.float64)
 	
 	return x, y
-"""
+
 # Funcion para calcular el error
 def Err(x,y,w):
-    return 
+	denominador = len(x)
+	numerador = (x@w-y)**2
+	numerador = np.sum(numerador)
+	res = numerador/denominador
+	return res
 
 # Gradiente Descendente Estocastico
 
-def sgd(?):
-    #
-    return w
+def sgd(X,Y,epsilon = 1e-14):
+	lr = 0.001
+	size_of_x = len(X)
+	minibatch_size = 64
+	minibatch_num = size_of_x // minibatch_size
+	cols_of_x = len(X[0])
+	w = np.zeros(cols_of_x)
+
+	while(Err(X,Y,w) > epsilon):
+		for i in range(minibatch_num):
+			for j in range(cols_of_x):
+				h_x = np.dot(X[i*minibatch_size : (i+1)*minibatch_size, :],w)
+				diff = h_x - Y[i*minibatch_size : (i+1)*minibatch_size]
+				mul = np.dot(X[i*minibatch_size : (i+1)*minibatch_size , j], diff)
+				sumatoria = np.sum(mul)
+				w[j] = w[j] - lr*sumatoria
+
+		if size_of_x % minibatch_size != 0:
+			n = minibatch_num*minibatch_size
+			for j in range(cols_of_x):
+				h_x = np.dot(X[n : size_of_x, :],w)
+				diff = h_x - Y[n : size_of_x]
+				mul = np.dot(X[n : size_of_x , j], diff)
+				sumatoria = np.sum(mul)
+				w[j] = w[j] - lr*sumatoria
+
+	return w
 
 # Pseudoinversa	
-def pseudoinverse(?):
-    #
+def pseudoinverse(X,Y):
+    x = np.linalg.pinv(X)
+    w = x @ Y
     return w
 
 # Lectura de los datos de entrenamiento
@@ -355,11 +384,11 @@ x, y = readData('datos/X_train.npy', 'datos/y_train.npy')
 # Lectura de los datos para el test
 x_test, y_test = readData('datos/X_test.npy', 'datos/y_test.npy')
 
-print(x)
+#print(x)
 
-print(y)
+#print(y)
 
-w = sgd(?)
+w = sgd(x,y)
 print ('Bondad del resultado para grad. descendente estocastico:\n')
 print ("Ein: ", Err(x,y,w))
 print ("Eout: ", Err(x_test, y_test, w))
@@ -374,4 +403,3 @@ def simula_unif(N, d, size):
 	return np.random.uniform(-size,size,(N,d))
 
 #Seguir haciendo el ejercicio...
-"""
