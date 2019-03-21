@@ -23,6 +23,7 @@ print('Ejercicio 1\n')
 def E(u,v):
     return (np.e**v*u**2-2*v**2*np.e**(-u))**2
 
+
 #Derivada parcial de E con respecto a u - 2*(np.e**v*u**2-2*v**2*np.e**(-u))*(2*v**2*np.e**(-u)+2*np.e**v*u)
 def dEu(u,v):
     return 2*(np.e**v*u**2-2*v**2*np.e**(-u))*(2*v**2*np.e**(-u)+2*np.e**v*u)
@@ -291,7 +292,7 @@ for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 	ax.set_xlabel('u')
 	ax.set_ylabel('v')
 	ax.set_zlabel('F(u,v)')
-		# Imprimimos por pantalla el resultado
+	# Imprimimos por pantalla el resultado
 	plt.show()
 
 
@@ -446,18 +447,56 @@ print ('Bondad del resultado para pseudoinversa de X:\n')
 print ("Ein: ", Err(x,y,w))
 print ("Eout: ", Err(x_test, y_test, w))
 
+
+
+figura = 'Ejercicio 1.3. Representacion 3D de la función F'
+fig = plt.figure(figura)
+ax = Axes3D(fig)
+
+
+min_point = np.array([w[0],w[1]])
+min_point_ = min_point[:, np.newaxis]
+
+calculated_y = np.dot(x,w)
+x_1_ = np.array(x[:,1])
+x_2_ = np.array(x[:,2])
+y_ = np.array(y)
+
+X, Y = np.meshgrid(x_1_, x_2_)
+
+func = w[0] + w[1]*X + w[2]*Y
+
+ax.plot(x_1_, x_2_, y_, '.', c='c')
+ax.plot_surface(x_1_, x_2_, func, cmap='viridis',rstride=100, cstride=100)
+# Ponemos título y nombre a los ejes de la gráfica
+ax.set(title='prueba')
+ax.set_xlabel('x_1')
+ax.set_ylabel('x_2')
+ax.set_zlabel('h(x)')
+# Imprimimos por pantalla el resultado
+plt.show()
+
+
+
+
+
+
+"""
+
 # Dibujamos en un diagrama de puntos los resultados del algoritmo
 # Calculamos las aproximaciones con el vector de pesos que hemos obtenido
 calculated_y = np.dot(x,w)
+# Dibujamos las y reales con puntos de color verde
+print(calculated_y.shape)
+#plt.plot(calculated_y, '.', color='C1', alpha=0.3)
+plt.plot(x[:,1], x[:,2], calculated_y, '.', color='c', alpha=0.3)
 # Dibujamos las y calculadas con puntos de color rojo
-plt.plot(calculated_y, '.', color='r')
- # Dibujamos las y reales con puntos de color verde
-plt.plot(y, '.', color='g')
+#plt.plot([0.0,0.6], [w[1] + w[2]*0.0, w[1] + w[2]*0.6], color='r')
 # Esrablecemos un título a la gráfica
 plt.title(u'Gráfico de comparación aproximación de y e y')
 # La imprimimos
 plt.show()
-
+"""
 input("\n--- Pulsar tecla para continuar al ejercicio 2.2 ---\n")
 
 
