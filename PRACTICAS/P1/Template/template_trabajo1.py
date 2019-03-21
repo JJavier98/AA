@@ -461,16 +461,22 @@ x_11_ = np.array(x[np.where(y==1),1].T)
 x_1_1 = np.array(x[np.where(y==-1),1].T)
 x_21_ = np.array(x[np.where(y==1),2].T)
 x_2_1 = np.array(x[np.where(y==-1),2].T)
-y_r1 = np.array(y[np.where(y==1)])
-y_r_1 = np.array(y[np.where(y==-1)])
+#y_r1 = np.array(y[np.where(y==1)])
+#y_r_1 = np.array(y[np.where(y==-1)])
 y_ = x.dot(w_pinv)
 y1_ = np.array(y_[np.where(y==1)])
 y_1 = np.array(y_[np.where(y==-1)])
 
-ax.plot(x_11_, x_21_, y1_, '.', c='c')
-ax.plot(x_1_1, x_2_1, y_1, '.', c='r')
-ax.plot(x_11_, x_21_, y_r1, '.', c='C1', alpha=0.3)
-ax.plot(x_1_1, x_2_1, y_r_1, '.', c='C1', alpha=0.3)
+lista_x = np.linspace(0.0,0.6,10)
+lista_y = np.linspace(-4.0,2.0,10)
+Lista_X, Lista_Y = np.meshgrid(lista_x, lista_y)
+X2 = (-w_sgd[0]-w_sgd[1]*Lista_X)/w_sgd[2]
+
+ax.plot(x_11_, x_21_, y1_, '.', c='r')
+ax.plot(x_1_1, x_2_1, y_1, '.', c='c')
+#ax.plot(x_11_, x_21_, y_r1, '.', c='C1', alpha=0.3)
+#ax.plot(x_1_1, x_2_1, y_r_1, '.', c='C1', alpha=0.3)
+ax.plot_surface(Lista_X, X2, Lista_Y, alpha=0.8, cmap='viridis')
 # Ponemos título y nombre a los ejes de la gráfica
 ax.set(title='Data 3D')
 ax.set_xlabel('x_1')
@@ -491,7 +497,7 @@ Aplicaremos transparencia a estos puntos para que sea más fácil comprender por
 """
 plt.scatter(x[np.where(y==1),1], x[np.where(y==1),2], c='r', alpha=0.5)
 plt.scatter(x[np.where(y==-1),1], x[np.where(y==-1),2], c='c', alpha=0.5)
-plt.plot([0.0,0.6],[w_sgd[0]+w_sgd[1]*0.1+w_sgd[2]*0.1, w_sgd[0]+w_sgd[1]*0.6+w_sgd[2]*0.6])
+plt.plot([0.0,1.0],[-w_sgd[0]/w_sgd[2], (-w_sgd[0]-w_sgd[1])/w_sgd[2]])
 # Esrablecemos un título a la gráfica
 plt.title(u'Gráfica de regresión lineal. Pesos calculados con SGD')
 # La imprimimos
@@ -499,7 +505,7 @@ plt.show()
 
 plt.scatter(x[np.where(y==1),1], x[np.where(y==1),2], c='r', alpha=0.5)
 plt.scatter(x[np.where(y==-1),1], x[np.where(y==-1),2], c='c', alpha=0.5)
-plt.plot([0.0,0.6],[w_pinv[0]+w_pinv[1]*0.1+w_pinv[2]*0.1, w_pinv[0]+w_pinv[1]*0.6+w_pinv[2]*0.6])
+plt.plot([0.0,1.0],[-w_sgd[0]/w_sgd[2], (-w_sgd[0]-w_sgd[1])/w_sgd[2]])
 # Esrablecemos un título a la gráfica
 plt.title(u'Gráfica de regresión lineal. Pesos calculados con Pseudoinversa')
 # La imprimimos
