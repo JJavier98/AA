@@ -5,9 +5,14 @@ Estudiante: JJavier Alonso Ramos
 
 """
 
+# Importamos módulo para trabajar con datos matemáticos
 import numpy as np
+# Importamos módulo para gráficos 2D
 import matplotlib.pyplot as plt
+# Importamos el mñodulo para formater tablas
 import pandas as pd
+# Importamos el módulo para hacer el gráfico 3D
+from mpl_toolkits.mplot3d import Axes3D
 
 np.random.seed(1)
 
@@ -54,11 +59,13 @@ def gradF(u,v):
 def gradient_descent(func,grad,u,v,maxIter,epsilon=np.NINF,learning_rate=0.01):
 	"""
 	Gradiente Descendente
-	Aceptamos como parámetro un punto mínimo (epsilon)
-	Aceptamos como parámetro el número máximo de iteraciones a realizar
-	Aceptamos como parámetro un learning-rate que por defecto será 0.01
+	Aceptamos como parámetros:
+	La fución sobre la que calcularemos el gradiente
+	Las coordenadas con las que evaluaremos la función (u,v)
+	El número máximo de iteraciones a realizar
+	Un valor de Z mínimo (epsilon)
+	Un learning-rate que por defecto será 0.01
 	"""
-
 	#Creamos un contador de iteraciones
 	it = 0
 	#Creamos una lista donde guardar todas las aproximaciones que realiza el algoritmo
@@ -148,11 +155,8 @@ plt.plot(valores_z)
 plt.show()
 
 """
-Creamos una figura 3D donde pintaremos la función para un conjunto de valores y marcaremos el mínimo encontrado
-	con una estrella roja.
+Creamos una figura 3D donde pintaremos la función para un conjunto de valores
 """
-# Importamos el módulo para hacer el gráfico 3D
-from mpl_toolkits.mplot3d import Axes3D
 # Tomamos 50 valores entre [-30,30] para la representación del gráfico
 x = np.linspace(-30, 30, 50)
 y = np.linspace(-30, 30, 50)
@@ -197,9 +201,8 @@ input("\n--- Pulsar intro para continuar con el ejercicio 1.3 ---\n")
 ################################################################################################
 
 # Creamos una tabla donde almacenaremos los distintos resultados del algoritmo dependiendo de nuestro punto de partida
-#tabla = []
-# Como primera fila de la tabla ponemos un índice para indicar qué será cada columna que incorporemos después
-###tabla.append(['punto inicial','u','v','F(u,v)'])
+# La crearemos como un objeto 'pandas' al que le pasaremos las columnas en el siguiente orden:
+# punto incial - u - v - f(u,v)
 
 columna1 = [[0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]]
 columna2 = []
@@ -211,7 +214,9 @@ for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 
 	"""
 	Realizamos el algoritmo del Gradiente Descendiente para la función F
-		partiendo desde los puntos ([0.1,0.1],[1,1],[-0.5,-0.5],[-1,-1])
+		partiendo desde los puntos ([0.1,0.1],[1,1],[-0.5,-0.5],[-1,-1], [22.0,22.0])
+		He añadido el punto (22.0, 22.0) para obtener una gráfica en la que se vea más
+		claramente el dibujo de los distintos puntos calculados hasta llegar al mínimo
 	Como tope de iteraciones indicamos 50
 
 	En w guardamos las coordenadas (x,y) del punto con z mínimo alcanzado
@@ -252,11 +257,8 @@ for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 	plt.show()
 
 	"""
-	Creamos una figura 3D donde pintaremos la función para un conjunto de valores y marcaremos el mínimo encontrado
-		con una estrella roja.
+	Creamos una figura 3D donde pintaremos la función para un conjunto de valores
 	"""
-	# Importamos el módulo para hacer el gráfico 3D
-	from mpl_toolkits.mplot3d import Axes3D
 	# Tomamos 50 valores entre [-30,30] para la representación del gráfico
 	x = np.linspace(-30, 30, 50)
 	y = np.linspace(-30, 30, 50)
@@ -293,7 +295,7 @@ for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 	plt.show()
 
 
-	input("\n--- Pulsar intro para continuar con el siguiente punto inicial ---\n")
+	input("\n--- Pulsar intro para continuar ---\n")
 
 dict_tabla = {'Initial Point':columna1, 'u':columna2, 'v':columna3, 'F(u,v)':columna4}
 dataframe = pd.DataFrame(dict_tabla)
@@ -337,31 +339,57 @@ def readData(file_x, file_y):
 
 # Funcion para calcular el error
 def Err(x,y,w):
-	denominador = len(x)
-	numerador = (x@w-y)**2
-	numerador = np.sum(numerador)
-	res = numerador/denominador
+	"""
+	Vamos a calcular el error cuadrático medio. Para ello:
+		Dividiremos por el número de elementos que en este caso es igual al numero de filas de X
+		Calculamos la diferencia entre nuestra aproximación y el valor real y la elevamos al cuadrado
+		Realizamos la sumatoria de todas estas diferencias
+		Hacemos la media y devolvemos el resultado
+	"""
+	denominador = len(x) # Número de elementos
+	numerador = (x@w-y)**2 # Diferencia cuadrática
+	numerador = np.sum(numerador) # Sumatoria de las diferencias
+	res = numerador/denominador # Media del error cuadrático
 	return res
 
 # Gradiente Descendente Estocastico
+def sgd(X,Y,epsilon = 1e-14, lr = 0.001):
+	"""
+	Gradiente Descendente Estocástico
+	Aceptamos como parámetros:
+	Un conjunto de datos (muestra) a partir de los cuales debemos obtener los valores pasados como segundo argumento
+	Un valor de error mínimo (epsilon) que marcará el final de la ejecución del algoritmo (por defecto será 1e-14)
+	Un learning-rate que por defecto será 0.001
+	"""
+	size_of_x = len(X) # calculamos el número de filas que tiene X (el número de muestras)
+	minibatch_size = 64 # establecemos un tamaño de minibatch
+	minibatch_num = size_of_x // minibatch_size # calculamos el número de minibatchs en que podemos dividir X
+	cols_of_x = len(X[0]) # calculamos el número de columnas de X (su número de características)
+	w = np.zeros(cols_of_x) # inicializamos un vector de pesos a 0 con longitud = cols_of_x
+	error_antiguo = 999.0 # inicializamos a un valor suficientemente alto para asegurarnos que entra en la condición de actualización de su valor
+	continuar = True # inicializamos a true para que entre en el bucle
 
-def sgd(X,Y,epsilon = 1e-14):
-	lr = 0.001
-	size_of_x = len(X)
-	minibatch_size = 64
-	minibatch_num = size_of_x // minibatch_size
-	cols_of_x = len(X[0])
-	w = np.zeros(cols_of_x)
-
-	while(Err(X,Y,w) > epsilon):
+	# mientras la diferencia entre el anterior error calculado y el recién calculado sea mayor que 1e-14 continuamos realizando el algoritmo
+	while(continuar):
+		# recorremos todos los minibatchs en los que hemos dividido X
 		for i in range(minibatch_num):
+			# recorremos las características de X (sus columnas)
 			for j in range(cols_of_x):
+				# multiplicamos vectorialmente toda la submatriz de X que conforma un minibatch por su peso asociado
 				h_x = np.dot(X[i*minibatch_size : (i+1)*minibatch_size, :],w)
+				# restamos al valor obtenido su verdadero valor para ver cuanta precisión tenemos por ahora
 				diff = h_x - Y[i*minibatch_size : (i+1)*minibatch_size]
+				# multiplicamos individualmente la característica correspondiente a la columna j, fila a fila del minibatch, por la diferencia anterior
 				mul = np.dot(X[i*minibatch_size : (i+1)*minibatch_size , j], diff)
+				# realizamos la sumatoria de los valores obtenidos en el vector anterior (mul)
 				sumatoria = np.sum(mul)
+				# actualizamos w[j] (el peso de esa característica) restándole el valor anterior multiplicado por el learning rate
 				w[j] = w[j] - lr*sumatoria
 
+		"""
+		si el número de filas de x no es múltiplo del tamaño del minibach sobrarán elementos en x que no se recorran con los bucles anteriores
+			con esta condición nos aseguramos de recorrerlos
+		"""
 		if size_of_x % minibatch_size != 0:
 			n = minibatch_num*minibatch_size
 			for j in range(cols_of_x):
@@ -370,6 +398,15 @@ def sgd(X,Y,epsilon = 1e-14):
 				mul = np.dot(X[n : size_of_x , j], diff)
 				sumatoria = np.sum(mul)
 				w[j] = w[j] - lr*sumatoria
+
+		# calculamos el error que obtenemos con una primera vuelta a los minibatchs
+		error = Err(X,Y,w)
+		# si todavía no llegamos a la precisión requerida repetimos el algoritmo
+		if(error_antiguo - error > epsilon):
+			error_antiguo = error
+		# si hemos alcanzado la precisión requerida salimos
+		else:
+			continuar = False
 
 	return w
 
@@ -384,11 +421,16 @@ x, y = readData('datos/X_train.npy', 'datos/y_train.npy')
 # Lectura de los datos para el test
 x_test, y_test = readData('datos/X_test.npy', 'datos/y_test.npy')
 
-#print(x)
+print(x)
 
-#print(y)
+print(y)
 
 w = sgd(x,y)
+print ('Bondad del resultado para grad. descendente estocastico:\n')
+print ("Ein: ", Err(x,y,w))
+print ("Eout: ", Err(x_test, y_test, w))
+
+w = pseudoinverse(x,y)
 print ('Bondad del resultado para grad. descendente estocastico:\n')
 print ("Ein: ", Err(x,y,w))
 print ("Eout: ", Err(x_test, y_test, w))
