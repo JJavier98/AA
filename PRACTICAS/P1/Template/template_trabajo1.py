@@ -356,10 +356,11 @@ def Err(x,y,w):
 def sgd(X,Y,epsilon = 1e-14, lr = 0.001):
 	"""
 	Gradiente Descendente Estocástico
+	Calculamos el vector de pesos W
 	Aceptamos como parámetros:
-	Un conjunto de datos (muestra) a partir de los cuales debemos obtener los valores pasados como segundo argumento
-	Un valor de error mínimo (epsilon) que marcará el final de la ejecución del algoritmo (por defecto será 1e-14)
-	Un learning-rate que por defecto será 0.001
+		Un conjunto de datos (muestra) a partir de los cuales debemos obtener los valores pasados como segundo argumento
+		Un valor de error mínimo (epsilon) que marcará el final de la ejecución del algoritmo (por defecto será 1e-14)
+		Un learning-rate que por defecto será 0.001
 	"""
 	size_of_x = len(X) # calculamos el número de filas que tiene X (el número de muestras)
 	minibatch_size = 64 # establecemos un tamaño de minibatch
@@ -412,26 +413,36 @@ def sgd(X,Y,epsilon = 1e-14, lr = 0.001):
 
 # Pseudoinversa	
 def pseudoinverse(X,Y):
-    x = np.linalg.pinv(X)
-    w = x @ Y
-    return w
+	"""
+	Calculamos el vector de pesos W
+	Aceptamos como parámetros:
+		La muestra que tenemos que acercar a los valores de Y por medio de W
+		Los valores de Y
+	"""
+    px = np.linalg.pinv(X) # Calculamos la pseudoinversa de X por medio de una función del módulo numpy
+    w = px @ Y # Calculamos W multiplicando vectorialmente la pseudoinversa de X por los valores Y
+    return w # Devolvemos el vector de pesos
 
 # Lectura de los datos de entrenamiento
 x, y = readData('datos/X_train.npy', 'datos/y_train.npy')
 # Lectura de los datos para el test
 x_test, y_test = readData('datos/X_test.npy', 'datos/y_test.npy')
 
+#Imprimimos la matrix de muestra
 print(x)
-
+#Imprimimos el vector de valores reales a alcanzar
 print(y)
 
+# Calculamos el vector de pesos W por medio del Gradiente Descendente Estocástico
 w = sgd(x,y)
 print ('Bondad del resultado para grad. descendente estocastico:\n')
 print ("Ein: ", Err(x,y,w))
 print ("Eout: ", Err(x_test, y_test, w))
 
+
+# Calculamos el vector de pesos W por medio de la pseudoinversa de X
 w = pseudoinverse(x,y)
-print ('Bondad del resultado para grad. descendente estocastico:\n')
+print ('Bondad del resultado para pseudoinversa de X:\n')
 print ("Ein: ", Err(x,y,w))
 print ("Eout: ", Err(x_test, y_test, w))
 
