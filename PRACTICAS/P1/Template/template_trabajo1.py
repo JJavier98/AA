@@ -307,11 +307,11 @@ input("\n--- Pulsar intro para continuar con el ejercicio 2 ---\n")
 
 
 ###############################################################################
-###################### EJERCICIO 2 - REGRESIÓN LINEAL##########################
+############################### EJERCICIO 2.1 #################################
 ###############################################################################
 
 print('EJERCICIO SOBRE REGRESION LINEAL\n')
-print('Ejercicio 2\n')
+print('Ejercicio 2.1\n')
 
 label5 = 1
 label1 = -1
@@ -419,9 +419,9 @@ def pseudoinverse(X,Y):
 		La muestra que tenemos que acercar a los valores de Y por medio de W
 		Los valores de Y
 	"""
-    px = np.linalg.pinv(X) # Calculamos la pseudoinversa de X por medio de una función del módulo numpy
-    w = px @ Y # Calculamos W multiplicando vectorialmente la pseudoinversa de X por los valores Y
-    return w # Devolvemos el vector de pesos
+	px = np.linalg.pinv(X) # Calculamos la pseudoinversa de X por medio de una función del módulo numpy
+	w = px @ Y # Calculamos W multiplicando vectorialmente la pseudoinversa de X por los valores Y
+	return w # Devolvemos el vector de pesos
 
 # Lectura de los datos de entrenamiento
 x, y = readData('datos/X_train.npy', 'datos/y_train.npy')
@@ -446,11 +446,28 @@ print ('Bondad del resultado para pseudoinversa de X:\n')
 print ("Ein: ", Err(x,y,w))
 print ("Eout: ", Err(x_test, y_test, w))
 
-input("\n--- Pulsar tecla para continuar ---\n")
+# Dibujamos en un diagrama de puntos los resultados del algoritmo
+# Calculamos las aproximaciones con el vector de pesos que hemos obtenido
+calculated_y = np.dot(x,w)
+# Dibujamos las y calculadas con puntos de color rojo
+plt.plot(calculated_y, '.', color='r')
+ # Dibujamos las y reales con puntos de color verde
+plt.plot(y, '.', color='g')
+# Esrablecemos un título a la gráfica
+plt.title(u'Gráfico de comparación aproximación de y e y')
+# La imprimimos
+plt.show()
 
-#Seguir haciendo el ejercicio...
+input("\n--- Pulsar tecla para continuar al ejercicio 2.2 ---\n")
 
-print('Ejercicio 2\n')
+
+
+###############################################################################
+############################### EJERCICIO 2.2 #################################
+###############################################################################
+
+
+print('Ejercicio 2.2\n')
 # Simula datos en un cuadrado [-size,size]x[-size,size]
 def simula_unif(N, d, size):
 	return np.random.uniform(-size,size,(N,d))

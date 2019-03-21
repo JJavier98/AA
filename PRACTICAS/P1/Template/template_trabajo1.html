@@ -19,8 +19,9 @@ Estudiante:&nbsp;JJavier&nbsp;Alonso&nbsp;Ramos</tt></p>
     
 <tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top><a href="pandas.html">pandas</a><br>
 </td><td width="25%" valign=top><a href="matplotlib.pyplot.html">matplotlib.pyplot</a><br>
-</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#eeaa77">
 <td colspan=3 valign=bottom>&nbsp;<br>
@@ -28,6 +29,11 @@ Estudiante:&nbsp;JJavier&nbsp;Alonso&nbsp;Ramos</tt></p>
     
 <tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
 <td width="100%"><dl><dt><a name="-E"><strong>E</strong></a>(u, v)</dt><dd><tt>#Función&nbsp;1.2&nbsp;-&nbsp;(np.e**v*u**2-2*v**2*np.e**(-u))**2</tt></dd></dl>
+ <dl><dt><a name="-Err"><strong>Err</strong></a>(x, y, w)</dt><dd><tt>Vamos&nbsp;a&nbsp;calcular&nbsp;el&nbsp;error&nbsp;cuadrático&nbsp;medio.&nbsp;Para&nbsp;ello:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dividiremos&nbsp;por&nbsp;el&nbsp;número&nbsp;de&nbsp;elementos&nbsp;que&nbsp;en&nbsp;este&nbsp;caso&nbsp;es&nbsp;igual&nbsp;al&nbsp;numero&nbsp;de&nbsp;filas&nbsp;de&nbsp;X<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Calculamos&nbsp;la&nbsp;diferencia&nbsp;entre&nbsp;nuestra&nbsp;aproximación&nbsp;y&nbsp;el&nbsp;valor&nbsp;real&nbsp;y&nbsp;la&nbsp;elevamos&nbsp;al&nbsp;cuadrado<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Realizamos&nbsp;la&nbsp;sumatoria&nbsp;de&nbsp;todas&nbsp;estas&nbsp;diferencias<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hacemos&nbsp;la&nbsp;media&nbsp;y&nbsp;devolvemos&nbsp;el&nbsp;resultado</tt></dd></dl>
  <dl><dt><a name="-F"><strong>F</strong></a>(u, v)</dt><dd><tt>#Función&nbsp;1.3&nbsp;-&nbsp;u**2+2*v**2+2*np.sin(2*np.pi*u)*np.sin(2*np.pi*v)</tt></dd></dl>
  <dl><dt><a name="-dEu"><strong>dEu</strong></a>(u, v)</dt><dd><tt>#Derivada&nbsp;parcial&nbsp;de&nbsp;E&nbsp;con&nbsp;respecto&nbsp;a&nbsp;u&nbsp;-&nbsp;2*(np.e**v*u**2-2*v**2*np.e**(-u))*(2*v**2*np.e**(-u)+2*np.e**v*u)</tt></dd></dl>
  <dl><dt><a name="-dEv"><strong>dEv</strong></a>(u, v)</dt><dd><tt>#Derivada&nbsp;parcial&nbsp;de&nbsp;E&nbsp;con&nbsp;respecto&nbsp;a&nbsp;v&nbsp;-&nbsp;2*(u**2*np.e**v-4*np.e**(-u)*v)*(u**2*np.e**v-2*np.e**(-u)*v**2)</tt></dd></dl>
@@ -36,9 +42,24 @@ Estudiante:&nbsp;JJavier&nbsp;Alonso&nbsp;Ramos</tt></p>
  <dl><dt><a name="-gradE"><strong>gradE</strong></a>(u, v)</dt><dd><tt>#Gradiente&nbsp;de&nbsp;E</tt></dd></dl>
  <dl><dt><a name="-gradF"><strong>gradF</strong></a>(u, v)</dt><dd><tt>#Gradiente&nbsp;de&nbsp;F</tt></dd></dl>
  <dl><dt><a name="-gradient_descent"><strong>gradient_descent</strong></a>(func, grad, u, v, maxIter, epsilon=-inf, learning_rate=0.01)</dt><dd><tt>Gradiente&nbsp;Descendente<br>
-Aceptamos&nbsp;como&nbsp;parámetro&nbsp;un&nbsp;punto&nbsp;mínimo&nbsp;(epsilon)<br>
-Aceptamos&nbsp;como&nbsp;parámetro&nbsp;el&nbsp;número&nbsp;máximo&nbsp;de&nbsp;iteraciones&nbsp;a&nbsp;realizar<br>
-Aceptamos&nbsp;como&nbsp;parámetro&nbsp;un&nbsp;learning-rate&nbsp;que&nbsp;por&nbsp;defecto&nbsp;será&nbsp;0.01</tt></dd></dl>
+Aceptamos&nbsp;como&nbsp;parámetros:<br>
+La&nbsp;fución&nbsp;sobre&nbsp;la&nbsp;que&nbsp;calcularemos&nbsp;el&nbsp;gradiente<br>
+Las&nbsp;coordenadas&nbsp;con&nbsp;las&nbsp;que&nbsp;evaluaremos&nbsp;la&nbsp;función&nbsp;(u,v)<br>
+El&nbsp;número&nbsp;máximo&nbsp;de&nbsp;iteraciones&nbsp;a&nbsp;realizar<br>
+Un&nbsp;valor&nbsp;de&nbsp;Z&nbsp;mínimo&nbsp;(epsilon)<br>
+Un&nbsp;learning-rate&nbsp;que&nbsp;por&nbsp;defecto&nbsp;será&nbsp;0.01</tt></dd></dl>
+ <dl><dt><a name="-pseudoinverse"><strong>pseudoinverse</strong></a>(X, Y)</dt><dd><tt>Calculamos&nbsp;el&nbsp;vector&nbsp;de&nbsp;pesos&nbsp;W<br>
+Aceptamos&nbsp;como&nbsp;parámetros:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;La&nbsp;muestra&nbsp;que&nbsp;tenemos&nbsp;que&nbsp;acercar&nbsp;a&nbsp;los&nbsp;valores&nbsp;de&nbsp;Y&nbsp;por&nbsp;medio&nbsp;de&nbsp;W<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Los&nbsp;valores&nbsp;de&nbsp;Y</tt></dd></dl>
+ <dl><dt><a name="-readData"><strong>readData</strong></a>(file_x, file_y)</dt><dd><tt>#&nbsp;Funcion&nbsp;para&nbsp;leer&nbsp;los&nbsp;datos</tt></dd></dl>
+ <dl><dt><a name="-sgd"><strong>sgd</strong></a>(X, Y, epsilon=1e-14, lr=0.001)</dt><dd><tt>Gradiente&nbsp;Descendente&nbsp;Estocástico<br>
+Calculamos&nbsp;el&nbsp;vector&nbsp;de&nbsp;pesos&nbsp;W<br>
+Aceptamos&nbsp;como&nbsp;parámetros:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Un&nbsp;conjunto&nbsp;de&nbsp;datos&nbsp;(muestra)&nbsp;a&nbsp;partir&nbsp;de&nbsp;los&nbsp;cuales&nbsp;debemos&nbsp;obtener&nbsp;los&nbsp;valores&nbsp;pasados&nbsp;como&nbsp;segundo&nbsp;argumento<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Un&nbsp;valor&nbsp;de&nbsp;error&nbsp;mínimo&nbsp;(epsilon)&nbsp;que&nbsp;marcará&nbsp;el&nbsp;final&nbsp;de&nbsp;la&nbsp;ejecución&nbsp;del&nbsp;algoritmo&nbsp;(por&nbsp;defecto&nbsp;será&nbsp;1e-14)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Un&nbsp;learning-rate&nbsp;que&nbsp;por&nbsp;defecto&nbsp;será&nbsp;0.001</tt></dd></dl>
+ <dl><dt><a name="-simula_unif"><strong>simula_unif</strong></a>(N, d, size)</dt><dd><tt>#&nbsp;Simula&nbsp;datos&nbsp;en&nbsp;un&nbsp;cuadrado&nbsp;[-size,size]x[-size,size]</tt></dd></dl>
 </td></tr></table><p>
 <table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
 <tr bgcolor="#55aa55">
@@ -53,22 +74,44 @@ Aceptamos&nbsp;como&nbsp;parámetro&nbsp;un&nbsp;learning-rate&nbsp;que&nbsp;por
 <strong>Z</strong> = array([[2700.        , 2628.02998751, 2559.05872...05872553,
         2628.02998751, 2700.        ]])<br>
 <strong>ax</strong> = &lt;mpl_toolkits.mplot3d.axes3d.Axes3D object&gt;<br>
+<strong>columna1</strong> = [[0.1, 0.1], [2.1, -2.1], [-0.5, -0.5], [-1, -1], [22.0, 22.0]]<br>
+<strong>columna2</strong> = [0.24380496934646034, 1.697256765341338, -0.7313774598701067, -1.2180703009052047, 7.604607922716837]<br>
+<strong>columna3</strong> = [-0.23792582148074198, -1.6558961191419805, -0.2378553629555273, -0.7128119503387537, 3.133127623683238]<br>
+<strong>columna4</strong> = [-1.8200785415471563, 6.794547122954722, -1.3324810623309777, 0.5932693743258357, 76.55603509162857]<br>
+<strong>dataframe</strong> =   Initial Point         u         v     F(u,v)
+0...69
+4  [22.0, 22.0]  7.604608  3.133128  76.556035<br>
+<strong>dict_tabla</strong> = {'F(u,v)': [-1.8200785415471563, 6.794547122954722, -1.3324810623309777, 0.5932693743258357, 76.55603509162857], 'Initial Point': [[0.1, 0.1], [2.1, -2.1], [-0.5, -0.5], [-1, -1], [22.0, 22.0]], 'u': [0.24380496934646034, 1.697256765341338, -0.7313774598701067, -1.2180703009052047, 7.604607922716837], 'v': [-0.23792582148074198, -1.6558961191419805, -0.2378553629555273, -0.7128119503387537, 3.133127623683238]}<br>
 <strong>fig</strong> = &lt;Figure size 640x480 with 1 Axes&gt;<br>
+<strong>figura</strong> = 'Ejercicio 1.3. Representacion 3D de la función F'<br>
+<strong>ini_point</strong> = array([22., 22.])<br>
+<strong>ini_point_</strong> = array([[22.],
+       [22.]])<br>
 <strong>initial_point_E</strong> = array([1., 1.])<br>
-<strong>initial_point_F</strong> = [-1, -1]<br>
+<strong>initial_point_F</strong> = [22.0, 22.0]<br>
 <strong>it</strong> = 50<br>
-<strong>min_point</strong> = array([-1.2180703 , -0.71281195])<br>
-<strong>min_point_</strong> = array([[-1.2180703 ],
-       [-0.71281195]])<br>
-<strong>points2min</strong> = [2.865938215426227, 2.779995555813659, 2.540369965867658, 1.9474671030685997, 1.0654045983317133, 0.6360725111646945, 0.5948139950470164, 0.5933221770700785, 0.5932712830075069, 0.5932694494369963, 0.5932693776321452, 0.5932693744900182, 0.5932693743348765, 0.5932693743263711, 0.5932693743258692, 0.5932693743258379, 0.5932693743258357, 0.5932693743258357, 0.5932693743258357, 0.5932693743258357, ...]<br>
-<strong>shape</strong> = (5, 4)<br>
+<strong>label1</strong> = -1<br>
+<strong>label5</strong> = 1<br>
+<strong>min_point</strong> = array([7.60460792, 3.13312762])<br>
+<strong>min_point_</strong> = array([[7.60460792],
+       [3.13312762]])<br>
+<strong>point</strong> = array([7.60460792, 3.13312762])<br>
+<strong>point_</strong> = array([[7.60460792],
+       [3.13312762]])<br>
+<strong>points2min</strong> = [[21.560000000000002, 21.12], [21.20878190822234, 20.30892201260953], [20.754604723204686, 19.540516324910474], [20.34042809331692, 18.63733284349668], [19.882247694917446, 17.9607135415401], [19.507280540449944, 17.32443746845172], [19.229185713726256, 16.628869235924505], [18.856467966366015, 16.049645718316736], [18.45542112067857, 15.501481856120904], [18.085188285478473, 14.916160709029281], [17.777825966458717, 14.264107723361272], [17.40049652352991, 13.682588574399608], [16.959596733799597, 13.165512853924112], [16.51550845409783, 12.654869863271621], [16.08181482891121, 12.14179498755601], [15.675085800050933, 11.617275785047978], [15.323288683211306, 11.069641502170835], [15.040485795029674, 10.524888015443718], [14.758617081205049, 10.135129304955514], [14.458339993970727, 9.812628759271128], ...]<br>
+<strong>punto</strong> = [7.604607922716837, 3.133127623683238]<br>
+<strong>subtitulo</strong> = 'Función F'<br>
 <strong>surf</strong> = &lt;mpl_toolkits.mplot3d.art3d.Poly3DCollection object&gt;<br>
-<strong>tabla</strong> = array([['punto inicial', 'x', 'y', 'z'],
-       ...7776,
-        0.5932693743258357]], dtype=object)<br>
-<strong>w</strong> = [-1.2180703013110816, -0.7128119506017776]<br>
-<strong>x</strong> = array([-30.        , -28.7755102 , -27.55102041,... 27.55102041,
-        28.7755102 ,  30.        ])<br>
-<strong>y</strong> = array([-30.        , -28.7755102 , -27.55102041,... 27.55102041,
-        28.7755102 ,  30.        ])</td></tr></table>
+<strong>titulo</strong> = 'Punto inicial: (22.0, 22.0)'<br>
+<strong>valores_z</strong> = [1356.438402805677, 1276.5193754516747, 1194.9206245502064, 1107.152649172238, 1040.8077022354603, 980.7246253019458, 921.3643606576961, 870.2671341864652, 821.1893003734874, 771.544870647335, 721.0188565754122, 676.1366585848905, 633.8562179763401, 593.214323155253, 554.2359059738998, 516.8282959878549, 480.63630567784884, 447.6843662554437, 421.7593739380924, 401.14096156438205, ...]<br>
+<strong>w</strong> = array([-1.11588016, -1.24859546, -0.49753165])<br>
+<strong>x</strong> = array([[ 1.        ,  0.44413086, -5.4968125 ],
+...
+       [ 1.        ,  0.2762207 , -0.91625   ]])<br>
+<strong>x_test</strong> = array([[ 1.        ,  0.15993359, -1.742     ],
+...
+       [ 1.        ,  0.18897656, -0.7813125 ]])<br>
+<strong>y</strong> = array([ 1., -1., -1., ..., -1., -1., -1.])<br>
+<strong>y_test</strong> = array([-1.,  1.,  1., -1., -1.,  1., -1.,  1., -...,
+        1., -1.,  1.,  1., -1.,  1.,  1., -1.])</td></tr></table>
 </body></html>
