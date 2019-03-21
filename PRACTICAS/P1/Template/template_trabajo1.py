@@ -435,21 +435,21 @@ print(x)
 print(y)
 
 # Calculamos el vector de pesos W por medio del Gradiente Descendente Estocástico
-"""
-w = sgd(x,y)
+
+w_sgd = sgd(x,y)
 print ('Bondad del resultado para grad. descendente estocastico:\n')
-print ("Ein: ", Err(x,y,w))
-print ("Eout: ", Err(x_test, y_test, w))
-"""
+print ("Ein: ", Err(x,y,w_sgd))
+print ("Eout: ", Err(x_test, y_test, w_sgd))
+
 
 # Calculamos el vector de pesos W por medio de la pseudoinversa de X
-w = pseudoinverse(x,y)
-print ('Bondad del resultado para pseudoinversa de X:\n')
-print ("Ein: ", Err(x,y,w))
-print ("Eout: ", Err(x_test, y_test, w))
+w_pinv = pseudoinverse(x,y)
+print ('\n\n\nBondad del resultado para pseudoinversa de X:\n')
+print ("Ein: ", Err(x,y,w_pinv))
+print ("Eout: ", Err(x_test, y_test, w_pinv))
 
 
-"""
+
 #Ponemos un título a la figura
 figura = 'Ejercicio 2.1. Representacion 3D de los datos según su target (1 ó -1)'
 # cremaos la figura
@@ -457,11 +457,20 @@ fig = plt.figure(figura)
 ax = Axes3D(fig)
 
 #Preparamos los datos para poder representarlos
-x_1_ = np.array(x[:,1])
-x_2_ = np.array(x[:,2])
-y_ = np.array(y)
+x_11_ = np.array(x[np.where(y==1),1].T)
+x_1_1 = np.array(x[np.where(y==-1),1].T)
+x_21_ = np.array(x[np.where(y==1),2].T)
+x_2_1 = np.array(x[np.where(y==-1),2].T)
+y_r1 = np.array(y[np.where(y==1)])
+y_r_1 = np.array(y[np.where(y==-1)])
+y_ = x.dot(w_pinv)
+y1_ = np.array(y_[np.where(y==1)])
+y_1 = np.array(y_[np.where(y==-1)])
 
-ax.plot(x_1_, x_2_, y_, '.', c='c')
+ax.plot(x_11_, x_21_, y1_, '.', c='c')
+ax.plot(x_1_1, x_2_1, y_1, '.', c='r')
+ax.plot(x_11_, x_21_, y_r1, '.', c='C1', alpha=0.3)
+ax.plot(x_1_1, x_2_1, y_r_1, '.', c='C1', alpha=0.3)
 # Ponemos título y nombre a los ejes de la gráfica
 ax.set(title='Data 3D')
 ax.set_xlabel('x_1')
@@ -469,7 +478,7 @@ ax.set_ylabel('x_2')
 ax.set_zlabel('y')
 # Imprimimos por pantalla el resultado
 plt.show()
-"""
+
 
 """
 Dibujamos en un diagrama de puntos la muestra y la separamos por medio de la recta calculada
@@ -482,9 +491,17 @@ Aplicaremos transparencia a estos puntos para que sea más fácil comprender por
 """
 plt.scatter(x[np.where(y==1),1], x[np.where(y==1),2], c='r', alpha=0.5)
 plt.scatter(x[np.where(y==-1),1], x[np.where(y==-1),2], c='c', alpha=0.5)
-plt.plot([0.0,0.6],[w[0]+w[1]*0.1+w[2]*0.1, w[0]+w[1]*0.6+w[2]*0.6])
+plt.plot([0.0,0.6],[w_sgd[0]+w_sgd[1]*0.1+w_sgd[2]*0.1, w_sgd[0]+w_sgd[1]*0.6+w_sgd[2]*0.6])
 # Esrablecemos un título a la gráfica
-plt.title(u'Gráfica de regresión lineal')
+plt.title(u'Gráfica de regresión lineal. Pesos calculados con SGD')
+# La imprimimos
+plt.show()
+
+plt.scatter(x[np.where(y==1),1], x[np.where(y==1),2], c='r', alpha=0.5)
+plt.scatter(x[np.where(y==-1),1], x[np.where(y==-1),2], c='c', alpha=0.5)
+plt.plot([0.0,0.6],[w_pinv[0]+w_pinv[1]*0.1+w_pinv[2]*0.1, w_pinv[0]+w_pinv[1]*0.6+w_pinv[2]*0.6])
+# Esrablecemos un título a la gráfica
+plt.title(u'Gráfica de regresión lineal. Pesos calculados con Pseudoinversa')
 # La imprimimos
 plt.show()
 
