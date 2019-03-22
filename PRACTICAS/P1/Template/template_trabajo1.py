@@ -708,10 +708,200 @@ print ("Ein medio: ", Error_in_med)
 print ("Eout medio: ", Error_out_med)
 
 
+###############################################################################
+########################## BONUS - MÉTODO DE NEWTON ###########################
+###############################################################################
+
+"""
+RECORDAMOS QUE CONTAMOS CON:
+#Función 1.3 - u**2+2*v**2+2*sin(2*pi*u)*sin(2*pi*v)
+def F(u,v):
+    return u**2+2*v**2+2*np.sin(2*np.pi*u)*np.sin(2*np.pi*v)
+
+#Derivada parcial de F con respecto a u - 4*pi*sin(2*pi*v)*cos(2*pi*u)+2*u
+def dFu(u,v):
+    return 4*np.pi*np.sin(2*np.pi*v)*np.cos(2*np.pi*u)+2*u
+
+#Derivada parcial de F con respecto a v - 4*pi*sin(2*pi*u)*cos(2*pi*v)+4*v
+def dFv(u,v):
+    return 4*np.pi*np.sin(2*np.pi*u)*np.cos(2*np.pi*v)+4*v
+
+#Gradiente de F
+def gradF(u,v):
+    return np.array([dFu(u,v), dFv(u,v)])
+"""
+def dFuu(u,v):
+	return 2-8*np.pi**2*np.sin(2*np.pi*v)*np.sin(2*np.pi*u)
+def dFuv(u,v):
+	return 8*np.pi**2*np.cos(2*np.pi*u)*np.cos(2*np.pi*v)
+def dFvv(u,v):
+	return 4-8*np.pi**2*np.sin(2*np.pi*u)*np.sin(2*np.pi*v)
+def dFvu(u,v):
+	return 8*np.pi**2*np.cos(2*np.pi*v)*np.cos(2*np.pi*u)
+
+def Hessian(u,v):
+    aux1 = np.array([dFuu(u,v), dFuv(u,v)])
+    aux2 = np.array([dFvu(u,v), dFvv(u,v)])
+    H = np.array([aux1, aux2])
+    
+    return H
+    
+def NewtonsMethod(func,grad,u,v,maxIter,epsilon=1e-14):
+	"""
+	Gradiente Descendente
+	Aceptamos como parámetros:
+	La fución sobre la que calcularemos el gradiente
+	Las coordenadas con las que evaluaremos la función (u,v)
+	El número máximo de iteraciones a realizar
+	Un valor de Z mínimo (epsilon)
+	Un learning-rate que por defecto será 0.01
+	"""
+	#Creamos un contador de iteraciones
+	it = 0
+	#Creamos una lista donde guardar todas las aproximaciones que realiza el algoritmo
+	points2min = []
+	"""
+	Creamos una variable donde guardaremos el último valor de Z obtenido
+		con el fin de acabar el algoritmo si es necesario
+	Creamos también un booleano para indicar la salida del bucle
+	Creamos una tupla donde almacenar las coordenadas de nuestro mínimo local alcanzado
+	"""
+	continuar = True
+	last_z=np.Inf
+	w=[u,v]
+
+	"""
+	Realizamos el cálculo de un nuevo punto
+		hasta alcanzar nuestro mínimo objetivo(epsilon)
+		o hasta superar el máximo de iteraciones
+	"""
+	while it < maxIter and continuar:
+		# Calculamos las pendientes respecto a u e v
+		_pend = grad(w[0],w[1])
+		H_inv = np.linalg.inv( Hessian(w[0],w[1]) )
+
+		# Calculamos el nuevo punto más próximo al mínimo local con el método de Newton
+		w = w - (H_inv @ _pend)
+
+		#points2min almacena todas las coordenadas (u,v) de los puntos que se han ido calculando
+		points2min.append( [ w[0],w[1] ] )
+		# Calculamso la "altura" del nuevo punto
+		new_z = func(w[0],w[1])
+
+		# Comprobamos que la diferencia entre los puntos calculados sea mayor que epsilon para seguir con el algoritmo
+		if last_z - new_z > epsilon:
+			last_z = new_z
+		else:
+			continuar = False
+
+		# Aumentamos el número de iteraciones realizadas
+		it = it+1
+
+	# Devolvemos las coordenadas (x,y) del punto mínimo alcanzado
+	# junto con el nº de iteraciones y todos los valores que se han ido recorriendo
+	return w, it, points2min
+
+
+# Creamos una tabla donde almacenaremos los distintos resultados del algoritmo dependiendo de nuestro punto de partida
+# La crearemos como un objeto 'pandas' al que le pasaremos las columnas en el siguiente orden:
+# punto incial - u - v - f(u,v)
+columna1 = [[0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]]
+columna2 = []
+columna3 = []
+columna4 = []
+
+# Realizamos el algoritmo para una lista de puntos iniciales
+for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
+
+	"""
+	Realizamos el algoritmo del Gradiente Descendiente para la función F
+		partiendo desde los puntos ([0.1,0.1],[1,1],[-0.5,-0.5],[-1,-1], [22.0,22.0])
+		He añadido el punto (22.0, 22.0) para obtener una gráfica en la que se vea más
+		claramente el dibujo de los distintos puntos calculados hasta llegar al mínimo
+	Como tope de iteraciones indicamos 50
+
+	En w guardamos las coordenadas (x,y) del punto con z mínimo alcanzado
+	En it almacenamos el número de iteraciones que han sido necesarias para calcular w
+	En points2min guardamos la secuencia de (x,y) que se ha ido generando hasta llegar a w
+	"""
+	w, it, points2min = NewtonsMethod(F,gradF,initial_point_F[0], initial_point_F[1],50)
+
+	# Incluimos en la tabla los resultados obtenidos
+	####tabla.append([tuple(initial_point_F), w[0],w[1],F(w[0], w[1])])
+	columna2.append(w[0])
+	columna3.append(w[1])
+	columna4.append(F(w[0],w[1]))
+
+	"""
+	Mostramos por pantalla los datos más relevantes de aplicar el algoritmo a la función F
+		con punto inicial initial_point_F
+	"""
+	print ('Función F')
+	print ('Punto inicial: (', initial_point_F[0], ', ', initial_point_F[1], ')' )
+	print ('Numero de iteraciones: ', it)
+	print ('Coordenadas obtenidas: (', w[0], ', ', w[1],')')
+	print ('Valor mínimo en estas coordenadas: ', F(w[0], w[1]), '\n\n')
+
+	# Creamos una gráfica con los valores de Z para cada una de las iteraciones
+	valores_z = []
+	for punto in points2min:
+		valores_z.append(F(punto[0], punto[1]))
+	figura = 'Ejercicio 3. Valor de Z en las distintas iteraciones del algoritmo'
+	titulo = 'Punto inicial: ('+ str(initial_point_F[0])+ ', '+ str(initial_point_F[1])+ ')'
+	subtitulo = 'Función F'
+	plt.figure(figura)
+	plt.title(titulo)
+	plt.suptitle(subtitulo)
+	plt.xlabel('iteraciones')
+	plt.ylabel('z')
+	plt.plot(valores_z)
+	plt.show()
+
+	"""
+	Creamos una figura 3D donde pintaremos la función para un conjunto de valores
+	"""
+	# Tomamos 50 valores entre [-30,30] para la representación del gráfico
+	x = np.linspace(-30, 30, 50)
+	y = np.linspace(-30, 30, 50)
+	X, Y = np.meshgrid(x, y)
+	# Calculamos los valores de z para los (x,y) obtenidos antes
+	Z = F(X, Y) #F_w([X, Y])
+	# Creamos la figura 3D y la dibujamos
+	figura = 'Ejercicio 1.3. Representacion 3D de la función F'
+	fig = plt.figure(figura)
+	ax = Axes3D(fig)
+	surf = ax.plot_surface(X, Y, Z, edgecolor='none', rstride=1,
+	                        cstride=1, cmap='jet')
+	"""
+	Dibujamos el punto mínimo encontrado como una estrella roja,
+		los puntos intermedios como puntos verdes
+		y el punto inicial como una estrella blanca
+	"""
+	min_point = np.array([w[0],w[1]])
+	min_point_ = min_point[:, np.newaxis]
+	ini_point = np.array([initial_point_F[0], initial_point_F[1]])
+	ini_point_ = ini_point[:, np.newaxis]
+	ax.plot(ini_point_[0], ini_point_[1], F(ini_point_[0], ini_point_[1]), 'r*', c='black')
+	for punto in points2min:
+		point = np.array([punto[0], punto[1]])
+		point_ = point[:, np.newaxis]
+		ax.plot(point_[0], point_[1], F(point_[0], point_[1]), '.', c='green')
+	ax.plot(min_point_[0], min_point_[1], F(min_point_[0], min_point_[1]), 'r*', c='red')
+	# Ponemos título y nombre a los ejes de la gráfica
+	ax.set(title='Punto inicial: (' + str(initial_point_F[0]) + ', ' + str(initial_point_F[1]) + ')')
+	ax.set_xlabel('u')
+	ax.set_ylabel('v')
+	ax.set_zlabel('F(u,v)')
+	# Imprimimos por pantalla el resultado
+	plt.show()
+
+
+	input("\n--- Pulsar intro para continuar ---\n")
+
+dict_tabla = {'Initial Point':columna1, 'u':columna2, 'v':columna3, 'F(u,v)':columna4}
+dataframe = pd.DataFrame(dict_tabla)
+
+print('   Tabla de datos con función F\n')
+print(dataframe)
+
 input("\n--- Finalizar ---\n")
-
-
-
-
-    
-    
