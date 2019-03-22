@@ -207,13 +207,13 @@ input("\n--- Pulsar intro para continuar con el ejercicio 1.3 ---\n")
 # La crearemos como un objeto 'pandas' al que le pasaremos las columnas en el siguiente orden:
 # punto incial - u - v - f(u,v)
 
-columna1 = [[0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]]
+columna1 = [[0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1],[22.0,22.0]]
 columna2 = []
 columna3 = []
 columna4 = []
 
 # Realizamos el algoritmo para una lista de puntos iniciales
-for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
+for initial_point_F in ([0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 
 	"""
 	Realizamos el algoritmo del Gradiente Descendiente para la función F
@@ -746,7 +746,7 @@ def Hessian(u,v):
     
     return H
     
-def NewtonsMethod(func,grad,u,v,maxIter,epsilon=1e-14):
+def NewtonsMethod(func,grad,u,v,maxIter,epsilon=1e-14, learning_rate = 0.001):
 	"""
 	Gradiente Descendente
 	Aceptamos como parámetros:
@@ -781,7 +781,7 @@ def NewtonsMethod(func,grad,u,v,maxIter,epsilon=1e-14):
 		H_inv = np.linalg.inv( Hessian(w[0],w[1]) )
 
 		# Calculamos el nuevo punto más próximo al mínimo local con el método de Newton
-		w = w - (H_inv @ _pend)
+		w = w - learning_rate*(H_inv @ _pend)
 
 		#points2min almacena todas las coordenadas (u,v) de los puntos que se han ido calculando
 		points2min.append( [ w[0],w[1] ] )
@@ -805,13 +805,13 @@ def NewtonsMethod(func,grad,u,v,maxIter,epsilon=1e-14):
 # Creamos una tabla donde almacenaremos los distintos resultados del algoritmo dependiendo de nuestro punto de partida
 # La crearemos como un objeto 'pandas' al que le pasaremos las columnas en el siguiente orden:
 # punto incial - u - v - f(u,v)
-columna1 = [[0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]]
+columna1 = [[0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1],[22.0,22.0]]
 columna2 = []
 columna3 = []
 columna4 = []
 
 # Realizamos el algoritmo para una lista de puntos iniciales
-for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
+for initial_point_F in ([0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 
 	"""
 	Realizamos el algoritmo del Gradiente Descendiente para la función F
@@ -824,7 +824,7 @@ for initial_point_F in ([0.1,0.1],[2.1,-2.1],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 	En it almacenamos el número de iteraciones que han sido necesarias para calcular w
 	En points2min guardamos la secuencia de (x,y) que se ha ido generando hasta llegar a w
 	"""
-	w, it, points2min = NewtonsMethod(F,gradF,initial_point_F[0], initial_point_F[1],50)
+	w, it, points2min = NewtonsMethod(F,gradF,initial_point_F[0], initial_point_F[1],50,learning_rate= 0.001)
 
 	# Incluimos en la tabla los resultados obtenidos
 	####tabla.append([tuple(initial_point_F), w[0],w[1],F(w[0], w[1])])
