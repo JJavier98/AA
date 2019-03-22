@@ -13,14 +13,16 @@ import matplotlib.pyplot as plt
 import pandas as pd
 # Importamos el módulo para hacer el gráfico 3D
 from mpl_toolkits.mplot3d import Axes3D
+# Importamos el módulo para generar números aleatorios
+import random as rnd
 
 np.random.seed(1)
 
 print('EJERCICIO SOBRE LA BUSQUEDA ITERATIVA DE OPTIMOS\n')
 print('Ejercicio 1\n')
 
-#Función 1.2 - (np.e**v*u**2-2*v**2*np.e**(-u))**2
-def E(u,v):
+# Función 1.2 - (np.e**v*u**2-2*v**2*np.e**(-u))**2
+def E(u, v):
     return (np.e**v*u**2-2*v**2*np.e**(-u))**2
 
 
@@ -451,34 +453,36 @@ print ("Eout: ", Err(x_test, y_test, w_pinv))
 
 
 #Ponemos un título a la figura
-figura = 'Ejercicio 2.1. Representacion 3D de los datos según su target (1 ó -1)'
+figura = 'Ejercicio 2.1. Representacion 3D de las soluciones obtenidas con los datos usados en el ajuste'
 # cremaos la figura
 fig = plt.figure(figura)
 ax = Axes3D(fig)
 
 #Preparamos los datos para poder representarlos
-x_11_ = np.array(x[np.where(y==1),1].T)
-x_1_1 = np.array(x[np.where(y==-1),1].T)
-x_21_ = np.array(x[np.where(y==1),2].T)
-x_2_1 = np.array(x[np.where(y==-1),2].T)
-#y_r1 = np.array(y[np.where(y==1)])
-#y_r_1 = np.array(y[np.where(y==-1)])
-y_ = x.dot(w_pinv)
+x_11_ = np.array(x[np.where(y==1),1].T) # Valores de la columna 1 de x cuyo target es 1
+x_1_1 = np.array(x[np.where(y==-1),1].T) # Valores de la columna 1 de x cuyo target es -1
+x_21_ = np.array(x[np.where(y==1),2].T) # Valores de la columna 2 de x cuyo target es 1
+x_2_1 = np.array(x[np.where(y==-1),2].T) # Valores de la columna 3 de x cuyo target es -1
+#y_r1 = np.array(y[np.where(y==1)]) # Lista de targets == 1
+#y_r_1 = np.array(y[np.where(y==-1)]) # Lista de targets == -1
+y_ = x.dot(w_pinv) # Calculos de los targets de X a traves del vector de pesos W
 y1_ = np.array(y_[np.where(y==1)])
 y_1 = np.array(y_[np.where(y==-1)])
 
-lista_x = np.linspace(0.0,0.6,10)
-lista_y = np.linspace(-4.0,2.0,10)
-Lista_X, Lista_Y = np.meshgrid(lista_x, lista_y)
-X2 = (-w_sgd[0]-w_sgd[1]*Lista_X)/w_sgd[2]
+# Creamos un conjunto de valores para representar el plano en el gráfico 3D
+# lista_x = np.linspace(0.0,0.6,10) # valores para x
+# lista_y = np.linspace(-4.0,2.0,10) # valores para y
+# Lista_X, Lista_Y = np.meshgrid(lista_x, lista_y) # transformamos las listas en matrices graficables
+# X2 = (Lista_Y-w_sgd[0]-w_sgd[1]*Lista_X)/w_sgd[2] # Esta es la función que nos dará el valor de X[2]
 
+# Pintamos los puntos con target == 1 de rojo y los de target == -1 de cian
 ax.plot(x_11_, x_21_, y1_, '.', c='r')
 ax.plot(x_1_1, x_2_1, y_1, '.', c='c')
 #ax.plot(x_11_, x_21_, y_r1, '.', c='C1', alpha=0.3)
 #ax.plot(x_1_1, x_2_1, y_r_1, '.', c='C1', alpha=0.3)
-ax.plot_surface(Lista_X, X2, Lista_Y, alpha=0.8, cmap='viridis')
+# ax.plot_surface(Lista_X, X2, Lista_Y, alpha=0.8, cmap='viridis') # Pintamos el plano que separa los puntos según su target
 # Ponemos título y nombre a los ejes de la gráfica
-ax.set(title='Data 3D')
+ax.set(title='Representacion 3D de las soluciones obtenidas con los datos usados en el ajuste')
 ax.set_xlabel('x_1')
 ax.set_ylabel('x_2')
 ax.set_zlabel('y')
@@ -487,14 +491,13 @@ plt.show()
 
 
 """
-Dibujamos en un diagrama de puntos la muestra y la separamos por medio de la recta calculada
-	por regresión lineal
+Dibujamos en un diagrama de puntos la muestra y la separamos por medio de la recta:
+	y = w[0] + w[1]*x1 + w[2]*x2
 Los puntos que coincidan con una etiqueta igual a 1 los pintaremos de rojo mientras que los
 	que tengan una etiqueta = -1 serán azul cian
-Aplicaremos transparencia a estos puntos para que sea más fácil comprender porqué la recta está
-	más arriba de lo que en un principio esperamos. Esto es porque la densidad de puntos de etiqueta 1
-	es muy alta.
+Aplicaremos transparencia a estos puntos para ver más claramente la densidad de puntos
 """
+# Lo hacemos con W calculado con el gradiente descendente estocástico
 plt.scatter(x[np.where(y==1),1], x[np.where(y==1),2], c='r', alpha=0.5)
 plt.scatter(x[np.where(y==-1),1], x[np.where(y==-1),2], c='c', alpha=0.5)
 plt.plot([0.0,1.0],[-w_sgd[0]/w_sgd[2], (-w_sgd[0]-w_sgd[1])/w_sgd[2]])
@@ -503,6 +506,8 @@ plt.title(u'Gráfica de regresión lineal. Pesos calculados con SGD')
 # La imprimimos
 plt.show()
 
+
+# Lo hacemos con W calculado con la pseudoinversa
 plt.scatter(x[np.where(y==1),1], x[np.where(y==1),2], c='r', alpha=0.5)
 plt.scatter(x[np.where(y==-1),1], x[np.where(y==-1),2], c='c', alpha=0.5)
 plt.plot([0.0,1.0],[-w_sgd[0]/w_sgd[2], (-w_sgd[0]-w_sgd[1])/w_sgd[2]])
@@ -511,7 +516,7 @@ plt.title(u'Gráfica de regresión lineal. Pesos calculados con Pseudoinversa')
 # La imprimimos
 plt.show()
 
-input("\n--- Pulsar tecla para continuar al ejercicio 2.2 ---\n")
+input("\n--- Pulsar tecla para continuar al ejercicio 2.2 a) ---\n")
 
 
 
@@ -520,9 +525,193 @@ input("\n--- Pulsar tecla para continuar al ejercicio 2.2 ---\n")
 ###############################################################################
 
 
-print('Ejercicio 2.2\n')
+print('Ejercicio 2.2 a)\n')
 # Simula datos en un cuadrado [-size,size]x[-size,size]
 def simula_unif(N, d, size):
 	return np.random.uniform(-size,size,(N,d))
 
-#Seguir haciendo el ejercicio...
+###############################################################################
+############################## EJERCICIO 2.2 a) ###############################
+###############################################################################
+
+
+num_muestras = 1000
+dimension = 2
+size = 1
+# Generamos una muestra de 100 puntos 2D en el cuadrado X = [−1, 1] × [−1, 1]
+points = simula_unif(num_muestras, dimension, size)
+# Dibujamos los puntos obtenidos en un plano
+plt.plot(points[:,0], points[:,1], '.', c='c')
+plt.show()
+
+input("\n--- Pulsar tecla para continuar al ejercicio 2.2 b) ---\n")
+###############################################################################
+############################## EJERCICIO 2.2 b) ###############################
+###############################################################################
+
+# Declaramos la función f que usaremos para asignar una atiqueta a cada punto anterior
+def f_sign(x1, x2):
+    return np.sign((x1-0.2)**2 + x2**2 - 0.6)
+
+# Calculamos el 10% de la muestra para saber cuántas etiquetas deben ser alteradas
+porcentaje = 10
+proporcion = porcentaje/100
+num_muestras_a_alterar = int(proporcion*num_muestras)
+
+# Generamos las etiquetas para cada coordenada
+etiquetas = f_sign(points[:,0], points[:,1])
+# Seleccionamos aleatoriamente los puntos que serán alterados
+indices_alterar = rnd.sample(range(num_muestras),num_muestras_a_alterar)
+# Agregamos las etiquetas a sus correspondientes coordenadas creando una matriz de tres atributos
+matriz = np.c_[points,etiquetas]
+# Agrupamos los puntos segun sus etiquetas para distinguirlos por colores
+matriz_positiva = matriz[matriz[:,2]==1]
+matriz_negativa = matriz[matriz[:,2]==-1]
+# Dibujamos el mapa de puntos según etiquetas
+plt.plot(matriz_positiva[:,0], matriz_positiva[:,1], '.', c='c')
+plt.plot(matriz_negativa[:,0], matriz_negativa[:,1], '.', c='r')
+plt.show()
+
+# Alteramos la etiqueta del 10% de la muestra
+matriz_alterada = matriz
+for i in indices_alterar:
+    matriz_alterada[i,2] = -matriz_alterada[i,2]
+
+# Volvemos a calcular las matrices según su etiqueta
+matriz_positiva = matriz[matriz[:,2]==1]
+matriz_negativa = matriz[matriz[:,2]==-1]
+# Dibujamos el mapa de puntos según etiquetas
+plt.plot(matriz_positiva[:,0], matriz_positiva[:,1], '.', c='c')
+plt.plot(matriz_negativa[:,0], matriz_negativa[:,1], '.', c='r')
+plt.show()
+
+
+input("\n--- Pulsar tecla para continuar al ejercicio 2.2 c) ---\n")
+###############################################################################
+############################## EJERCICIO 2.2 c) ###############################
+###############################################################################
+
+# Creamos el conjunto de muestra a partir de los puntos 2D aleatorios
+muestra = points
+# Como etiqueta usamos el signo obtenido al aplicar la función de signo del apartado b)
+etiqueta_real  = matriz_alterada[:,2]
+# Creamos una columna de unos para sacar el término independiente de W
+independiente = np.ones_like(points[:,0])
+# Terminamos de conformar la muestra añadiento esta columna de unos a la izquierda de los puntos 2D
+muestra = np.c_[independiente, muestra]
+# Calculamos los pesos W por medio del Gradiente Descendiente Estocástico
+W = sgd(muestra, etiqueta_real)
+# Nos sale un Ein muy alto devido a que, por la distribución de los puntos según su etiqueta,
+# no podemos realizar un buen ajuste con un modelo lineal
+print ('Bondad del resultado para grad. descendente estocastico:\n')
+print ("Ein: ", Err(muestra, etiqueta_real, W))
+
+
+input("\n--- Pulsar tecla para continuar al ejercicio 2.2 d) ---\n")
+###############################################################################
+############################## EJERCICIO 2.2 d) ###############################
+###############################################################################
+
+# DUPLICAMOS CÓDIGO PARA TENER PERFECTAMENTE SEPARADOS LOS APARTADOS DEL EJERCICIO 
+
+# Simula datos en un cuadrado [-size,size]x[-size,size]
+def simula_unif(N, d, size):
+	return np.random.uniform(-size,size,(N,d))
+
+# Declaramos la función f que usaremos para asignar una atiqueta a cada punto anterior
+def f_sign(x1, x2):
+    return np.sign((x1-0.2)**2 + x2**2 - 0.6)
+
+Error_in_med = 0.0
+Error_out_med = 0.0
+
+iteraciones = 1000
+
+for i in range(iteraciones):
+    num_muestras = 1000
+    dimension = 2
+    size = 1
+    # Generamos una muestra de 100 puntos 2D en el cuadrado X = [−1, 1] × [−1, 1]
+    points = simula_unif(num_muestras, dimension, size)
+    # Creamos un conjusto de test de 1000 valores para calcular Eout
+    test = simula_unif(num_muestras, dimension, size)
+    
+    # No imprimimos las gráficas porque son muchas iteraciones y son inecesarias
+    
+    # Calculamos el 10% de la muestra para saber cuántas etiquetas deben ser alteradas
+    porcentaje = 10
+    proporcion = porcentaje/100
+    num_muestras_a_alterar = int(proporcion*num_muestras)
+    
+    # Generamos las etiquetas para cada valor de points
+    etiquetas = f_sign(points[:,0], points[:,1])
+    # Generamos las etiquetas para cada valor de test
+    etiquetas_test = f_sign(test[:,0], test[:,1])
+    
+    # Seleccionamos aleatoriamente los datos de points que serán alterados
+    indices_alterar = rnd.sample(range(num_muestras),num_muestras_a_alterar)
+    # Seleccionamos aleatoriamente los datos de test que serán alterados
+    indices_alterar_test = rnd.sample(range(num_muestras),num_muestras_a_alterar)
+    
+    # Agregamos las etiquetas a sus correspondientes coordenadas de pointscreando una matriz de tres atributos
+    matriz = np.c_[points,etiquetas]
+    # Agregamos las etiquetas a sus correspondientes coordenadas de test creando una matriz de tres atributos
+    matriz_test = np.c_[test,etiquetas_test]
+    
+    # No imprimimos las gráficas porque son muchas iteraciones y son inecesarias
+    
+    # Alteramos la etiqueta del 10% de la muestra y del test
+    matriz_alterada = matriz
+    matriz_alterada_test = matriz_test
+    for i in indices_alterar:
+        matriz_alterada[i,2] = -matriz_alterada[i,2]
+        matriz_alterada_test[i,2] = -matriz_alterada_test[i,2]
+    
+    # No imprimimos las gráficas porque son muchas iteraciones y son inecesarias
+    
+    # Creamos el conjunto de muestra a partir de los puntos 2D aleatorios
+    muestra = points
+    # Creamos el conjunto de test a partir de los puntos 2D aleatorios
+    Test = test
+    
+    # Como etiqueta usamos el signo obtenido al aplicar la función de signo del apartado b)
+    etiqueta_real  = matriz_alterada[:,2]
+    etiqueta_real_test  = matriz_alterada_test[:,2]
+    
+    # Creamos una columna de unos para sacar el término independiente de W
+    independiente = np.ones_like(points[:,0])
+    independiente_test = np.ones_like(test[:,0])
+    
+    # Terminamos de conformar la muestra añadiento esta columna de unos a la izquierda de los puntos 2D
+    muestra = np.c_[independiente, muestra]
+    Test = np.c_[independiente_test, Test]
+    
+    # Calculamos los pesos W por medio del Gradiente Descendiente Estocástico
+    W = sgd(muestra, etiqueta_real)
+    # Nos sale un Ein muy alto devido a que, por la distribución de los puntos según su etiqueta,
+    # no podemos realizar un buen ajuste con un modelo lineal
+    ei = Err(muestra, etiqueta_real, W)
+    eo = Err(Test, etiqueta_real_test, W)
+    # Sumamos para calcular posteriormente el error medio
+    Error_in_med = Error_in_med + ei
+    Error_out_med = Error_out_med + eo
+    # No mostramos el error de manera individual para ahorrar tiempo en la ejecución
+#    print ('Bondad del resultado para grad. descendente estocastico:\n')
+#    print ("Ein: ", ei)
+#    print ("Eout: ", eo)
+
+# Calculamos el error medio
+Error_in_med = Error_in_med/iteraciones
+Error_out_med = Error_out_med/iteraciones
+print ('\n\nError medio tras ' + str(iteraciones) + ' iteraciones:\n')
+print ("Ein medio: ", Error_in_med)
+print ("Eout medio: ", Error_out_med)
+
+
+input("\n--- Finalizar ---\n")
+
+
+
+
+    
+    
