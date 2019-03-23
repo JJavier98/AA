@@ -59,7 +59,7 @@ def gradF(u,v):
 ######################################## 1.1 ###################################################
 ################################################################################################
 
-def gradient_descent(func,grad,u,v,maxIter,epsilon=np.NINF,learning_rate=0.01):
+def gradient_descent(func,grad,u,v,maxIter,epsilon=1e-14,learning_rate=0.01):
 	"""
 	Gradiente Descendente
 	Aceptamos como parámetros:
@@ -86,7 +86,7 @@ def gradient_descent(func,grad,u,v,maxIter,epsilon=np.NINF,learning_rate=0.01):
 		hasta alcanzar nuestro mínimo objetivo(epsilon)
 		o hasta superar el máximo de iteraciones
 	"""
-	while func(u,v) > epsilon and it < maxIter and continuar:
+	while it < maxIter and continuar:
     	# Calculamos las pendientes respecto a u e v
 		_pend = grad(u,v)
 
@@ -104,7 +104,7 @@ def gradient_descent(func,grad,u,v,maxIter,epsilon=np.NINF,learning_rate=0.01):
 		# Almacenamos la "altura" de todos los puntos (u,v) calculados
 		new_z = func(u,v)
 
-		if new_z < last_z:
+		if last_z - new_z > epsilon:
 			last_z = new_z
 		else:
 			continuar = False
@@ -170,8 +170,7 @@ Z = E(X, Y) #E_w([X, Y])
 figura = 'Ejercicio 1.2. Representacion 3D de la función E'
 fig = plt.figure(figura)
 ax = Axes3D(fig)
-surf = ax.plot_surface(X, Y, Z, edgecolor='none', rstride=1,
-                        cstride=1, cmap='jet')
+surf = ax.plot_surface(X, Y, Z, edgecolor='none', rstride=1, cstride=1, cmap='jet', alpha=0.5)
 
 """
 Dibujamos el punto mínimo encontrado como una estrella roja,
@@ -272,8 +271,7 @@ for initial_point_F in ([0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 	figura = 'Ejercicio 1.3. Representacion 3D de la función F'
 	fig = plt.figure(figura)
 	ax = Axes3D(fig)
-	surf = ax.plot_surface(X, Y, Z, edgecolor='none', rstride=1,
-	                        cstride=1, cmap='jet')
+	surf = ax.plot_surface(X, Y, Z, edgecolor='none', rstride=1, cstride=1, cmap='jet', alpha=0.5)
 	"""
 	Dibujamos el punto mínimo encontrado como una estrella roja,
 		los puntos intermedios como puntos verdes
@@ -469,18 +467,12 @@ y_ = x.dot(w_pinv) # Calculos de los targets de X a traves del vector de pesos W
 y1_ = np.array(y_[np.where(y==1)])
 y_1 = np.array(y_[np.where(y==-1)])
 
-# Creamos un conjunto de valores para representar el plano en el gráfico 3D
-# lista_x = np.linspace(0.0,0.6,10) # valores para x
-# lista_y = np.linspace(-4.0,2.0,10) # valores para y
-# Lista_X, Lista_Y = np.meshgrid(lista_x, lista_y) # transformamos las listas en matrices graficables
-# X2 = (Lista_Y-w_sgd[0]-w_sgd[1]*Lista_X)/w_sgd[2] # Esta es la función que nos dará el valor de X[2]
 
 # Pintamos los puntos con target == 1 de rojo y los de target == -1 de cian
 ax.plot(x_11_, x_21_, y1_, '.', c='r')
 ax.plot(x_1_1, x_2_1, y_1, '.', c='c')
 #ax.plot(x_11_, x_21_, y_r1, '.', c='C1', alpha=0.3)
 #ax.plot(x_1_1, x_2_1, y_r_1, '.', c='C1', alpha=0.3)
-# ax.plot_surface(Lista_X, X2, Lista_Y, alpha=0.8, cmap='viridis') # Pintamos el plano que separa los puntos según su target
 # Ponemos título y nombre a los ejes de la gráfica
 ax.set(title='Representacion 3D de las soluciones obtenidas con los datos usados en el ajuste')
 ax.set_xlabel('x_1')
@@ -500,19 +492,10 @@ Aplicaremos transparencia a estos puntos para ver más claramente la densidad de
 # Lo hacemos con W calculado con el gradiente descendente estocástico
 plt.scatter(x[np.where(y==1),1], x[np.where(y==1),2], c='r', alpha=0.5)
 plt.scatter(x[np.where(y==-1),1], x[np.where(y==-1),2], c='c', alpha=0.5)
-plt.plot([0.0,1.0],[-w_sgd[0]/w_sgd[2], (-w_sgd[0]-w_sgd[1])/w_sgd[2]])
+plt.plot([0.0,1.0],[-w_sgd[0]/w_sgd[2], (-w_sgd[0]-w_sgd[1])/w_sgd[2]], c='dodgerblue')
+plt.plot([0.0,1.0],[-w_pinv[0]/w_pinv[2], (-w_pinv[0]-w_pinv[1])/w_pinv[2]], c='magenta')
 # Esrablecemos un título a la gráfica
 plt.title(u'Gráfica de regresión lineal. Pesos calculados con SGD')
-# La imprimimos
-plt.show()
-
-
-# Lo hacemos con W calculado con la pseudoinversa
-plt.scatter(x[np.where(y==1),1], x[np.where(y==1),2], c='r', alpha=0.5)
-plt.scatter(x[np.where(y==-1),1], x[np.where(y==-1),2], c='c', alpha=0.5)
-plt.plot([0.0,1.0],[-w_sgd[0]/w_sgd[2], (-w_sgd[0]-w_sgd[1])/w_sgd[2]])
-# Esrablecemos un título a la gráfica
-plt.title(u'Gráfica de regresión lineal. Pesos calculados con Pseudoinversa')
 # La imprimimos
 plt.show()
 
@@ -746,7 +729,7 @@ def Hessian(u,v):
     
     return H
     
-def NewtonsMethod(func,grad,u,v,maxIter,epsilon=1e-14, learning_rate = 0.001):
+def NewtonsMethod(func,grad,u,v,maxIter,epsilon=1e-14, learning_rate = 0.1):
 	"""
 	Gradiente Descendente
 	Aceptamos como parámetros:
@@ -805,13 +788,13 @@ def NewtonsMethod(func,grad,u,v,maxIter,epsilon=1e-14, learning_rate = 0.001):
 # Creamos una tabla donde almacenaremos los distintos resultados del algoritmo dependiendo de nuestro punto de partida
 # La crearemos como un objeto 'pandas' al que le pasaremos las columnas en el siguiente orden:
 # punto incial - u - v - f(u,v)
-columna1 = [[0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1],[22.0,22.0]]
+columna1 = [[0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1]]
 columna2 = []
 columna3 = []
 columna4 = []
 
 # Realizamos el algoritmo para una lista de puntos iniciales
-for initial_point_F in ([0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
+for initial_point_F in ([0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1]):
 
 	"""
 	Realizamos el algoritmo del Gradiente Descendiente para la función F
@@ -824,7 +807,7 @@ for initial_point_F in ([0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 	En it almacenamos el número de iteraciones que han sido necesarias para calcular w
 	En points2min guardamos la secuencia de (x,y) que se ha ido generando hasta llegar a w
 	"""
-	w, it, points2min = NewtonsMethod(F,gradF,initial_point_F[0], initial_point_F[1],50,learning_rate= 0.001)
+	w, it, points2min = NewtonsMethod(F,gradF,initial_point_F[0], initial_point_F[1],50)
 
 	# Incluimos en la tabla los resultados obtenidos
 	####tabla.append([tuple(initial_point_F), w[0],w[1],F(w[0], w[1])])
@@ -870,8 +853,7 @@ for initial_point_F in ([0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 	figura = 'Ejercicio 1.3. Representacion 3D de la función F'
 	fig = plt.figure(figura)
 	ax = Axes3D(fig)
-	surf = ax.plot_surface(X, Y, Z, edgecolor='none', rstride=1,
-	                        cstride=1, cmap='jet')
+	surf = ax.plot_surface(X, Y, Z, edgecolor='none', rstride=1, cstride=1, cmap='jet', alpha=0.5)
 	"""
 	Dibujamos el punto mínimo encontrado como una estrella roja,
 		los puntos intermedios como puntos verdes
