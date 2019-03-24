@@ -59,7 +59,7 @@ def gradF(u,v):
 ######################################## 1.1 ###################################################
 ################################################################################################
 
-def gradient_descent(func,grad,u,v,maxIter,epsilon=1e-14,learning_rate=0.01):
+def gradient_descent(func,grad,u,v,maxIter,epsilon=1e-14,learning_rate=0.01, ejer1_2=False):
 	"""
 	Gradiente Descendente
 	Aceptamos como parámetros:
@@ -109,6 +109,9 @@ def gradient_descent(func,grad,u,v,maxIter,epsilon=1e-14,learning_rate=0.01):
 		else:
 			continuar = False
 
+		if ejer1_2 and new_z < epsilon:
+			continuar = False
+
 		# Aumentamos el número de iteraciones realizadas
 		it = it+1
 
@@ -132,7 +135,7 @@ En w guardamos las coordenadas (x,y) del punto con z mínimo alcanzado
 En it almacenamos el número de iteraciones que han sido necesarias para calcular w
 En points2min guardamos la secuencia de (x,y) que se ha ido generando hasta llegar a w
 """
-w, it, points2min = gradient_descent(E,gradE,initial_point_E[0], initial_point_E[1],10000000000,1e-14)
+w, it, points2min = gradient_descent(E,gradE,initial_point_E[0], initial_point_E[1],10000000000,1e-14,ejer1_2=True)
 
 
 # Mostramos por pantalla los datos más relevantes de aplicar el algoritmo a la función E

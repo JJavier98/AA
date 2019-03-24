@@ -37,19 +37,18 @@ ___
 
 _Derivada de E respecto a 'u'_  
 
-$${d\over du}[(u^2e^v-2v^2e^{-u})^2]$$ Aplicamos la regla de la potencia.  
-$$2(u^2e^v-2v^2e^{-u}){d\over du}[u^2e^v-2v^2e^{-u}]$$ Derivamos los términos por eseparado.  
-$$2(u^2e^v-2v^2e^{-u})(e^v {d\over du}[u^2] - 2v^2 {d\over du}[e^{-u}])$$ Resultado de la derivada parcial respecto _u_:  
-$$2(u^2e^v-2v^2e^{-u})(2e^v u + 2v^2 e^{-u})$$  
+$${d\over du}[(u^2 e^v - 2v^2 e^{-u}) ^2]$$ _Aplicamos la regla de la potencia._  
+$$2(u^2 e^v - 2v^2 e^{-u}) {d\over du}[u^2 e^v - 2v^2 e^{-u}]$$ _Derivamos los términos por eseparado._  
+$$2(u^2 e^v - 2v^2 e^{-u})(e^v {d\over du}[u^2] - 2v^2 {d\over du}[e^{-u}])$$ _Resultado de la derivada parcial respecto 'u'_:  
+$$2(u^2 e^v - 2v^2 e^{-u})(2e^v u + 2v^2 e^{-u})$$  
 
 ---  
 
 _Derivada de E respecto a 'v'_
 
-$${d\over du}[(u^2e^v-2v^2e^{-u})^2]$$ Aplicamos la regla de la potencia.  
-$$2(u^2e^v-2v^2e^{-u}){d\over du}[u^2e^v-2v^2e^{-u}]$$ Derivamos los términos por eseparado.  
-$$2(u^2e^v-2v^2e^{-u})(u^2 {d\over du}[e^v] - 2e^{-u} {d\over du}[v^2])$$ Resultado de la derivada parcial respecto _v_:  
-$$2(u^2e^v-2v^2e^{-u})(e^v u^2 - 4v e^{-u})$$  
+$${d\over du}[(u^2 e^v - 2v^2 e^{-u})^2]$$ _Aplicamos la regla de la potencia._  
+$$2(u^2 e^v - 2v^2 e^{-u}) {d\over du}[u^2 e^v - 2v^2 e^{-u}]$$ _Derivamos los términos por eseparado._  
+$$2(u^2 e^v - 2v^2 e^{-u})(u^2 {d\over du}[e^v] - 2e^{-u} {d\over du}[v^2])$$ _Resultado de la derivada parcial respecto 'v'_:  
+$$2(u^2 e^v - 2v^2 e^{-u})(e^v u^2 - 4v e^{-u})$$  
 
----  
 
