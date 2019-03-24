@@ -59,7 +59,7 @@ def gradF(u,v):
 ######################################## 1.1 ###################################################
 ################################################################################################
 
-def gradient_descent(func,grad,u,v,maxIter,epsilon=1e-14,learning_rate=0.01, ejer1_2=False):
+def gradient_descent(func,grad,u,v,maxIter,epsilon=1e-14,learning_rate=0.01, ejer1_2=False, ejer1_3a=False):
 	"""
 	Gradiente Descendente
 	Aceptamos como parámetros:
@@ -111,6 +111,9 @@ def gradient_descent(func,grad,u,v,maxIter,epsilon=1e-14,learning_rate=0.01, eje
 
 		if ejer1_2 and new_z < epsilon:
 			continuar = False
+
+		if(ejer1_3a):
+			continuar=True
 
 		# Aumentamos el número de iteraciones realizadas
 		it = it+1
@@ -178,7 +181,7 @@ surf = ax.plot_surface(X, Y, Z, edgecolor='none', rstride=1, cstride=1, cmap='je
 """
 Dibujamos el punto mínimo encontrado como una estrella roja,
 	los puntos intermedios como puntos verdes
-	y el punto inicial como una estrella blanca
+	y el punto inicial como una estrella negra
 """
 min_point = np.array([w[0],w[1]])
 min_point_ = min_point[:, np.newaxis]
@@ -199,10 +202,80 @@ ax.set_zlabel('E(u,v)')
 # Imprimimos por pantalla el resultado
 plt.show()
 
-input("\n--- Pulsar intro para continuar con el ejercicio 1.3 ---\n")
+input("\n--- Pulsar intro para continuar con el ejercicio 1.3 a) ---\n")
 
 ################################################################################################
-######################################## 1.3 ###################################################
+###################################### 1.3 a) ##################################################
+################################################################################################
+"""
+Vamos a comparar los resultados obtenidos aplicando el gradiente descendente al punto inicial (0.1,0.1)
+con un learning-rate de 0.1 y 0.01
+"""
+#Inicializamos las columnas que indicarán el punto de inicio y el learning-rate utilizado en cada caso
+columna1 = [[0.1,0.1],[0.1,0.1]]
+columna2 = []
+columna3 = []
+columna4 = [0.01,0.1]
+columna5 = []
+columna6 = []
+
+# Aplicamos el algoritmo para un lr=0.01 y almacenamos los resultados obtenidos en la tabla
+w, it, points2min = gradient_descent(F,gradF,0.1,0.1,50)
+columna2.append(w[0])
+columna3.append(w[1])
+columna5.append(F(w[0],w[1]))
+columna6.append(it)
+
+# Creamos una gráfica con los valores de Z para cada una de las iteraciones
+valores_z = []
+for punto in points2min:
+	valores_z.append(F(punto[0], punto[1]))
+figura = 'Ejercicio 1.3 a). Valor de Z para lr = 0.01'
+titulo = 'Punto inicial: (0.1, 0.1)'
+subtitulo = 'Función F'
+plt.figure(figura)
+plt.title(titulo)
+plt.suptitle(subtitulo)
+plt.xlabel('iteraciones')
+plt.ylabel('z')
+plt.plot(valores_z)
+plt.show()
+
+# Realizamos lo mismo pero para un lr=0.1
+w, it, points2min = gradient_descent(F,gradF,0.1,0.1,50,learning_rate=0.1, ejer1_3a=True)
+columna2.append(w[0])
+columna3.append(w[1])
+columna5.append(F(w[0],w[1]))
+columna6.append(it)
+
+# Creamos una gráfica con los valores de Z para cada una de las iteraciones
+valores_z = []
+for punto in points2min:
+	valores_z.append(F(punto[0], punto[1]))
+figura = 'Ejercicio 1.3 a). Valor de Z para lr = 0.1'
+titulo = 'Punto inicial: (0.1, 0.1)'
+subtitulo = 'Función F'
+plt.figure(figura)
+plt.title(titulo)
+plt.suptitle(subtitulo)
+plt.xlabel('iteraciones')
+plt.ylabel('z')
+plt.plot(valores_z)
+plt.show()
+
+# Creamos la tabla con los rersultados almacenados anteriormente y la imprimimos
+dict_tabla = {'Initial Point':columna1, 'u':columna2, 'v':columna3, 'lr': columna4,
+			'F(u,v)':columna5, 'iteraciones':columna6}
+dataframe = pd.DataFrame(dict_tabla)
+
+print('   Tabla de datos con función F\n')
+print(dataframe)
+print('\n\n')
+
+input("\n--- Pulsar intro para continuar con el ejercicio 1.3 b) ---\n")
+
+################################################################################################
+###################################### 1.3 b) ##################################################
 ################################################################################################
 
 # Creamos una tabla donde almacenaremos los distintos resultados del algoritmo dependiendo de nuestro punto de partida
@@ -212,7 +285,9 @@ input("\n--- Pulsar intro para continuar con el ejercicio 1.3 ---\n")
 columna1 = [[0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1],[22.0,22.0]]
 columna2 = []
 columna3 = []
-columna4 = []
+columna4 = [0.01, 0.01, 0.01, 0.01, 0.01]
+columna5 = []
+columna6 = []
 
 # Realizamos el algoritmo para una lista de puntos iniciales
 for initial_point_F in ([0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
@@ -234,7 +309,8 @@ for initial_point_F in ([0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 	####tabla.append([tuple(initial_point_F), w[0],w[1],F(w[0], w[1])])
 	columna2.append(w[0])
 	columna3.append(w[1])
-	columna4.append(F(w[0],w[1]))
+	columna5.append(F(w[0],w[1]))
+	columna6.append(it)
 
 	"""
 	Mostramos por pantalla los datos más relevantes de aplicar el algoritmo a la función F
@@ -301,7 +377,8 @@ for initial_point_F in ([0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 
 	input("\n--- Pulsar intro para continuar ---\n")
 
-dict_tabla = {'Initial Point':columna1, 'u':columna2, 'v':columna3, 'F(u,v)':columna4}
+dict_tabla = {'Initial Point':columna1, 'u':columna2, 'v':columna3, 'lr': columna4,
+			'F(u,v)':columna5, 'iteraciones':columna6}
 dataframe = pd.DataFrame(dict_tabla)
 
 print('   Tabla de datos con función F\n')
@@ -691,7 +768,7 @@ Error_in_med = Error_in_med/iteraciones
 Error_out_med = Error_out_med/iteraciones
 print ('\n\nError medio tras ' + str(iteraciones) + ' iteraciones:\n')
 print ("Ein medio: ", Error_in_med)
-print ("Eout medio: ", Error_out_med)
+print ("Eout medio: ", Error_out_med, '\n\n')
 
 
 ###############################################################################
