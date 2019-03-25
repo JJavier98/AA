@@ -105,14 +105,20 @@ def gradient_descent(func,grad,u,v,maxIter,epsilon=1e-14,learning_rate=0.01, eje
 		# Almacenamos la "altura" de todos los puntos (u,v) calculados
 		new_z = func(u,v)
 
+		"""
+		Si de una iteración a otra no se produce una mejora considerable
+			salimos del bucle, en caso contrario, actualizamos
+		"""
 		if last_z - new_z > epsilon:
 			last_z = new_z
 		else:
 			continuar = False
 
+		# Si realizamos el ejercicio 1.2 y el valor calculado es menor que epsilon, salimos.
 		if ejer1_2 and new_z < epsilon:
 			continuar = False
 
+		# En el ejercicio 1.3 iteramos hasta final de iteraciones.
 		if(ejer1_3a):
 			continuar=True
 
@@ -281,7 +287,7 @@ input("\n--- Pulsar intro para continuar con el ejercicio 1.3 b) ---\n")
 
 # Creamos una tabla donde almacenaremos los distintos resultados del algoritmo dependiendo de nuestro punto de partida
 # La crearemos como un objeto 'pandas' al que le pasaremos las columnas en el siguiente orden:
-# punto incial - u - v - f(u,v)
+# punto incial - u - v - learning-rate - f(u,v) - iteraciones
 
 columna1 = [[0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1],[22.0,22.0]]
 columna2 = []
@@ -516,7 +522,6 @@ print(x)
 print(y)
 
 # Calculamos el vector de pesos W por medio del Gradiente Descendente Estocástico
-
 w_sgd = sgd(x,y)
 print ('Bondad del resultado para grad. descendente estocastico:\n')
 print ("Ein: ", Err(x,y,w_sgd))
@@ -883,7 +888,7 @@ def NewtonsMethod(func,grad,u,v,maxIter,epsilon=1e-14, learning_rate = 0.1):
 
 # Creamos una tabla donde almacenaremos los distintos resultados del algoritmo dependiendo de nuestro punto de partida
 # La crearemos como un objeto 'pandas' al que le pasaremos las columnas en el siguiente orden:
-# punto incial - u - v - f(u,v)
+# punto incial - u - v - lr - f(u,v) - it
 columna1 = [[0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1]]
 columna2 = []
 columna3 = []
