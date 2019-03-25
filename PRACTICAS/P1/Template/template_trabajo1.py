@@ -9,7 +9,7 @@ Estudiante: JJavier Alonso Ramos
 import numpy as np
 # Importamos módulo para gráficos 2D
 import matplotlib.pyplot as plt
-# Importamos el mñodulo para formater tablas
+# Importamos el módulo para formater tablas
 import pandas as pd
 # Importamos el módulo para hacer el gráfico 3D
 from mpl_toolkits.mplot3d import Axes3D
@@ -354,7 +354,7 @@ for initial_point_F in ([0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1],[22.0,22.0]):
 	"""
 	Dibujamos el punto mínimo encontrado como una estrella roja,
 		los puntos intermedios como puntos verdes
-		y el punto inicial como una estrella blanca
+		y el punto inicial como una estrella negra
 	"""
 	min_point = np.array([w[0],w[1]])
 	min_point_ = min_point[:, np.newaxis]
@@ -428,7 +428,7 @@ def Err(x,y,w):
 		Hacemos la media y devolvemos el resultado
 	"""
 	denominador = len(x) # Número de elementos
-	numerador = (x@w-y)**2 # Diferencia cuadrática
+	numerador = (np.dot(x,w)-y)**2 # Diferencia cuadrática
 	numerador = np.sum(numerador) # Sumatoria de las diferencias
 	res = numerador/denominador # Media del error cuadrático
 	return res
@@ -501,7 +501,7 @@ def pseudoinverse(X,Y):
 		Los valores de Y
 	"""
 	px = np.linalg.pinv(X) # Calculamos la pseudoinversa de X por medio de una función del módulo numpy
-	w = px @ Y # Calculamos W multiplicando vectorialmente la pseudoinversa de X por los valores Y
+	w = np.dot(px, Y) # Calculamos W multiplicando vectorialmente la pseudoinversa de X por los valores Y
 	return w # Devolvemos el vector de pesos
 
 # Lectura de los datos de entrenamiento
@@ -568,6 +568,9 @@ Dibujamos en un diagrama de puntos la muestra y la separamos por medio de la rec
 Los puntos que coincidan con una etiqueta igual a 1 los pintaremos de rojo mientras que los
 	que tengan una etiqueta = -1 serán azul cian
 Aplicaremos transparencia a estos puntos para ver más claramente la densidad de puntos
+Dibujaremos las rectas asociadas a la regresión:
+	De color azul la correspondiente al SGD
+	De color magenta la correspondiente a la Pseudoinversa
 """
 # Lo hacemos con W calculado con el gradiente descendente estocástico
 plt.scatter(x[np.where(y==1),1], x[np.where(y==1),2], c='r', alpha=0.5)
@@ -771,6 +774,7 @@ print ("Ein medio: ", Error_in_med)
 print ("Eout medio: ", Error_out_med, '\n\n')
 
 
+input("\n--- Pulsar tecla para continuar al ejercicio 3 ---\n")
 ###############################################################################
 ########################## BONUS - MÉTODO DE NEWTON ###########################
 ###############################################################################
@@ -794,30 +798,40 @@ def gradF(u,v):
     return np.array([dFu(u,v), dFv(u,v)])
 """
 def dFuu(u,v):
+	# Segunda derivada respecto a u de F
 	return 2-8*np.pi**2*np.sin(2*np.pi*v)*np.sin(2*np.pi*u)
+
 def dFuv(u,v):
+	# Segunda derivada de F primero respecto a u y luego respecto a v de F
 	return 8*np.pi**2*np.cos(2*np.pi*u)*np.cos(2*np.pi*v)
+
 def dFvv(u,v):
+	# Segunda derivada respecto a v de F
 	return 4-8*np.pi**2*np.sin(2*np.pi*u)*np.sin(2*np.pi*v)
+
 def dFvu(u,v):
+	# Segunda derivada de F primero respecto a v y luego respecto a u de F
 	return 8*np.pi**2*np.cos(2*np.pi*v)*np.cos(2*np.pi*u)
 
 def Hessian(u,v):
-    aux1 = np.array([dFuu(u,v), dFuv(u,v)])
-    aux2 = np.array([dFvu(u,v), dFvv(u,v)])
-    H = np.array([aux1, aux2])
-    
-    return H
+	"""
+	Función que devuelve la matriz Hessiana de orden dos
+	segun las coordenadas (u, v) pasadas como argumentos.
+	"""
+	aux1 = np.array([dFuu(u,v), dFuv(u,v)])
+	aux2 = np.array([dFvu(u,v), dFvv(u,v)])
+	H = np.array([aux1, aux2])
+
+	return H
     
 def NewtonsMethod(func,grad,u,v,maxIter,epsilon=1e-14, learning_rate = 0.1):
 	"""
-	Gradiente Descendente
 	Aceptamos como parámetros:
 	La fución sobre la que calcularemos el gradiente
 	Las coordenadas con las que evaluaremos la función (u,v)
 	El número máximo de iteraciones a realizar
 	Un valor de Z mínimo (epsilon)
-	Un learning-rate que por defecto será 0.01
+	Un learning-rate que por defecto será 0.1
 	"""
 	#Creamos un contador de iteraciones
 	it = 0
@@ -839,12 +853,13 @@ def NewtonsMethod(func,grad,u,v,maxIter,epsilon=1e-14, learning_rate = 0.1):
 		o hasta superar el máximo de iteraciones
 	"""
 	while it < maxIter and continuar:
-		# Calculamos las pendientes respecto a u e v
+		# Calculamos las pendientes respecto a u y v
 		_pend = grad(w[0],w[1])
+		# Montamos la matriz Hessiana y calculamos su inversa
 		H_inv = np.linalg.inv( Hessian(w[0],w[1]) )
 
 		# Calculamos el nuevo punto más próximo al mínimo local con el método de Newton
-		w = w - learning_rate*(H_inv @ _pend)
+		w = w - learning_rate*(np.dot(H_inv, _pend))
 
 		#points2min almacena todas las coordenadas (u,v) de los puntos que se han ido calculando
 		points2min.append( [ w[0],w[1] ] )
@@ -871,16 +886,16 @@ def NewtonsMethod(func,grad,u,v,maxIter,epsilon=1e-14, learning_rate = 0.1):
 columna1 = [[0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1]]
 columna2 = []
 columna3 = []
-columna4 = []
+columna4 = [0.1, 0.1, 0.1, 0.1]
+columna5 = []
+columna6 = []
 
 # Realizamos el algoritmo para una lista de puntos iniciales
 for initial_point_F in ([0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1]):
 
 	"""
 	Realizamos el algoritmo del Gradiente Descendiente para la función F
-		partiendo desde los puntos ([0.1,0.1],[1,1],[-0.5,-0.5],[-1,-1], [22.0,22.0])
-		He añadido el punto (22.0, 22.0) para obtener una gráfica en la que se vea más
-		claramente el dibujo de los distintos puntos calculados hasta llegar al mínimo
+		partiendo desde los puntos ([0.1,0.1],[1,1],[-0.5,-0.5],[-1,-1])
 	Como tope de iteraciones indicamos 50
 
 	En w guardamos las coordenadas (x,y) del punto con z mínimo alcanzado
@@ -893,7 +908,8 @@ for initial_point_F in ([0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1]):
 	####tabla.append([tuple(initial_point_F), w[0],w[1],F(w[0], w[1])])
 	columna2.append(w[0])
 	columna3.append(w[1])
-	columna4.append(F(w[0],w[1]))
+	columna5.append(F(w[0],w[1]))
+	columna6.append(it)
 
 	"""
 	Mostramos por pantalla los datos más relevantes de aplicar el algoritmo a la función F
@@ -937,7 +953,7 @@ for initial_point_F in ([0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1]):
 	"""
 	Dibujamos el punto mínimo encontrado como una estrella roja,
 		los puntos intermedios como puntos verdes
-		y el punto inicial como una estrella blanca
+		y el punto inicial como una estrella negra
 	"""
 	min_point = np.array([w[0],w[1]])
 	min_point_ = min_point[:, np.newaxis]
@@ -960,7 +976,8 @@ for initial_point_F in ([0.1,0.1],[1.0,1.0],[-0.5,-0.5],[-1,-1]):
 
 	input("\n--- Pulsar intro para continuar ---\n")
 
-dict_tabla = {'Initial Point':columna1, 'u':columna2, 'v':columna3, 'F(u,v)':columna4}
+dict_tabla = {'Initial Point':columna1, 'u':columna2, 'v':columna3, 'lr': columna4,
+			'F(u,v)':columna5, 'iteraciones':columna6}
 dataframe = pd.DataFrame(dict_tabla)
 
 print('   Tabla de datos con función F\n')

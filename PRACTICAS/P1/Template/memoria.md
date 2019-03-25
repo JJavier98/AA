@@ -59,7 +59,7 @@ ___
 
 - b) ___¿Cuántas iteraciones tarda el algoritmo en obtener por primera vez un  valor de $E(u, v)$ inferior a $10^{-14}$?___  
 
-Como mostramos en una imagen más adelante, se realizan ***33*** iteraciones.  
+Como mostramos en una tabla más adelante, se realizan ***33*** iteraciones.  
 
 ___
 
@@ -133,4 +133,130 @@ ___
 #### Ejercicio 2.- BÚSQUEDA ITERATIVA DE ÓPTIMOS
 ___Este ejercicio ajusta modelos de regresión a vectores de características extraidos de imágenes de digitos manuscritos. En particular se extraen dos característcas concretas: el valor medio del nivel de gris y simetría del número respecto de su eje vertical. Solo se seleccionarán para este ejercicio las imágenes de los números 1 y 5.___  
 
-1. ___Estimar un modelo de regresión lineal a partir de los datos proporcionados de dichos números (Intensidad promedio, Simetria) usando tanto el algoritmo de la pseudo-inversa como Gradiente descendente estocástico (SGD). Las etiquetas serán {−1, 1}, una para cada vector de cada uno de los números. Pintar las soluciones obtenidas junto con los datos usados en el ajuste. Valorar la bondad del resultado usando E in y E out (para E out calcular las predicciones usando los datos del fichero de test).___
+1. ___Estimar un modelo de regresión lineal a partir de los datos proporcionados de dichos números (Intensidad promedio, Simetria) usando tanto el algoritmo de la pseudo-inversa como Gradiente descendente estocástico (SGD). Las etiquetas serán {-1, 1}, una para cada vector de cada uno de los números. Pintar las soluciones obtenidas junto con los datos usados en el ajuste. Valorar la bondad del resultado usando E in y E out (para E out calcular las predicciones usando los datos del fichero de test).___  
+
+Para el ***Gradiente Descendente Estocástico*** hemos escogido un tamaño de Minibatch = 64.
+
+$$w_j = w_j - \eta\sum_{n\in Minibatch}[ x_{nj} (h(x_n) - y_n) ]$$  
+_j hace referencia a las columnas_  
+_n hace referencia a las filas dentro del Minibatch_  
+
+- ***$h(x_n)$:*** nuestra aproximación al valor _y_ asociado a _$x_n$_.
+- ***$y_n$:*** valor real asociado a $x_n$.
+- ***$x_{nj}$:*** columna del atributo _j_ perteneciente al minibatch _n_.
+- ***$\eta$:*** learning-rate.
+- ***$w_j$:*** peso asociado al atributo _j_.  
+
+Para realizar la ***Pseudo-inversa*** nos hemos ayudado de una función del módulo _numpy_ (_numpy.linalg.pinv(X)_).  
+
+$$w = X^{\dagger} Y$$
+
+Para calcular el ***Error medio*** realizamos la sumatoria de la diferencia cuadrática entre nuestra aproximación (_$Xw$_) y el valor real asociado a _X_ (_Y_) dividido por el número de datos.
+
+$$Err = \frac{\sum_{n=1}^N [X w - Y]^2} {N}$$
+
+Acontinuación mostramos en una gráfica 3D la distribución de todos los valores de la muestra X leidos. Pintaremos de rojo aquellos a los que nuestro algoritmo les haya asignado la etiqueta 1 y de azul a los que se les haya asignado la etiqueta -1.  
+![Representación 3D de la muestra y su asignación](imagenes/Ejer2_1_3D.png)  
+
+Mostramos el error obtenido con SGD y Pseudo-inversa:  
+
+|           | SGD               | Pseudo-inversa    |
+|-----------|-------------------|-------------------|
+|$E_{in}$   |0.08003514522556675|0.07918658628900395|
+|$E_{out}$  |0.12937370028710854|0.13095383720052584|  
+
+Dibujaremos las rectas asociadas a la regresión:  
+    De color azul la correspondiente al SGD  
+    De color magenta la correspondiente a la Pseudoinversa  
+_Tener en cuenta que los ejes del gráfico indican las dos coordenadas de x_
+![Comparativa SGD y Pinv](imagenes/Ejer2_1_Recta.png)  
+
+2. ___En este apartado exploramos como se transforman los errores E in y E out cuando aumentamos la complejidad del modelo lineal usado. Ahora hacemos uso de la función simula_unif (N, 2, size) que nos devuelve N coordenadas 2D de puntos uniformemente muestreados dentro del cuadrado definido por [size, size]$\times$[-size,-size]___  
+
+- a) ___Generar una muestra de entrenamiento de N = 1000 puntos en el cuadrado X = [-1, 1]$\times$[-1, 1]. Pintar el mapa de puntos 2D.___  
+![Mapa de puntos aleatorios](imagenes/Mapa_de_puntos_2a.png)  
+
+- b) ___Consideremos la función $f(x_{1}, x_2)=sign((x_1-0.2)^2+x_2^2-0.6)$ que usaremos para asignar una etiqueta a cada punto de la muestra anterior. Introducimos ruido sobre las etiquetas cambiando aleatoriamente el signo de un 10% de las mismas. Pintar el mapa de etiquetas obtenido.___  
+
+Para modificar el 10% de la muestra:  
+
+- Calculamos las etiquetas correspondientes a cada dato generado en el apartado _2 a)_ con la función proporcionada.  
+
+- Añadimos a la matriz de puntos 2D una nueva columna que contendrá las etiquetas recién calculadas haciéndolas coincidir con su correspondiente punto 2D.  
+
+- Generamos números aleatorios no repetidos en el rango [0, número de datos), es decir, generamos aleatoriamente los índices que referencian a los datos que vamos a alterar.  
+
+- Cambiamos de signo las etiquetas referenciadas por estos índices.  
+
+Mapa de puntos según etiquetas y mapa de puntos con ruido:  
+![Mapa de puntos por etiquetas](imagenes/etiquetas_segun_signo.png)
+![Mapa con ruido](imagenes/etiquetas_con_ruido.png)  
+
+- c) ___Usando como vector de características $(1, x_1, x_2)$ ajustar un modelo de regresion lineal al conjunto de datos generado y estimar los pesos w. Estimar el error de ajuste $E_{in}$ usando Gradiente Descendente Estocástico (SGD).___  
+$$E_{in} = 0.914712199961714$$  
+
+- d) ___Ejecutar todo el experimento definido por (a)-(c) 1000 veces (generamos 1000 muestras diferentes) y___
+    - ___Calcular el valor medio de los errores E in de las 1000 muestras.___
+    - ___Generar 1000 puntos nuevos por cada iteración y calcular con ellos el valor de E out en dicha iteración. Calcular el valor medio de E out en todas las iteraciones.___  
+
+_Error medio tras 1000 iteraciones:_  
+$E_{in}$ medio:  0.926598330902378  
+$E_{out}$ medio:  0.9322474843982484  
+  
+- e) ___Valore que tan bueno considera que es el ajuste con este modelo lineal a la vista de los valores medios obtenidos de $E_{in}$ y $E_{out}$___  
+
+Debido a la distribución de los puntos no podemos realizar un buen ajuste con un modelo lineal. El haber alterado un 10% de la muestra no es motivo sufuciente para obtener unos resultados tan malos.  
+No podemos tomar por bueno un ajuste con un error $E \simeq 0.9$.  
+
+Para intentar realizar un mejor ajuste deberíamos probar con un modelo no lineal.  
+
+___  
+#### Ejercicio 3.- BONUS - NEWTON'S METHOD  
+$$\bigtriangleup w = -H^{-1} \bigtriangledown E_{in}(w)$$  
+En este método acompaña al learning-rate ($\eta$) la matriz Hessiana que, al igual que $\eta$, nos indicará en qué medida debemos hacer caso a lo que nos indica el gradiente.  
+
+La matriz Hessiana está compuesta por lo siguiente:  
+
+$$H = 
+\left(\begin{array}{cc} 
+\delta F_{uu} & \delta F_{uv}\\
+\delta F_{vu} & \delta F_{vv}
+\end{array}\right)$$  
+
+Siendo:  
+$$\delta F_{uu} = 2-8\pi^2 sin(2\pi v) sin(2\pi u)$$
+$$\delta F_{uv} = 8\pi^2 cos(2\pi u) cos(2\pi v)$$
+$$\delta F_{vv} = 4-8\pi^2 sin(2\pi u) sin(2\pi v)$$
+$$\delta F_{vu} = 8\pi^2 cos(2\pi v) cos(2\pi u)$$
+
+Vamos a comparar los resultados con los obtenidos en el ejercicio 1.3:  
+
+- ___Para el punto (0.1, 0.1):___  
+Gradiente:  
+![Gradiente Descendiente](imagenes/F_01.png)  
+Newton:  
+![Método de Newton](imagenes/newton_01.png)  
+- ___Para el punto (1, 1):___  
+Gradiente:  
+![Gradiente Descendiente](imagenes/F_10.png)  
+Newton:  
+![Método de Newton](imagenes/newton_10.png)  
+- ___Para el punto (-1, -1):___  
+Gradiente:  
+![Gradiente Descendiente](imagenes/F_-1.png)  
+Newton:  
+![Método de Newton](imagenes/newton_-1.png)  
+- ___Para el punto (-0.5, -0.5):___  
+Gradiente:  
+![Gradiente Descendiente](imagenes/F_-05.png)  
+Newton:  
+![Método de Newton](imagenes/newton_-05.png)  
+
+| Initial Point |       u |       v  |  lr |   F(u,v) | iteraciones|
+|---------------|---------|----------|-----|----------|------------|
+|    [0.1, 0.1] |0.000368 |  0.000364| 0.1 | 0.000011 |         50 |
+|    [1.0, 1.0] |0.949409 |  0.974715| 0.1 | 2.900408 |         50 |
+|  [-0.5, -0.5] |-0.475244| -0.487869| 0.1 | 0.725483 |         50 |
+|      [-1, -1] |-1.949409| -0.974715| 0.1 | 2.900408 |         50 |  
+
+El método de Newton tiende a converger a 0 aunque en los puntos $(\pm 1, \pm 1)$ no lo logre. Por lo tanto el gradiente descendente consigue mejores resultados pudiendo alcanzar valores negaivos.
