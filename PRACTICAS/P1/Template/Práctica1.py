@@ -68,6 +68,7 @@ def gradient_descent(func,grad,u,v,maxIter,epsilon=1e-14,learning_rate=0.01, eje
 	El número máximo de iteraciones a realizar
 	Un valor de Z mínimo (epsilon)
 	Un learning-rate que por defecto será 0.01
+	Los parámetros ejer* ayudan a la impresión o ejecución con factores determinados
 	"""
 	#Creamos un contador de iteraciones
 	it = 0
