@@ -162,8 +162,8 @@ Mostramos el error obtenido con SGD y Pseudo-inversa:
 
 |           | SGD               | Pseudo-inversa    |
 |-----------|-------------------|-------------------|
-|$E_{in}$   |0.08003514522556675|0.07918658628900395|
-|$E_{out}$  |0.12937370028710854|0.13095383720052584|  
+|$E_{in}$   |0.08262032686662257|0.07918658628900395|
+|$E_{out}$  |0.13317636750014467|0.13095383720052584|  
 
 Dibujaremos las rectas asociadas a la regresión:  
     De color azul la correspondiente al SGD  
@@ -193,15 +193,15 @@ Mapa de puntos según etiquetas y mapa de puntos con ruido:
 ![Mapa con ruido](imagenes/etiquetas_con_ruido.png)  
 
 - c) ___Usando como vector de características $(1, x_1, x_2)$ ajustar un modelo de regresion lineal al conjunto de datos generado y estimar los pesos w. Estimar el error de ajuste $E_{in}$ usando Gradiente Descendente Estocástico (SGD).___  
-$$E_{in} = 0.914712199961714$$  
+$$E_{in} = 0.9266173649533643$$  
 
 - d) ___Ejecutar todo el experimento definido por (a)-(c) 1000 veces (generamos 1000 muestras diferentes) y___
     - ___Calcular el valor medio de los errores E in de las 1000 muestras.___
     - ___Generar 1000 puntos nuevos por cada iteración y calcular con ellos el valor de E out en dicha iteración. Calcular el valor medio de E out en todas las iteraciones.___  
 
 _Error medio tras 1000 iteraciones:_  
-$E_{in}$ medio:  0.926598330902378  
-$E_{out}$ medio:  0.9322474843982484  
+$E_{in}$ medio:  0.9273397180289497  
+$E_{out}$ medio:  0.9320711718563939  
   
 - e) ___Valore que tan bueno considera que es el ajuste con este modelo lineal a la vista de los valores medios obtenidos de $E_{in}$ y $E_{out}$___  
 

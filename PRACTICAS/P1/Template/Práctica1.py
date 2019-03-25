@@ -454,26 +454,32 @@ def sgd(X,Y,epsilon = 1e-14, lr = 0.001):
 	minibatch_size = 64 # establecemos un tamaño de minibatch
 	minibatch_num = size_of_x // minibatch_size # calculamos el número de minibatchs en que podemos dividir X
 	cols_of_x = len(X[0]) # calculamos el número de columnas de X (su número de características)
-	w = np.zeros(cols_of_x) # inicializamos un vector de pesos a 0 con longitud = cols_of_x
 	error_antiguo = 999.0 # inicializamos a un valor suficientemente alto para asegurarnos que entra en la condición de actualización de su valor
 	continuar = True # inicializamos a true para que entre en el bucle
+	w_epoca_actual = np.zeros(cols_of_x)
+	matriz_completa = np.c_[X,Y]
+	etiquetas = matriz_completa[:,3]
+	datos = matriz_completa[:,0:3]
 
 	# mientras la diferencia entre el anterior error calculado y el recién calculado sea mayor que 1e-14 continuamos realizando el algoritmo
 	while(continuar):
+		np.random.shuffle(matriz_completa)
+		etiquetas = matriz_completa[:,3]
+		datos = matriz_completa[:,0:3]
 		# recorremos todos los minibatchs en los que hemos dividido X
 		for i in range(minibatch_num):
 			# recorremos las características de X (sus columnas)
 			for j in range(cols_of_x):
 				# multiplicamos vectorialmente toda la submatriz de X que conforma un minibatch por su peso asociado
-				h_x = np.dot(X[i*minibatch_size : (i+1)*minibatch_size, :],w)
+				h_x = np.dot(datos[i*minibatch_size : (i+1)*minibatch_size, :],w_epoca_actual)
 				# restamos al valor obtenido su verdadero valor para ver cuanta precisión tenemos por ahora
-				diff = h_x - Y[i*minibatch_size : (i+1)*minibatch_size]
+				diff = h_x - etiquetas[i*minibatch_size : (i+1)*minibatch_size]
 				# multiplicamos individualmente la característica correspondiente a la columna j, fila a fila del minibatch, por la diferencia anterior
-				mul = np.dot(X[i*minibatch_size : (i+1)*minibatch_size , j], diff)
+				mul = np.dot(datos[i*minibatch_size : (i+1)*minibatch_size , j], diff)
 				# realizamos la sumatoria de los valores obtenidos en el vector anterior (mul)
 				sumatoria = np.sum(mul)
 				# actualizamos w[j] (el peso de esa característica) restándole el valor anterior multiplicado por el learning rate
-				w[j] = w[j] - lr*sumatoria
+				w_epoca_actual[j] = w_epoca_actual[j] - lr*sumatoria
 
 		"""
 		si el número de filas de x no es múltiplo del tamaño del minibach sobrarán elementos en x que no se recorran con los bucles anteriores
@@ -481,15 +487,20 @@ def sgd(X,Y,epsilon = 1e-14, lr = 0.001):
 		"""
 		if size_of_x % minibatch_size != 0:
 			n = minibatch_num*minibatch_size
-			for j in range(cols_of_x):
-				h_x = np.dot(X[n : size_of_x, :],w)
-				diff = h_x - Y[n : size_of_x]
-				mul = np.dot(X[n : size_of_x , j], diff)
-				sumatoria = np.sum(mul)
-				w[j] = w[j] - lr*sumatoria
+			restantes = size_of_x - n
+			a = np.r_[ datos[n : size_of_x, :], datos[0:restantes, :] ]
+			b = np.r_[ etiquetas[n : size_of_x], etiquetas[0:restantes] ]
 
-		# calculamos el error que obtenemos con una primera vuelta a los minibatchs
-		error = Err(X,Y,w)
+			for j in range(cols_of_x):
+				h_x = np.dot(a,w_epoca_actual)
+				diff = h_x - b
+				mul = np.dot(a[:, j], diff)
+				sumatoria = np.sum(mul)
+				w_epoca_actual[j] = w_epoca_actual[j] - lr*sumatoria
+
+		# calculamos el error que obtenemos en la primera epoca a los minibatchs
+		error = Err(datos,etiquetas,w_epoca_actual)
+
 		# si todavía no llegamos a la precisión requerida repetimos el algoritmo
 		if(error_antiguo - error > epsilon):
 			error_antiguo = error
@@ -497,7 +508,7 @@ def sgd(X,Y,epsilon = 1e-14, lr = 0.001):
 		else:
 			continuar = False
 
-	return w
+	return w_epoca_actual
 
 # Pseudoinversa	
 def pseudoinverse(X,Y):
