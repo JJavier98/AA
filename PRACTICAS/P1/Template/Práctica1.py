@@ -463,7 +463,9 @@ def sgd(X,Y,epsilon = 1e-14, lr = 0.001):
 
 	# mientras la diferencia entre el anterior error calculado y el recién calculado sea mayor que 1e-14 continuamos realizando el algoritmo
 	while(continuar):
+		# Mezclamos los datos de la mustra y sus etiquetas para obtener minibatchs distintos en cada época
 		np.random.shuffle(matriz_completa)
+		# dividimos en etiquetas y datos de muestra
 		etiquetas = matriz_completa[:,3]
 		datos = matriz_completa[:,0:3]
 		# recorremos todos los minibatchs en los que hemos dividido X
@@ -486,6 +488,8 @@ def sgd(X,Y,epsilon = 1e-14, lr = 0.001):
 			con esta condición nos aseguramos de recorrerlos
 		"""
 		if size_of_x % minibatch_size != 0:
+			# Calculamos cuantos elementos quedan por recorrer y,
+			# empezando por el principio de la muestra, le añadimos los datos que faltan para completar el minibatch
 			n = minibatch_num*minibatch_size
 			restantes = size_of_x - n
 			a = np.r_[ datos[n : size_of_x, :], datos[0:restantes, :] ]
