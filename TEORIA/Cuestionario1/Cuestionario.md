@@ -16,6 +16,8 @@ un tipo, explicar como y describir los elementos para cada tipo.
 
 a) Clasificación automática de cartas por distrito postal:
 
+
+
 b) Decidir si un determinado índice del mercado de valores subirá o bajará dentro de un
 periodo de tiempo fijado.
 
