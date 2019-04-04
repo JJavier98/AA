@@ -13,7 +13,9 @@ header-includes: |
 
 **a) Clasificación automática de cartas por distrito postal:**
 
-Se trata de un problema de aprendizaje no supervisado. El programa clasificará los distintos códigos postales de manera automática comparando los distintos números 
+A mi parecer se trata de un problema de diseño ya que cada código tiene asignada una ciudad unívoca, e incluso cada prefijo  de dos dígitos del código se corresponde con una provincia. Podríamos realizar un algoritmo que nos agrupase perfectamente las cartas por distritos sin necesidad de un algoritmo de aprendizaje.
+
+Si por algún casual no pudiésemos organizar los códigos postales de esa manera utilizaríamos aprendizaje no supervisado. El programa clasificaría los distintos códigos postales de manera automática comparando los dígitos y agrupando las cartas en grupos de dígitos que sean iguales.
 
 **b) Decidir si un determinado índice del mercado de valores subirá o bajará dentro de un periodo de tiempo fijado.**
 
@@ -21,18 +23,13 @@ Se trata de un problema que requiere aprendizaje supervisado. El programa deber�
 
 **c) Hacer que un dron sea capaz de rodear un obstáculo.**
 
-Si entendemos dron como, según lo define la RAE, una aeronave no tripulada, debemos suponer que el dron va suficientemente lento y tiene la suficiente protección como para aguantar posibles choques sin derribarse (si se tratase de un robot terrestre tendríamos que suponer las mismas conticiones pero son más fáciles de cumplir).
+Si entendemos dron como, según lo define la RAE, una aeronave no tripulada, debemos suponer que el dron va suficientemente lento y tiene la suficiente protección como para aguantar posibles choques sin derribarse o un tiempo suficiente para detectar el obstáculo (si se tratase de un robot terrestre tendríamos que suponer las mismas condiciones pero son más fáciles de cumplir).
 
-Se trata de un problema de aprendizaje por refuerzo ya que el dron realizaría una acción y, atendiendo a las consecuencias de esta, tomaría una decisión u otra. Por ejemplo un robot aspirador que está siguiendo un itinerario y se encontrase con un obstáculo lo detectaría con un sensor (laser, de choque, de imagen, ...), registraría que ahí hay un obstaculo y aprendería a reconocer a otro futuro obstáculo si lo vuelve a detectar por un sensor El resultado sería modificar el itinerariopara llegar a su destino evitando el obstáculo.
+Se trata de un problema de aprendizaje por refuerzo ya que el dron realizaría una acción y, atendiendo a las consecuencias de esta, tomaría una decisión u otra. Por ejemplo un robot aspirador que está siguiendo un itinerario y se encontrase con un obstáculo lo detectaría con un sensor (láser, de choque, de imagen, ...), registraría que ahí hay un obstáculo y aprendería a reconocer a otro futuro obstáculo si lo vuelve a detectar por un sensor El resultado sería modificar el itinerario para llegar a su destino evitando el obstáculo.
 
 **d) Dada una colección de fotos de perros, posiblemente de distintas razas, establecer cuantas razas distintas hay representadas en la colección.**
 
-Es un problema de aprendizaje no supervisado. El programa tendrá que agrupar a los perros según sus características comunes y manteniendo separados aquellos que no compartan características que que el programa interprete como distintivas.
-
-%
-%
-%
-%
+Es un problema de aprendizaje no supervisado. El programa tendrá que agrupar a los perros según sus características comunes y manteniendo separados aquellos que no compartan rasgos que el programa interprete como distintivas.
 
 **2. ¿Cuales de los siguientes problemas son más adecuados para una aproximación por aprendizaje y cuales más adecuados para una aproximación por diseño? Justificar la decisión**
 
@@ -40,30 +37,70 @@ Es un problema de aprendizaje no supervisado. El programa tendrá que agrupar a 
 
 Diseño. Las características distintivas necesarias para clasificar a un animal vertebrado están muy claras y una persona podría hacerlo sin problemas. Podemos poner unas condiciones claras en un programa que nos distinga a los distintos tipos de animales: ¿Tiene pelo?, ¿Tiene pico?, ¿Tiene escamas?, ¿Respira dentro y fuera del agua?, etc. 
 
-Son características binarias muy sencillas.
+Necesitamos, relativamente, muy pocas características y fáciles de distinguir para clasificar adecuadamente a los tipos de vertebrados.
 
 **b) Determinar si se debe aplicar una campaña de vacunación contra una enfermedad.**
 
-Diseño. Al igual que antes podemos decidir una solución al problema respondiendo a una serie de preguntas binarias finitas: ¿La enfermedad está erradicada?, ¿nos encontramos en una zona geográfica que se vea afectada por esta enfermedad?
+Diseño. Al igual que antes podemos decidir una solución al problema por medio de unas "pocas" características que podemos formular de manera binaria para simplificarlas aún más: ¿La enfermedad está erradicada?, ¿nos encontramos en una zona geográfica que se vea afectada por esta enfermedad?.
+
+De todas formas, desde un punto de vista sanitario, social, político e incluso económico la respuesta siempre debe tender a sí aplicar la vacuna para disminuir riesgo de enfermedad.
 
 **c) Determinar perfiles de consumidor en una cadena de supermercados.**
 
-Aprendizaje. A priori no podemos definir un perfil de consumidor observando sus artículos de compra. El patrón que defina un perfil de comprador es suficientemente complejo como para necesitar un algoritmo automatizado que lo encuentre por nosotros. Podríamos afrontarlo como un aprendizaje supervisado y, a partir de una muestra, aprender información sobre como deducir perfiles de comprador.
+Aprendizaje. A priori no podemos definir un perfil de consumidor observando sus artículos de compra. El patrón que defina un perfil de comprador es suficientemente complejo como para necesitar un algoritmo automatizado que lo encuentre por nosotros. Podríamos afrontarlo como un aprendizaje supervisado y, a partir de una muestra, aprender información sobre cómo deducir perfiles de comprador.
 
 **d) Determinar el estado anímico de una persona a partir de una foto de su cara.**
 
-Aprendizaje. De nuevo los rasgos faciales generan un conjunto de patrones que pueden ser difíciles de interpretar. Una sonrisa no siempre significa alegría; debemos tener en cuenta otros rasgos faciales que en su conjunto nos deriven a pensar que una persona se encuentra en un determinado estado anímico.
+Aprendizaje. De nuevo los rasgos faciales generan un conjunto de patrones suficientemente grande y que pueden ser difíciles de interpretar. Una sonrisa no siempre significa alegría; debemos tener en cuenta otros rasgos faciales que en su conjunto nos deriven a pensar que una persona se encuentra en un determinado estado anímico. Debemos analizar cada rasgo y la relación entre ellos para poder llegar a una conclusión. Esta tarea es demasiado compleja como para realizarla por diseño.
 
 **e) Determinar el ciclo óptimo para las luces de los semáforos en un cruce con mucho tráfico.**
 
-Aprendizaje. Estudiando la situación
+Aprendizaje. Estudiando la situación a lo largo de suficientes días podemos deducir el comportamiento complejo de los vehículos en dicho cruce. Estimar las horas punta en las que se concentra más tráfico, desde dónde y hacia dónde se dirige la mayor afluencia de vehículos, diferenciar entre un comportamiento diurno y nocturno, ... En definitiva, distintas variables que pueden resultar complejas de estudiar dado que dicho cruce se encuentra integrado en un sistema mayor de carreteras del que depende y del que nos resultaría complejo abstraernos en un problema de diseño.
 
 **3. Construir un problema de aprendizaje desde datos para un problema de clasificación de fruta en una explotación agraria que produce mangos, papayas y guayabas. Identificar los siguientes elementos formales $X,Y,D,f$ del problema. Dar una descripción de los mismos que pueda ser usada por un computador. ¿Considera que en este problema estamos ante un caso de etiquetas con ruido o sin ruido? Justificar las respuestas.**
 
+Nuestro conjunto X, que consideramos en este caso aislado como población, será todo el conjunto de frutas (mangos + papayas + guayabas) de nuestra explotación agraria caracterizadas según distintos criterios como: peso, color, tamaño, forma, hojas colindantes, forma del racimo...
 
+El conjunto Y lo conforman las distintas etiquetas asignadas a cada elemento de X. Cada $x_{i}$ tiene asignada una etiqueta $y_{i}$ que será mango, papaya o guayaba. Este conjunto Y puede contener ruido, es decir, la etiqueta asignada a un elemento de $x_{i}\in X$ puede no coincidir con la fruta que es realmente y la cual se encuentra descrita. Esto se debe a que las tres frutas crecen y maduran en la misma temporada y las tres pueden llegar a tener idénticas características en un momento dado (mismo peso, color, tamaño, los árboles frutales pueden estar lo suficientemente cerca como para que sus hojas se mezclen y no se asocien bien a los frutos).
 
-**4. Suponga una matriz cuadrada A que admita la descomposición $A = X^TX$ para alguna matriz $X$ de números reales. Establezca una relación entre los valores singulares de las matriz $A$ y los valores singulares de $X$.**
+El conjunto D será un subconjunto representativo de X al que llamaremos muestra y mediante el cual intentaremos aprender un método de clasificación óptimo de los elementos de X. Este método lo denominamos f; una función que asigna inequívocamente una etiqueta $y_{i}$ a un elemento $x_{i}$.
 
+**4. Suponga una matriz cuadrada A que admita la descomposición $A = $ para alguna matriz $X$ de números reales. Establezca una relación entre los valores singulares de las matriz $A$ y los valores singulares de $X$.**
+Descomponemos A, X y $X^{T}$ en valores singulares:  
+$$ 
+A=U_{A} D_{A} V^{T}
+$$
+$$ 
+X=U_{x} D_{x} V_{x}^{T}
+$$
+$$ 
+X^{T}=V_{x} D_{x}^{T} U^{T}
+$$
+
+Como $A = X^TX$, sustituimos los valores singulares de cada matriz:
+
+$$ 
+A=X^{T} X=V_{x} D_{x}^{T} U_{x}^{T} U_{x} D_{x} V_{x}^{T}
+$$
+
+Como U es una matriz unidad. La multiplicación $U_{x}^{T} U_{x}$ es igual a la identidad $I$.
+
+$$
+A=V_{x} D_{x}^{T} D_{x} V_{x}^{T}
+$$
+
+La matriz D es diagonal y por lo tanto $D^T = D$
+
+$$
+A=V_{x} D_{x}^{2} V_{x}^{T}
+$$
+
+Si lo igualamos a los valores singulares de A tenemos que:
+
+$A=U_{A} D_{A} V^{T}=V_{x} D_{x}^{2} V_{x}^{T}$
+$$U_{A} = V_{x}$$
+$$D_{A}=D_{x}^{2}$$
+$$V_{A}^{T}=V_{x}^{T}$$
 
 
 **5. Sean x e y dos vectores de características de dimensión M × 1. La expresión**
@@ -79,9 +116,53 @@ $$ \operatorname{cov}(\mathrm{X})=\left( \begin{array}{cccc}{\operatorname{cov}\
 
 a) $E 1=11^{T} \mathrm{X}$
 
+Empezaremos por multiplicar $11^{T}$ y a la matriz resultado la denotaremos como $A$ que resultará en una matriz de unos de forma MxM:
+
+$$
+A = \left( \begin{array}{c}{1} \\ {1} \\ {\vdots} \\ {1}\end{array}\right) (1,1 \cdots 1) = \left( \begin{array}{ccc}{1} & {\cdots} & {1} \\{\vdots} & {\vdots} & {\vdots} \\ {1} & {\cdots} & {1}\end{array}\right)
+$$
+
+Por último multiplicamos $A\mathrm{X}$ para obtener la matriz E1 donde cada posición tiene el valor de la sumatoria de todos los valores de columna. La matriz tendrá la forma $(MxM)x(MxN)=(MxN)$.
+
+Siguiendo la notación de los vectores columna $x_{i}$ marcaremos el índice del vector en primera posición y la posición dentro de ese vector en segunda posición. Así la posición 5 del vector columna 3 será $x_{3 5}$.
+
+$$
+E1 = A\mathrm{X} = \left( \begin{array}{ccc}
+{\sum_{i=0}^{M} x_{1 i}} & {\cdots} & {\sum_{i=0}^{M} x_{N i}} \\
+{\sum_{i=0}^{M} x_{1 i}} & {\cdots} & {\sum_{i=0}^{M} x_{N i}} \\
+{\vdots} & {\vdots} & {\vdots} \\
+{\sum_{i=0}^{M} x_{1 i}} & {\cdots} & {\sum_{i=0}^{M} x_{N i}}
+\end{array}\right)
+$$
+
+\vskip 10em
+
 b) $E 2=\left(\mathrm{X}-\frac{1}{M} E 1\right)^{T}\left(\mathrm{X}-\frac{1}{M} E 1\right)$
 
+Si operamos $\frac{1}{M} E 1$ tenemos:
 
+$$
+\left( \begin{array}{ccc}
+\frac{1}{M}{\sum_{i=0}^{M} x_{1 i}} & {\cdots} & \frac{1}{M}{\sum_{i=0}^{M} x_{N i}} \\
+\frac{1}{M}{\sum_{i=0}^{M} x_{1 i}} & {\cdots} & \frac{1}{M}{\sum_{i=0}^{M} x_{N i}} \\
+{\vdots} & {\vdots} & {\vdots} \\
+\frac{1}{M}{\sum_{i=0}^{M} x_{1 i}} & {\cdots} & \frac{1}{M}{\sum_{i=0}^{M} x_{N i}}
+\end{array}\right)
+$$
+
+La expresión $\frac{1}{M}{\sum_{i=0}^{M} x_{1 i}}$ denota la media del vector columna $x_{1}$ = $\overline{x_{1}}$
+
+Por lo tanto la resta $\mathrm{X}-\frac{1}{M} E 1$, que definiremos como matriz C, tiene la siguiente forma:
+
+$$
+C = 
+\left( \begin{array}{ccc}
+x_{1 1}-\overline{x_{1}} & {\cdots} & x_{N 1}-\overline{x_{N}} \\
+x_{1 2}-\overline{x_{1}} & {\cdots} & x_{N 2}-\overline{x_{N}} \\
+{\vdots} & {\vdots} & {\vdots} \\
+x_{1 M}-\overline{x_{1}} & {\cdots} & x_{N M}-\overline{x_{N}}
+\end{array}\right)
+$$
 
 **6. Considerar la matriz hat definida en regresión, $\hat{\mathrm{H}}=\mathrm{X}\left(\mathrm{X}^{\mathrm{T}} \mathrm{X}\right)^{-1} \mathrm{X}^{\mathrm{T}}$ donde X es la matriz de observaciones de dimensión $N \times (d + 1)$, y $\mathrm{X}^T\mathrm{X}$ es invertible.**
 
@@ -95,7 +176,7 @@ b) $E 2=\left(\mathrm{X}-\frac{1}{M} E 1\right)^{T}\left(\mathrm{X}-\frac{1}{M} 
 
 
 
-**8. Sea un problema probabilístico de clasificación binaria con etiquetas $\{0,1\}$, es decir $P(Y = 1) = h(x)$ y $P(Y = 0) = 1 − h(x)$, para una función $h()$ dependiente de la muestra**
+**8. Sea un problema probabilístico de clasificación binaria con etiquetas $\{0,1\}$, es decir $P(Y = 1) = h(x)$ y $P(Y = 0) = 1 - h(x)$, para una función $h()$ dependiente de la muestra**
 
 **a) Considere una muestra i.i.d. de tamaño N $(x_1, \dots , x_N)$. Mostrar que la función $h$ que maximiza la verosimilitud de la muestra es la misma que minimiza.**
 
