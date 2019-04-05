@@ -4,7 +4,8 @@ date: \today
 geometry: margin=2cm
 title: "Aprendizaje Automático : Cuestionario 1"
 header-includes: |
-  \usepackage{stmaryrd}
+  \usepackage{stmaryrd} |
+  \usepackage{gensymb}
 ---
 
 # Preguntas
@@ -65,14 +66,17 @@ El conjunto Y lo conforman las distintas etiquetas asignadas a cada elemento de 
 
 El conjunto D será un subconjunto representativo de X al que llamaremos muestra y mediante el cual intentaremos aprender un método de clasificación óptimo de los elementos de X. Este método lo denominamos f; una función que asigna inequívocamente una etiqueta $y_{i}$ a un elemento $x_{i}$.
 
-**4. Suponga una matriz cuadrada A que admita la descomposición $A = $ para alguna matriz $X$ de números reales. Establezca una relación entre los valores singulares de las matriz $A$ y los valores singulares de $X$.**
+**4. Suponga una matriz cuadrada A que admita la descomposición $A = X^TX$ para alguna matriz $X$ de números reales. Establezca una relación entre los valores singulares de las matriz $A$ y los valores singulares de $X$.**
+
 Descomponemos A, X y $X^{T}$ en valores singulares:  
 $$ 
 A=U_{A} D_{A} V^{T}
 $$
+
 $$ 
 X=U_{x} D_{x} V_{x}^{T}
 $$
+
 $$ 
 X^{T}=V_{x} D_{x}^{T} U^{T}
 $$
@@ -98,8 +102,11 @@ $$
 Si lo igualamos a los valores singulares de A tenemos que:
 
 $A=U_{A} D_{A} V^{T}=V_{x} D_{x}^{2} V_{x}^{T}$
+
 $$U_{A} = V_{x}$$
+
 $$D_{A}=D_{x}^{2}$$
+
 $$V_{A}^{T}=V_{x}^{T}$$
 
 
@@ -127,11 +134,11 @@ Por último multiplicamos $A\mathrm{X}$ para obtener la matriz E1 donde cada pos
 Siguiendo la notación de los vectores columna $x_{i}$ marcaremos el índice del vector en primera posición y la posición dentro de ese vector en segunda posición. Así la posición 5 del vector columna 3 será $x_{3 5}$.
 
 $$
-E1 = A\mathrm{X} = \left( \begin{array}{ccc}
-{\sum_{i=0}^{M} x_{1 i}} & {\cdots} & {\sum_{i=0}^{M} x_{N i}} \\
-{\sum_{i=0}^{M} x_{1 i}} & {\cdots} & {\sum_{i=0}^{M} x_{N i}} \\
-{\vdots} & {\vdots} & {\vdots} \\
-{\sum_{i=0}^{M} x_{1 i}} & {\cdots} & {\sum_{i=0}^{M} x_{N i}}
+E1 = A\mathrm{X} = \left( \begin{array}{cccc}
+{\sum_{i=0}^{M} x_{1 i}} & {\sum_{i=0}^{M} x_{2 i}} & {\cdots} & {\sum_{i=0}^{M} x_{N i}} \\
+{\sum_{i=0}^{M} x_{1 i}} & {\sum_{i=0}^{M} x_{2 i}} & {\cdots} & {\sum_{i=0}^{M} x_{N i}} \\
+{\vdots} & {\vdots} & {\vdots} & {\vdots} \\
+{\sum_{i=0}^{M} x_{1 i}} & {\sum_{i=0}^{M} x_{2 i}} & {\cdots} & {\sum_{i=0}^{M} x_{N i}}
 \end{array}\right)
 $$
 
@@ -142,26 +149,42 @@ b) $E 2=\left(\mathrm{X}-\frac{1}{M} E 1\right)^{T}\left(\mathrm{X}-\frac{1}{M} 
 Si operamos $\frac{1}{M} E 1$ tenemos:
 
 $$
-\left( \begin{array}{ccc}
-\frac{1}{M}{\sum_{i=0}^{M} x_{1 i}} & {\cdots} & \frac{1}{M}{\sum_{i=0}^{M} x_{N i}} \\
-\frac{1}{M}{\sum_{i=0}^{M} x_{1 i}} & {\cdots} & \frac{1}{M}{\sum_{i=0}^{M} x_{N i}} \\
-{\vdots} & {\vdots} & {\vdots} \\
-\frac{1}{M}{\sum_{i=0}^{M} x_{1 i}} & {\cdots} & \frac{1}{M}{\sum_{i=0}^{M} x_{N i}}
+\left( \begin{array}{cccc}
+\frac{1}{M}{\sum_{i=0}^{M} x_{1 i}} & \frac{1}{M}{\sum_{i=0}^{M} x_{2 i}} & {\cdots} & \frac{1}{M}{\sum_{i=0}^{M} x_{N i}} \\
+\frac{1}{M}{\sum_{i=0}^{M} x_{1 i}} & \frac{1}{M}{\sum_{i=0}^{M} x_{2 i}} & {\cdots} & \frac{1}{M}{\sum_{i=0}^{M} x_{N i}} \\
+{\vdots} & {\vdots} & {\vdots} & {\vdots} \\
+\frac{1}{M}{\sum_{i=0}^{M} x_{1 i}} & \frac{1}{M}{\sum_{i=0}^{M} x_{2 i}} & {\cdots} & \frac{1}{M}{\sum_{i=0}^{M} x_{N i}}
 \end{array}\right)
 $$
 
-La expresión $\frac{1}{M}{\sum_{i=0}^{M} x_{1 i}}$ denota la media del vector columna $x_{1}$ = $\overline{x_{1}}$
+La expresión $\frac{1}{M}{\sum_{i=0}^{M} x_{1 i}}$ denota la media del vector columna $x_{1}\rightarrow\overline{x_{1}}$
 
 Por lo tanto la resta $\mathrm{X}-\frac{1}{M} E 1$, que definiremos como matriz C, tiene la siguiente forma:
 
 $$
 C = 
-\left( \begin{array}{ccc}
-x_{1 1}-\overline{x_{1}} & {\cdots} & x_{N 1}-\overline{x_{N}} \\
-x_{1 2}-\overline{x_{1}} & {\cdots} & x_{N 2}-\overline{x_{N}} \\
-{\vdots} & {\vdots} & {\vdots} \\
-x_{1 M}-\overline{x_{1}} & {\cdots} & x_{N M}-\overline{x_{N}}
+\left( \begin{array}{cccc}
+x_{1 1}-\overline{x_{1}} & x_{2 1}-\overline{x_{2}} & {\cdots} & x_{N 1}-\overline{x_{N}} \\
+x_{1 2}-\overline{x_{1}} & x_{2 2}-\overline{x_{2}} & {\cdots} & x_{N 2}-\overline{x_{N}} \\
+{\vdots} & {\vdots} & {\vdots} & {\vdots} \\
+x_{1 M}-\overline{x_{1}} & x_{2 M}-\overline{x_{2}} & {\cdots} & x_{N M}-\overline{x_{N}}
 \end{array}\right)
+$$
+
+Y su traspuesta:
+$$
+C^T = 
+\left( \begin{array}{cccc}
+x_{1 1}-\overline{x_{1}} & x_{1 2}-\overline{x_{1}} & {\cdots} & x_{1 M}-\overline{x_{1}} \\
+x_{2 1}-\overline{x_{2}} & x_{2 2}-\overline{x_{2}} & {\cdots} & x_{2 M}-\overline{x_{2}} \\
+{\vdots} & {\vdots} & {\vdots} & {\vdots} \\
+x_{N 1}-\overline{x_{N}} & x_{N 2}-\overline{x_{N}} & {\cdots} & x_{N M}-\overline{x_{N}}
+\end{array}\right)
+$$
+
+Si operamos E2 tenemos:
+$$
+E2 = C^{T} C = 
 $$
 
 **6. Considerar la matriz hat definida en regresión, $\hat{\mathrm{H}}=\mathrm{X}\left(\mathrm{X}^{\mathrm{T}} \mathrm{X}\right)^{-1} \mathrm{X}^{\mathrm{T}}$ donde X es la matriz de observaciones de dimensión $N \times (d + 1)$, y $\mathrm{X}^T\mathrm{X}$ es invertible.**
@@ -170,11 +193,53 @@ $$
 
 **b) Identifique la propiedad más relevante de dicha matriz en relación con regresión lineal.**
 
+En regresión lineal aplicar una función de proyección sobre unos datos debe dar siempre el mismo resultado independientemente de cuantas veces se repita. Esto solo es posible si nuestra matriz de proyección $\hat{\mathrm{H}}$ es IDEMPOTENTE.
 
+**7. La regla de adaptación de los pesos del Perceptrón $(w_{new} = w_{old} + y x)$ tiene la interesante propiedad de que mueve el vector de pesos en la dirección adecuada para clasificar x de forma correcta. Suponga el vector de pesos $w$ de un modelo y un dato $x(t)$ mal clasificado respecto de dicho modelo. Probar matemáticamente que el movimiento de la regla de adaptación de pesos siempre produce un movimiento de $w$ en la dirección correcta para clasificar bien $x(t)$.**
 
-**7. La regla de adaptación de los pesos del Perceptrón $(w_{new} = w_{old} + y_x)$ tiene la interesante propiedad de que mueve el vector de pesos en la dirección adecuada para clasificar x de forma correcta. Suponga el vector de pesos $w$ de un modelo y un dato $x(t)$ mal clasificado respecto de dicho modelo. Probar matemáticamente que el movimiento de la regla de adaptación de pesos siempre produce un movimiento de $w$ en la dirección correcta para clasificar bien $x(t)$.**
+La asignación de etiquetas viene dada por el signo obtenido en la operación $w^{T} x_{i}$, es decir, si $w^{T} x_{i} < 0$ la etiqueta asignada será -1 y si $w^{T} x_{i} > 0$ la etiqueta asignada será +1.
 
+El producto escalar $w^T x$ lo podemos descomponer tal que:
 
+$$
+w^T x = \mid w^T \mid \mid x \mid cos (\alpha)
+$$
+
+Los módulos de $w^T$ y $x$ son siempre positivos por lo cual el signo depende del coseno del ángulo que forman ($\alpha$).
+
+$$
+cos(\alpha \in [0\degree,90\degree)) > 0
+$$
+$$
+cos(\alpha \in (90\degree,180\degree]) < 0
+$$
+
+Sólo actualizaremos el vector de pesos si no coincide la predicción con la etiqueta real. Será de la siguiente forma:
+
+$$w_{new} = w_{old} + y x$$
+ 
+$\hat{y} \equiv prediction$
+
+Si $y=1$ y $\hat{y} = -1$ quiere decir que el ángulo de nuestro coseno es demasiado grande y tenemos que disminuirlo. Para ello sumamos a w el vector x haciendo $\alpha$ más pequeño y provocando así que cos($\alpha$) llegue o, al menos, se acerque a un valor positivo.
+
+$$w_{new} = w_{old} + 1 x$$
+
+![Suma de vectores](img/suma_vec.png){width=120}
+
+En la imagen tenemos que $\vec{B}$ es nuestro vector $\vec{x}$ y $\vec{A}$ es nuestro vector $\vec{w}$.  
+El vector suma $\vec{(A+B)}$ forma un menor ángulo con respecto a $\vec{B}$ de lo que lo hacía $\vec{A}$.
+
+___
+Si por el contrario $y=-1$ y $\hat{y} = 1$ quiere decir que el ángulo de nuestro coseno es demasiado pequeño y tenemos que aumentarlo. Para ello restamos a $\vec{w}$ el vector $\vec{xp}$ haciendo $\alpha$ más grande y provocando así que cos($\alpha$) llegue o, al menos, se acerque a un valor negativo.
+
+$$w_{new} = w_{old} + (-1) x$$
+
+![Resta de vectores](img/resta_vec.png){width=120}
+
+En la imagen tenemos que $\vec{b}$ es nuestro vector $\vec{x}$ y $\vec{a}$ es nuestro vector $\vec{w}$.  
+Si ponemos el vector resta $\vec{a-b}$ en el punto de partida de los otros dos vectores, vemos que forma un mayor ángulo con respecto a $\vec{b}$ de lo que lo hacía $\vec{a}$.
+
+Con estas variaciones del vector $\vec{w}$ conseguiremos en un número finito de iteraciones clasificar inequívocamente todos los ejemplos.
 
 **8. Sea un problema probabilístico de clasificación binaria con etiquetas $\{0,1\}$, es decir $P(Y = 1) = h(x)$ y $P(Y = 0) = 1 - h(x)$, para una función $h()$ dependiente de la muestra**
 
@@ -184,12 +249,61 @@ $$E_{\mathrm{in}}(\mathbf{w})=\sum_{n=1}^{N}\llbracket y_{n}=1 \rrbracket \ln \f
 
 **donde $\llbracket \cdot \rrbracket$ vale 1 o 0 según que sea verdad o falso respectivamente la expresión en su interior.**
 
+Para comenzar definiremos la función de la verosimilitud (likelyhood):
+
+$$
+L(\omega)=\prod_{i=1}^{N} P\left(y_{i} | x_{i}\right)
+$$
+
+Donde si y=1 $P\left(y_{i} | x_{i}\right) = h(x)$  
+y si y=0 $P\left(y_{i} | x_{i}\right) = 1 - h(x)$
+
+$$
+L(\omega)=\prod_{i=1}^{N} [y=1] h(x) * [y=0] 1 - h(x)
+$$
+
+Por una propiedad de los productorios podemos transformar éstos en una sumatoria de logaritmos:
+
+$$
+L(\omega)=\sum_{i=1}^{N} [y=1] logp(h(x)) + [y=0] log(1 - h(x))
+$$
+
+Vemos que hemos obtenido la misma forma que la función $E_{in}$ tan solo que los parámetros de los logaritmos están invertidos. Debido a esto, dado un h(x) que maximice el valor de un logaritmo (ya sea cuando y=0 o y=1) en L(w), se tomará el valor inverso para $E_{in}$ minimizando su resultado.
 
 **b) Para el caso $h(x) = \sigma(w^Tx)$ mostrar que minimizar el error de la muestra en el apartado anterior es equivalente a minimizar el error muestral**
 
 $$E_{\mathrm{in}}(\mathbf{w})=\frac{1}{N} \sum_{n=1}^{N} \ln \left(1+e^{-y_{n} \mathbf{w}^{T} \mathbf{x}_{n}}\right)$$
 
+Para realizar esta comprobación cambiaremos las etiquetas del problema. La etiqueta 1 se mantendrá en 1 y la etiqueta 0 pasará a ser -1.
 
+Una vez aclarado sustituimos h(x) por $\sigma(w^Tx)$ en $E_{in}$
+
+$$E_{\mathrm{in}}(\mathbf{w})=\sum_{n=1}^{N}\llbracket y_{n}=1 \rrbracket \ln \frac{1}{\sigma(w^Tx)}+\llbracket y_{n}=-1 \rrbracket \ln \frac{1}{1-\sigma(w^Tx)}$$
+
+Una propiedad del sigmoide indica que $1-\sigma(x) = \sigma(-x)$:
+
+$$E_{\mathrm{in}}(\mathbf{w})=\sum_{n=1}^{N}\llbracket y_{n}=1 \rrbracket \ln \frac{1}{\sigma(w^Tx)}+\llbracket y_{n}=-1 \rrbracket \ln \frac{1}{\sigma(-w^Tx)}$$
+
+Con este cambio podemos unificar la función incorporando el parámetro y dentro de la función sigmoide para definir su signo ya que concuerda que cuando y>0 el contenido del sigmoide se evalúa de manera positiva y si y<0 el contenido del sigmoide se evalúa de manera negativa.
+
+$$E_{\mathrm{in}}(\mathbf{w})=\sum_{n=1}^{N} \ln \frac{1}{\sigma(yw^Tx)}$$
+
+Por otra parte la función sigmoide es:
+
+$$
+\sigma(x) = \frac{1}{1+e^{-x}}
+$$
+
+Si en vez de x ponemos nuestros parámetros $yw^Tx$ y sustituimos en la función $E_{in}$ tenemos:
+
+$$
+E_{\mathrm{in}}(\mathbf{w})=\sum_{n=1}^{N} \ln \frac{1}{\frac{1}{1+e^{-yw^Tx}}}
+$$
+$$
+E_{\mathrm{in}}(\mathbf{w})=\sum_{n=1}^{N} \ln {1+e^{-yw^Tx}}
+$$
+
+Obteniendo, con $h(x) = \sigma(w^Tx)$, la misma expresión en la función anterior que la dada en este apartado, demostramos que es equivalente minimizar el error muestral en una u otra.
 
 **9. Derivar el error $E_{in}$ para mostrar que en regresión logística se verifica:**
 
@@ -197,7 +311,55 @@ $$\nabla E_{\mathrm{in}}(\mathbf{w})=-\frac{1}{N} \sum_{n=1}^{N} \frac{y_{n} \ma
 
 **Argumentar sobre si un ejemplo mal clasificado contribuye al gradiente más que un ejemplo bien clasificado.**
 
+El error viene dado por:
 
+$$
+E_{in}=\frac{1}{N} \sum_{i=0}^{N} \ln \left(1+e^{-y_{i} \mathbf{w}^{\mathrm{T}} \mathbf{x}_{i}}\right)
+$$
+
+Dejando a un lado la división para obtener la media y la sumatoria, nos interesa derivar el logaritmo:
+
+$$
+\frac{\delta}{\delta \omega}\left(\ln \left(1+e^{-y \omega^{T} x}\right)\right)
+$$
+
+$$
+\frac{1}{1+e^{-y \omega^{T} x}}\frac{\delta}{\delta \omega}(1+e^{-y \omega^{T} x})
+$$
+
+$$
+\frac{e^{-y \omega^{T} x}}{1+e^{-y \omega^{T} x}}\frac{\delta}{\delta \omega}{(-y \omega^{T} x)}
+$$
+
+$$
+\frac{(-yx)e^{-y \omega^{T} x}}{1+e^{-y \omega^{T} x}}
+$$
+
+Si comparamos esta expresión con el sigmoide:
+
+$$
+\sigma(\mathrm{x})=\frac{e^{x}}{e^{x}+1}
+$$
+
+Tenemos que $x_{sigmoide} = -yw^Tx$ y por tanto: $(-yx)\sigma(-yw^Tx)$. Si añadimos la media y la sumatoria tenemos la expresión a demostrar:
+
+$$
+\frac{1}{N} \sum_{i=0}^{N} (-yx)\sigma(-yw^Tx)
+$$
+
+Un ejemplo mal clasificado supone que los valores de y e $\hat{y}$ (predicción) sean diferentes: y = 1, $\hat{y}=-1$ o y = -1, $\hat{y}=1$.
+
+Si $\hat{y} = w^T x$:
+
+$$
+\frac{1}{N} \sum_{i=0}^{N} (-yx)\sigma(-y\hat{y})
+$$
+
+En un ejemplo mal clasificado, el producto $y\hat{y}$ siempre será negativo y por lo tanto la expresión sobre la que se evalúa el sigmoide será positiva tendiendo así a 1 y proporcionando un valor significativo a la sumatoria del error.
+
+Por el contrario, un ejemplo bien clasificado supone un producto de $y\hat{y}$ positivo y, por lo tanto, una evaluación del sigmoide sobre una expresión negativa tendiendo así a 0 y aportando un valor poco significativo a la sumatoria del error.
+
+![Sigmoide](img/sigmoide.png){width=200}
 
 **10. Definamos el error en un punto $(x_n, y_n)$ por**
 
@@ -227,7 +389,8 @@ Sustituimos $\eta = 1$ en SGD y multiplicamos:
 $$ 
 SGD = w_{j}=w_{j}+y_{n} x_{n}
 $$
-Como vemos tenemos una expresión similar a PLA.
+Como vemos tenemos la misma expresión que en PLA para los casos en que la predicción no sea buena. Recordemos que $e_{n}$ es el máximo entre 0 y el producto de la predicción por la etiqueta real cambiado de signo.  
+¿Esto que significa? Si la predicción ha sido acertada, la evaluación de $-y_{n} w^{T} x_{n}$ será negativa y como $e_{n}$ obtendremos 0 como máximo dejando así w inalterado. Por el contrario, si la predicción ha sido errónea, la evaluación de $-y_{n} w^{T} x_{n}$ será positiva quedando esta expresión como máximo en $e_{n}$ y alterando w.
 
 
 # BONUS
