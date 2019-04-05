@@ -1,8 +1,9 @@
 ---
 author: José Javier Alonso Ramos
-email: "email: jjavier.ar98@gmail.com"
-dni: "DNI: 77766199-W"
+email: "email: "
+dni: "DNI: "
 date: \today
+group: "Grupo: AA2"
 geometry: margin=2cm
 title: "Aprendizaje Automático : Cuestionario 1"
 header-includes: |
@@ -11,6 +12,8 @@ toc: True
 toc-own-page: TRUE
 titlepage: True
 titlepage-rule: 1
+logo: "img/logoUGR.png"
+logo-width: 300
 ---
 
 # Preguntas
@@ -210,12 +213,16 @@ y = etiquetas reales
 
 Desde un punto de vista geométrico, en un modelo de regresión lineal con k variables, consideramos un hiperplano $\pi$ de dimensión k+1 formado por $(1,x_1,x_2,...,x_k)$ siendo 1 un vector de unos y $x_i$ vectores columna de la matriz X.
 
-El objetivo de la matriz $\hat{H}$ es encontrar un vector de predicción $\hat{y}$ perteneciente al hiperplano cuya distancia al vector $y$ sea la menor posible. La distancia entre ellos será $e=y-\hat{y}$, por lo tanto para minimizar la distancia entre las etiquetas predichas y las reales debemos minimizar el módulo de $e$. Si lo vemos gráficamente es más fácil darnos cuenta que este vector $e$ debe formar un ángulo de $90\degree$ con el hiperplano para ser módulo mínimo, es decir, debemos proyectar las etiquetas reales sobre $\pi$ para obtener como resultado $\hat{y}$.  
+El objetivo de la matriz $\hat{H}$ es encontrar un vector de predicción $\hat{y}$ perteneciente al hiperplano cuya distancia al vector $y$ sea la menor posible. La distancia entre ellos será $e=y-\hat{y}$, por lo tanto para minimizar la distancia entre las etiquetas predichas y las reales debemos minimizar el módulo de $e$.
+
+![Hat](img/h.jpg){width=400}
+
+Si lo vemos gráficamente es más fácil darnos cuenta que este vector $e$ debe formar un ángulo de $90\degree$ con el hiperplano para ser módulo mínimo, es decir, debemos proyectar las etiquetas reales sobre $\pi$ para obtener como resultado $\hat{y}$.  
 Simplificando, $\hat{H}$ produce una proyección de $y$ sobre $\pi$ para obtener $\hat{y}$.
 
 **b) Identifique la propiedad más relevante de dicha matriz en relación con regresión lineal.**
 
-En regresión lineal aplicar una función de proyección sobre unos datos debe dar siempre el mismo resultado independientemente de cuantas veces se repita. Esto solo es posible si nuestra matriz de proyección $\hat{\mathrm{H}}$ es IDEMPOTENTE. Como $H^2 = H$ una vez calculada $\hat{y}$ si volvemos a multiplicar $\hat{H} \hat{y} $ volvemos a obtener el mismo resultado, es decir, $\hat{y}$.
+En regresión lineal aplicar una función de proyección sobre unos datos debe dar siempre el mismo resultado independientemente de cuantas veces se repita. Esto solo es posible si nuestra matriz de proyección $\hat{\mathrm{H}}$ es IDEMPOTENTE. Como $H^2 = H$, una vez calculada $\hat{y}$, si volvemos a multiplicar $\hat{H} \hat{y}$ volvemos a obtener el mismo resultado, es decir, $\hat{y}$.
 
 ##7. La regla de adaptación de los pesos del Perceptrón $(w_{new} = w_{old} + y x)$ tiene la interesante propiedad de que mueve el vector de pesos en la dirección adecuada para clasificar x de forma correcta. Suponga el vector de pesos $w$ de un modelo y un dato $x(t)$ mal clasificado respecto de dicho modelo. Probar matemáticamente que el movimiento de la regla de adaptación de pesos siempre produce un movimiento de $w$ en la dirección correcta para clasificar bien $x(t)$.
 
@@ -242,7 +249,7 @@ $$w_{new} = w_{old} + y x$$
  
 $\hat{y} \equiv prediction$
 
-Si $y=1$ y $\hat{y} = -1$ quiere decir que el ángulo de nuestro coseno es demasiado grande y tenemos que disminuirlo $(si \hat{y} = -1 \leftarrow cos(\alpha) < 0 \leftarrow \alpha \in (90,180])$. Para ello sumamos a $\vec{w}$ el vector $\vec{x}$ haciendo $\alpha$ más pequeño y provocando así que cos($\alpha$) llegue o, al menos, se acerque a un valor positivo.
+Si $y=1$ y $\hat{y} = -1$ quiere decir que el ángulo de nuestro coseno es demasiado grande y tenemos que disminuirlo $(si \hat{y} = -1 \rightarrow cos(\alpha) < 0 \rightarrow \alpha \in (90,180])$. Para ello sumamos a $\vec{w}$ el vector $\vec{x}$ haciendo $\alpha$ más pequeño y provocando así que cos($\alpha$) llegue o, al menos, se acerque a un valor positivo.
 
 $$w_{new} = w_{old} + 1 x$$
 
@@ -252,14 +259,14 @@ En la imagen tenemos que $\vec{B}$ es nuestro vector $\vec{x}$ y $\vec{A}$ es nu
 El vector suma $\vec{(A+B)}$ forma un menor ángulo con respecto a $\vec{B}$ de lo que lo hacía $\vec{A}$.
 
 ___
-Si por el contrario $y=-1$ y $\hat{y} = 1$ quiere decir que el ángulo de nuestro coseno es demasiado pequeño y tenemos que aumentarlo $(si \hat{y} = +1 \leftarrow cos(\alpha) > 0 \leftarrow \alpha \in [0,90)$. Para ello restamos a $\vec{w}$ el vector $\vec{x}$ haciendo $\alpha$ más grande y provocando así que cos($\alpha$) llegue o, al menos, se acerque a un valor negativo.
+Si por el contrario $y=-1$ y $\hat{y} = 1$ quiere decir que el ángulo de nuestro coseno es demasiado pequeño y tenemos que aumentarlo $(si \hat{y} = +1 \rightarrow cos(\alpha) > 0 \rightarrow \alpha \in [0,90)$. Para ello restamos a $\vec{w}$ el vector $\vec{x}$ haciendo $\alpha$ más grande y provocando así que cos($\alpha$) llegue o, al menos, se acerque a un valor negativo.
 
 $$w_{new} = w_{old} + (-1) x$$
 
 ![Resta de vectores](img/resta_vec.png){width=120}
 
-En la imagen tenemos que $\vec{b}$ es nuestro vector $\vec{x}$ y $\vec{a}$ es nuestro vector $\vec{w}$.  
-Si ponemos el vector resta $\vec{a-b}$ en el punto de partida de los otros dos vectores, vemos que forma un mayor ángulo con respecto a $\vec{b}$ de lo que lo hacía $\vec{a}$.
+En la imagen tenemos que $\vec{B}$ es nuestro vector $\vec{x}$ y $\vec{A}$ es nuestro vector $\vec{w}$.  
+Si ponemos el vector resta $\vec{A-B}$ en el punto de partida de los otros dos vectores, vemos que forma un mayor ángulo con respecto a $\vec{B}$ de lo que lo hacía $\vec{A}$.
 
 Con estas variaciones del vector $\vec{w}$ conseguiremos en un número finito de iteraciones clasificar inequívocamente todos los ejemplos.
 
