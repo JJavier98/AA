@@ -41,7 +41,7 @@ _Derivada de E respecto a 'u'_
 $$\delta E_u = {\delta \over \delta u}[(u^2 e^v - 2v^2 e^{-u}) ^2]$$  
 _Aplicamos la regla de la potencia._  
 $$\delta E_u = 2(u^2 e^v - 2v^2 e^{-u}) {\delta \over \delta u}[u^2 e^v - 2v^2 e^{-u}]$$  
-_Derivamos los términos por eseparado._  
+_Derivamos los términos por separado._  
 $$\delta E_u = 2(u^2 e^v - 2v^2 e^{-u})(e^v {\delta \over \delta u}[u^2] - 2v^2 {\delta \over \delta u}[e^{-u}])$$  
 _Resultado de la derivada parcial respecto 'u'_:  
 $$\delta E_u = 2(u^2 e^v - 2v^2 e^{-u})(2e^v u + 2v^2 e^{-u})$$  
@@ -50,7 +50,7 @@ _Derivada de E respecto a 'v'_
 $$\delta E_v = {\delta \over \delta u}[(u^2 e^v - 2v^2 e^{-u})^2]$$  
 _Aplicamos la regla de la potencia._  
 $$\delta E_v = 2(u^2 e^v - 2v^2 e^{-u}) {\delta \over \delta u}[u^2 e^v - 2v^2 e^{-u}]$$  
-_Derivamos los términos por eseparado._  
+_Derivamos los términos por separado._  
 $$\delta E_v = 2(u^2 e^v - 2v^2 e^{-u})(u^2 {\delta \over \delta u}[e^v] - 2e^{-u} {\delta \over \delta u}[v^2])$$  
 _Resultado de la derivada parcial respecto 'v'_:  
 $$\delta E_v = 2(u^2 e^v - 2v^2 e^{-u})(e^v u^2 - 4v e^{-u})$$  
@@ -72,9 +72,9 @@ Las coordenadas ***(0.619207678450638, 0.9684482690100487)*** son las primeras e
 |    [1.0, 1.0] |0.6192076|0.96844826| 0.01|5.9973 x 10^(-15)|         33 |
 
 ![Evolución de E(u,v) en cada iteración](imagenes/Ejercicio_1.2._Valor_de_Z_en_las_distintas_iteraciones_del_algoritmo.png)  
-Vemos como tiende a una asíntota horizontal cuando se aproxima al minímo.
+Vemos como tiende a una asíntota horizontal cuando se aproxima al mínimo.
 ![Evolución de E(u,v) en cada iteración](imagenes/Ejercicio_1.2._Representacion_3D_de_la_función_E.png)  
-Esta es una representación 3D de la gráfica donde se ven representados el punto incial como una estrella negra y el mínimo alcanzado como una estrella roja. También marcamos los puntos intermedios recorridos en color verde pero, debido a la proximidad del punto inicial con el mínimo, no se distinguen bien.  
+Esta es una representación 3D de la gráfica donde se ven representados el punto inicial como una estrella negra y el mínimo alcanzado como una estrella roja. También marcamos los puntos intermedios recorridos en color verde pero, debido a la proximidad del punto inicial con el mínimo, no se distinguen bien.  
 
 ___
 
@@ -127,13 +127,13 @@ ___
 
 4. ___¿Cuál sería su conclusión sobre la verdadera dificultad de encontrar el mínimo global de una función arbitraria?___  
 
-La dificultad recae en lo bueno que sea el punto inicial escogido (que el camino marcado por el gradiente descendente sea hacia el mínimo globlal y no hacia un mínimo local), en que el _learning rate_ escogido sea acertado (permita converger adecuadamente en el mínimo y a su vez no sea demasiado pequeño y haga que la ejecución del algoritmo sea extremadamente larga) y en ser capaces de solucionar o evitar estancamientos en mínimos locales.  
+La dificultad recae en lo bueno que sea el punto inicial escogido (que el camino marcado por el gradiente descendente sea hacia el mínimo global y no hacia un mínimo local), en que el _learning rate_ escogido sea acertado (permita converger adecuadamente en el mínimo y a su vez no sea demasiado pequeño y haga que la ejecución del algoritmo sea extremadamente larga) y en ser capaces de solucionar o evitar estancamientos en mínimos locales.  
 
 ___  
 #### Ejercicio 2.- BÚSQUEDA ITERATIVA DE ÓPTIMOS
-___Este ejercicio ajusta modelos de regresión a vectores de características extraidos de imágenes de digitos manuscritos. En particular se extraen dos característcas concretas: el valor medio del nivel de gris y simetría del número respecto de su eje vertical. Solo se seleccionarán para este ejercicio las imágenes de los números 1 y 5.___  
+___Este ejercicio ajusta modelos de regresión a vectores de características extraídos de imágenes de dígitos manuscritos. En particular se extraen dos características concretas: el valor medio del nivel de gris y simetría del número respecto de su eje vertical. Solo se seleccionarán para este ejercicio las imágenes de los números 1 y 5.___  
 
-1. ___Estimar un modelo de regresión lineal a partir de los datos proporcionados de dichos números (Intensidad promedio, Simetria) usando tanto el algoritmo de la pseudo-inversa como Gradiente descendente estocástico (SGD). Las etiquetas serán {-1, 1}, una para cada vector de cada uno de los números. Pintar las soluciones obtenidas junto con los datos usados en el ajuste. Valorar la bondad del resultado usando E in y E out (para E out calcular las predicciones usando los datos del fichero de test).___  
+1. ___Estimar un modelo de regresión lineal a partir de los datos proporcionados de dichos números (Intensidad promedio, Simetría) usando tanto el algoritmo de la pseudo-inversa como Gradiente descendente estocástico (SGD). Las etiquetas serán {-1, 1}, una para cada vector de cada uno de los números. Pintar las soluciones obtenidas junto con los datos usados en el ajuste. Valorar la bondad del resultado usando E in y E out (para E out calcular las predicciones usando los datos del fichero de test).___  
 
 Para el ***Gradiente Descendente Estocástico*** hemos escogido un tamaño de Minibatch = 64.
 
@@ -155,7 +155,7 @@ Para calcular el ***Error medio*** realizamos la sumatoria de la diferencia cuad
 
 $$Err = \frac{\sum_{n=1}^N [X w - Y]^2} {N}$$
 
-Acontinuación mostramos en una gráfica 3D la distribución de todos los valores de la muestra X leidos. Pintaremos de rojo aquellos a los que nuestro algoritmo les haya asignado la etiqueta 1 y de azul a los que se les haya asignado la etiqueta -1.  
+A continuación mostramos en una gráfica 3D la distribución de todos los valores de la muestra X leídos. Pintaremos de rojo aquellos a los que nuestro algoritmo les haya asignado la etiqueta 1 y de azul a los que se les haya asignado la etiqueta -1.  
 ![Representación 3D de la muestra y su asignación](imagenes/Ejer2_1_3D.png)  
 
 Mostramos el error obtenido con SGD y Pseudo-inversa:  
@@ -192,7 +192,7 @@ Mapa de puntos según etiquetas y mapa de puntos con ruido:
 ![Mapa de puntos por etiquetas](imagenes/etiquetas_segun_signo.png)
 ![Mapa con ruido](imagenes/etiquetas_con_ruido.png)  
 
-- c) ___Usando como vector de características $(1, x_1, x_2)$ ajustar un modelo de regresion lineal al conjunto de datos generado y estimar los pesos w. Estimar el error de ajuste $E_{in}$ usando Gradiente Descendente Estocástico (SGD).___  
+- c) ___Usando como vector de características $(1, x_1, x_2)$ ajustar un modelo de regresión lineal al conjunto de datos generado y estimar los pesos w. Estimar el error de ajuste $E_{in}$ usando Gradiente Descendente Estocástico (SGD).___  
 $$E_{in} = 0.9266173649533643$$  
 
 - d) ___Ejecutar todo el experimento definido por (a)-(c) 1000 veces (generamos 1000 muestras diferentes) y___
@@ -259,4 +259,4 @@ Newton:
 |  [-0.5, -0.5] |-0.475244| -0.487869| 0.1 | 0.725483 |         50 |
 |      [-1, -1] |-1.949409| -0.974715| 0.1 | 2.900408 |         50 |  
 
-El método de Newton tiende a converger a 0 aunque en los puntos $(\pm 1, \pm 1)$ no lo logre. Por lo tanto el gradiente descendente consigue mejores resultados pudiendo alcanzar valores negaivos.
+El método de Newton tiende a converger a 0 aunque en los puntos $(\pm 1, \pm 1)$ no lo logre. Por lo tanto el gradiente descendente consigue mejores resultados pudiendo alcanzar valores negativos.
