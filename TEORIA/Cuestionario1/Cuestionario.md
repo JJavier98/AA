@@ -18,7 +18,7 @@ logo-width: 300
 
 # Preguntas
 
-##1. Identificar, para cada una de las siguientes tareas, cual es el problema, que tipo de aprendizaje es el adecuado (supervisado, no supervisado, por refuerzo) y los elementos de aprendizaje ($X , f, Y$) que deberíamos usar en cada caso. Si una tarea se ajusta a más de un tipo, explicar como y describir los elementos para cada tipo.
+## 1. Identificar, para cada una de las siguientes tareas, cual es el problema, que tipo de aprendizaje es el adecuado (supervisado, no supervisado, por refuerzo) y los elementos de aprendizaje ($X , f, Y$) que deberíamos usar en cada caso. Si una tarea se ajusta a más de un tipo, explicar como y describir los elementos para cada tipo.
 
 **a) Clasificación automática de cartas por distrito postal:**
 
@@ -40,7 +40,7 @@ Se trata de un problema de aprendizaje por refuerzo ya que el dron realizaría u
 
 Es un problema de aprendizaje no supervisado. El programa tendrá que agrupar a los perros según sus características comunes y manteniendo separados aquellos que no compartan rasgos que el programa interprete como distintivas, creando así grupos que posiblemente coincidan con una clasificación por razas.
 
-##2. ¿Cuales de los siguientes problemas son más adecuados para una aproximación por aprendizaje y cuales más adecuados para una aproximación por diseño? Justificar la decisión
+## 2. ¿Cuales de los siguientes problemas son más adecuados para una aproximación por aprendizaje y cuales más adecuados para una aproximación por diseño? Justificar la decisión
 
 **a) Determinar si un vertebrado es mamífero, reptil, ave, anfibio o pez.**
 
@@ -67,7 +67,7 @@ Este problema lo afrontaremos mediante aprendizaje. La combinación de distintos
 
 De nuevo se nos presenta un problema que abordaremos mediante aprendizaje. Estudiando la situación a lo largo de suficientes días podemos deducir el comportamiento complejo de los vehículos en un cruce. Estimar las horas punta en las que se concentra más tráfico, día de la semana en el que realizamos el estudio, desde dónde y hacia dónde se dirige la mayor afluencia de vehículos, diferenciar entre un comportamiento diurno y nocturno, ... En definitiva, distintas variables que pueden resultar complejas de estudiar dado que dicho cruce se encuentra integrado en un sistema mayor de carreteras del que depende y del que nos resultaría complejo abstraernos en un problema de diseño.
 
-##3. Construir un problema de aprendizaje desde datos para un problema de clasificación de fruta en una explotación agraria que produce mangos, papayas y guayabas. Identificar los siguientes elementos formales $X,Y,D,f$ del problema. Dar una descripción de los mismos que pueda ser usada por un computador. ¿Considera que en este problema estamos ante un caso de etiquetas con ruido o sin ruido? Justificar las respuestas.
+## 3. Construir un problema de aprendizaje desde datos para un problema de clasificación de fruta en una explotación agraria que produce mangos, papayas y guayabas. Identificar los siguientes elementos formales $X,Y,D,f$ del problema. Dar una descripción de los mismos que pueda ser usada por un computador. ¿Considera que en este problema estamos ante un caso de etiquetas con ruido o sin ruido? Justificar las respuestas.
 
 Nuestro conjunto X, que consideramos en este caso aislado como población, será todo el conjunto de frutas (mangos + papayas + guayabas) de nuestra explotación agraria caracterizadas según distintos criterios como: peso, color, tamaño, forma, aspereza de la piel, ...
 
@@ -75,7 +75,7 @@ El conjunto Y lo conforman las distintas etiquetas asignadas a cada elemento de 
 
 El conjunto D será un subconjunto representativo de X junto con sus etiquetas al que llamaremos muestra y mediante el cual intentaremos aprender un método de clasificación óptimo de los elementos de X. Este método lo denominamos f, una función que asigna inequívocamente una etiqueta $y_{i}$ a un elemento $x_{i}$. Normalmente, no conseguiremos f como tal, sino una aproximación más o menos acertada.
 
-##4. Suponga una matriz cuadrada A que admita la descomposición $A = X^TX$ para alguna matriz $X$ de números reales. Establezca una relación entre los valores singulares de las matriz $A$ y los valores singulares de $X$.
+## 4. Suponga una matriz cuadrada A que admita la descomposición $A = X^TX$ para alguna matriz $X$ de números reales. Establezca una relación entre los valores singulares de las matriz $A$ y los valores singulares de $X$.
 
 Descomponemos A, X y $X^{T}$ en valores singulares:  
 $$ 
@@ -119,7 +119,7 @@ $$D_{A}=D_{x}^{2}$$
 $$V_{A}^{T}=V_{x}^{T}$$
 
 
-##5. Sean x e y dos vectores de características de dimensión M × 1. La expresión
+## 5. Sean x e y dos vectores de características de dimensión M × 1. La expresión
 
 $$\operatorname{cov}(\mathbf{x}, \mathbf{y})=\frac{1}{M} \sum_{i=1}^{M}\left(x_{i}-\overline{x}\right)\left(y_{i}-\overline{y}\right)$$
 
@@ -204,7 +204,7 @@ $$
 
 Acabamos de obtener la matriz de covarianza presentada en el enunciado.
 
-##6. Considerar la matriz hat definida en regresión, $\hat{\mathrm{H}}=\mathrm{X}\left(\mathrm{X}^{\mathrm{T}} \mathrm{X}\right)^{-1} \mathrm{X}^{\mathrm{T}}$ donde X es la matriz de observaciones de dimensión $N \times (d + 1)$, y $\mathrm{X}^T\mathrm{X}$ es invertible.
+## 6. Considerar la matriz hat definida en regresión, $\hat{\mathrm{H}}=\mathrm{X}\left(\mathrm{X}^{\mathrm{T}} \mathrm{X}\right)^{-1} \mathrm{X}^{\mathrm{T}}$ donde X es la matriz de observaciones de dimensión $N \times (d + 1)$, y $\mathrm{X}^T\mathrm{X}$ es invertible.
 
 **a) ¿Que representa la matriz $\hat{\mathrm{H}}$ en un modelo de regresión?**
 
@@ -224,7 +224,7 @@ Simplificando, $\hat{H}$ produce una proyección de $y$ sobre $\pi$ para obtener
 
 En regresión lineal aplicar una función de proyección sobre unos datos debe dar siempre el mismo resultado independientemente de cuantas veces se repita. Esto solo es posible si nuestra matriz de proyección $\hat{\mathrm{H}}$ es IDEMPOTENTE. Como $H^2 = H$, una vez calculada $\hat{y}$, si volvemos a multiplicar $\hat{H} \hat{y}$ volvemos a obtener el mismo resultado, es decir, $\hat{y}$.
 
-##7. La regla de adaptación de los pesos del Perceptrón $(w_{new} = w_{old} + y x)$ tiene la interesante propiedad de que mueve el vector de pesos en la dirección adecuada para clasificar x de forma correcta. Suponga el vector de pesos $w$ de un modelo y un dato $x(t)$ mal clasificado respecto de dicho modelo. Probar matemáticamente que el movimiento de la regla de adaptación de pesos siempre produce un movimiento de $w$ en la dirección correcta para clasificar bien $x(t)$.
+## 7. La regla de adaptación de los pesos del Perceptrón $(w_{new} = w_{old} + y x)$ tiene la interesante propiedad de que mueve el vector de pesos en la dirección adecuada para clasificar x de forma correcta. Suponga el vector de pesos $w$ de un modelo y un dato $x(t)$ mal clasificado respecto de dicho modelo. Probar matemáticamente que el movimiento de la regla de adaptación de pesos siempre produce un movimiento de $w$ en la dirección correcta para clasificar bien $x(t)$.
 
 La asignación de etiquetas viene dada por el signo obtenido en la operación $w^{T} x_{i}$, es decir, si $w^{T} x_{i} < 0$ la etiqueta asignada será -1 y si $w^{T} x_{i} > 0$ la etiqueta asignada será +1.
 
@@ -270,7 +270,7 @@ Si ponemos el vector resta $\vec{A-B}$ en el punto de partida de los otros dos v
 
 Con estas variaciones del vector $\vec{w}$ conseguiremos en un número finito de iteraciones clasificar inequívocamente todos los ejemplos.
 
-##8. Sea un problema probabilístico de clasificación binaria con etiquetas $\{0,1\}$, es decir $P(Y = 1) = h(x)$ y $P(Y = 0) = 1 - h(x)$, para una función $h()$ dependiente de la muestra
+## 8. Sea un problema probabilístico de clasificación binaria con etiquetas $\{0,1\}$, es decir $P(Y = 1) = h(x)$ y $P(Y = 0) = 1 - h(x)$, para una función $h()$ dependiente de la muestra
 
 **a) Considere una muestra i.i.d. de tamaño N $(x_1, \dots , x_N)$. Mostrar que la función $h$ que maximiza la verosimilitud de la muestra es la misma que minimiza.**
 
@@ -334,7 +334,7 @@ $$
 
 Obteniendo, con $h(x) = \sigma(w^Tx)$, la misma expresión en la función anterior que la dada en este apartado, demostramos que es equivalente minimizar el error muestral en una u otra.
 
-##9. Derivar el error $E_{in}$ para mostrar que en regresión logística se verifica:
+## 9. Derivar el error $E_{in}$ para mostrar que en regresión logística se verifica:
 
 $$\nabla E_{\mathrm{in}}(\mathbf{w})=-\frac{1}{N} \sum_{n=1}^{N} \frac{y_{n} \mathbf{x}_{n}}{1+e^{y_{n} \mathbf{w}^{T} \mathbf{x}_{n}}}=\frac{1}{N} \sum_{n=1}^{N}-y_{n} \mathbf{x}_{n} \sigma\left(-y_{n} \mathbf{w}^{T} \mathbf{x}_{n}\right)$$
 
@@ -390,7 +390,7 @@ Por el contrario, un ejemplo bien clasificado supone un producto de $y\hat{y}$ p
 
 ![Sigmoide](img/sigmoide.png){width=200}
 
-##10. Definamos el error en un punto $(x_n, y_n)$ por
+## 10. Definamos el error en un punto $(x_n, y_n)$ por
 
 $$\mathbf{e}_{n}(\mathbf{w})=\max \left(0,-y_{n} \mathbf{w}^{T} \mathbf{x}_{n}\right)$$
 
@@ -424,7 +424,7 @@ Como vemos tenemos la misma expresión que en PLA para los casos en que la predi
 
 # BONUS
 
-##1. (2 puntos) En regresión lineal con ruido en las etiquetas, el error fuera de la muestra para una $h$ dada puede expresarse como
+## 1. (2 puntos) En regresión lineal con ruido en las etiquetas, el error fuera de la muestra para una $h$ dada puede expresarse como
 
 $$E_{\mathrm{out}}(h)=\mathbb{E}_{\mathbf{x}, y}\left[(h(\mathbf{x})-y)^{2}\right]=\iint(h(\mathbf{x})-y)^{2} p(\mathbf{x}, y) d \mathbf{x} d y$$
 
@@ -453,4 +453,4 @@ $$h^{*}(\mathbf{x})=\mathbb{E}_{y}[y | \mathbf{x}]=\int y \cdot p(y | \mathbf{x}
 
 
 
-##2. (1 punto) Una modificación del algoritmo perceptrón denominada ADALINE, incorpora en la regla de adaptación una ponderación sobre la cantidad de movimiento necesaria. En PLA se aplica $w_{new} = w_{old} + y_n x_n$ y en ADALINE se aplica la regla $w_{new} = w_{old} + \eta (y_n − w^T x_n) x_n$. Considerar la función de error $En(w) = (max(0, 1 − y_n w^T x_n))^2$. Argumentar que la regla de adaptación de ADALINE es equivalente a gradiente descendente estocástico (SGD) sobre $\frac{1}{N} \sum_{n=1}^{N} E_{n}(\mathbf{w})$.
+## 2. (1 punto) Una modificación del algoritmo perceptrón denominada ADALINE, incorpora en la regla de adaptación una ponderación sobre la cantidad de movimiento necesaria. En PLA se aplica $w_{new} = w_{old} + y_n x_n$ y en ADALINE se aplica la regla $w_{new} = w_{old} + \eta (y_n − w^T x_n) x_n$. Considerar la función de error $En(w) = (max(0, 1 − y_n w^T x_n))^2$. Argumentar que la regla de adaptación de ADALINE es equivalente a gradiente descendente estocástico (SGD) sobre $\frac{1}{N} \sum_{n=1}^{N} E_{n}(\mathbf{w})$.
