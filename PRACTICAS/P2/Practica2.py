@@ -10,9 +10,6 @@ import matplotlib.pyplot as plt
 # Fijamos la semilla
 np.random.seed(1)
 
-recta_y = lambda a,b,x: a*x + b
-distancia_a_recta = lambda a,b,x,y: np.sign(y-a*x-b)
-
 def simula_unif(N, dim, rango):
 	return np.random.uniform(rango[0],rango[1],(N,dim))
 
@@ -52,7 +49,7 @@ lista_puntos_gaus = simula_gaus(50,2,[5,7])
 #a) Mostramos puntos de simula_unif
 titulo = 'Puntos de simula_unif'
 plt.title(titulo)
-plt.scatter(lista_puntos_unif[:,0], lista_puntos_unif[:,1], c='c')
+plt.scatter(lista_puntos_unif[:,0], lista_puntos_unif[:,1], c='r')
 plt.show()
 
 # b) Mostramos puntos de simula_gaus
@@ -68,14 +65,18 @@ plt.scatter(lista_puntos_gaus[:,0], lista_puntos_gaus[:,1], c='c')
 plt.scatter(lista_puntos_unif[:,0], lista_puntos_unif[:,1], c='r')
 plt.show()
 
-
-input("\n--- Pulsar intro para continuar con el ejercicio 1.2 ---\n")
+input("\n--- Pulsar Intro para continuar con el ejercicio 1.2 ---\n")
 
 ################################################################################################
 ######################################## 1.2 ###################################################
 ################################################################################################
+
+# Declaramos funciones auxiliares para el cálculo de parámetros.
+recta_y = lambda a,b,x: a*x + b
+distancia_a_recta = lambda a,b,x,y: np.sign(y-a*x-b)
+
 # a)
-# Generamos la muetsra de puntos mediante simula_unif
+# Generamos la muestra de puntos mediante simula_unif
 muestra_de_puntos = simula_unif(100,2,[-50,50])
 # Generamos los coeficientes a,b de la recta y = ax + b
 a,b = simula_recta([-50,50])
@@ -87,7 +88,6 @@ eje_y_recta = recta_y(a,b,eje_x_recta)
 lista_etiquetas = distancia_a_recta(a,b,muestra_de_puntos[:,0],muestra_de_puntos[:,1])
 # Hacemos corresponder cada etiqueta con su punto
 datos_completos = np.c_[muestra_de_puntos, lista_etiquetas]
-
 # Imprimimos los resultados
 titulo = 'Puntos según etiqueta'
 plt.title(titulo)
@@ -97,26 +97,74 @@ plt.plot(eje_x_recta, eje_y_recta, 'k-')
 plt.show()
 
 # b)
+# Dividimos los datos según sus etiquetas
 _negativos = datos_completos[ datos_completos[:,2]<0, :]
 _positivos = datos_completos[ datos_completos[:,2]>0, :]
-
+# Mezclamos los conjuntos para asegurarnos la introducción de ruido aleatoria
 np.random.shuffle(_negativos)
 np.random.shuffle(_positivos)
-
-tope = int(_negativos.shape[0]*0.1)
+# Aplicamos el 10% de ruido a ambos conjuntos (redondeamos cuánto es el 10% de cada grupo)
+tope = round(_negativos.shape[0]*0.1)
 for i in range(0,tope):
 	_negativos[i,2] = -_negativos[i,2];
 
-tope = int(_negativos.shape[0]*0.1)
+tope = round(_positivos.shape[0]*0.1)
 for i in range(0,tope):
 	_positivos[i,2] = -_positivos[i,2];
-
-titulo = 'Puntos según etiqueta'
+# Volvemos a juntarlos en un único conjunto y los volvemos a mezclar
+datos_completos_ruido = np.r_[_negativos, _positivos]
+np.random.shuffle(datos_completos_ruido)
+# Imprimimos el resultado
+titulo = 'Puntos según etiqueta - 10% de ruido'
 plt.title(titulo)
-plt.scatter(_negativos[:,0], _negativos[:,1], c='c')
-plt.scatter(_positivos[:,0], _positivos[:,1], c='r')
+plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]<0,0], datos_completos_ruido[datos_completos_ruido[:,2]<0,1], c='c')
+plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]>0,0], datos_completos_ruido[datos_completos_ruido[:,2]>0,1], c='r')
 plt.plot(eje_x_recta, eje_y_recta, 'k-')
 plt.show()
+
+input("\n--- Pulsar Intro para continuar con el ejercicio 1.3 ---\n")
+
+################################################################################################
+######################################## 1.3 ###################################################
+################################################################################################
+
+# Declaramos las distintas funciones
+f1 = lambda x,y: (x-10)*(x-10)+(y-20)*(y-20)-400
+f2 = lambda x,y: 0.5*(x+10)*(x+10)+(y-20)*(y-20)-400
+f3 = lambda x,y: 0.5*(x-10)*(x-10)-(y+20)*(y+20)-400
+f4 = lambda x,y: y-20*x*x-5*x+3
+
+# Generamos 100 puntos en el intervalo [-50,50] para generar la función
+eje_x_recta = np.linspace(-50,50,100)
+
+titulo = 'Puntos según etiqueta - 10% de ruido'
+plt.title(titulo)
+plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]<0,0], datos_completos_ruido[datos_completos_ruido[:,2]<0,1], c='c')
+plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]>0,0], datos_completos_ruido[datos_completos_ruido[:,2]>0,1], c='r')
+plt.plot(eje_x_recta, eje_y_recta, 'k-')
+plt.show()
+
+titulo = 'Puntos según etiqueta - 10% de ruido'
+plt.title(titulo)
+plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]<0,0], datos_completos_ruido[datos_completos_ruido[:,2]<0,1], c='c')
+plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]>0,0], datos_completos_ruido[datos_completos_ruido[:,2]>0,1], c='r')
+plt.plot(eje_x_recta, eje_y_recta, 'k-')
+plt.show()
+
+titulo = 'Puntos según etiqueta - 10% de ruido'
+plt.title(titulo)
+plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]<0,0], datos_completos_ruido[datos_completos_ruido[:,2]<0,1], c='c')
+plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]>0,0], datos_completos_ruido[datos_completos_ruido[:,2]>0,1], c='r')
+plt.plot(eje_x_recta, eje_y_recta, 'k-')
+plt.show()
+
+titulo = 'Puntos según etiqueta - 10% de ruido'
+plt.title(titulo)
+plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]<0,0], datos_completos_ruido[datos_completos_ruido[:,2]<0,1], c='c')
+plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]>0,0], datos_completos_ruido[datos_completos_ruido[:,2]>0,1], c='r')
+plt.plot(eje_x_recta, eje_y_recta, 'k-')
+plt.show()
+
 ###############################################################################
 ###############################################################################
 ###############################################################################
