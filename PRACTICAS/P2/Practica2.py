@@ -1,0 +1,148 @@
+# -*- coding: utf-8 -*-
+"""
+TRABAJO 2. 
+Nombre Estudiante: 
+"""
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+# Fijamos la semilla
+np.random.seed(1)
+
+recta_y = lambda a,b,x: a*x + b
+distancia_a_recta = lambda a,b,x,y: np.sign(y-a*x-b)
+
+def simula_unif(N, dim, rango):
+	return np.random.uniform(rango[0],rango[1],(N,dim))
+
+def simula_gaus(N, dim, sigma):
+    media = 0    
+    out = np.zeros((N,dim),np.float64)        
+    for i in range(N):
+        # Para cada columna dim se emplea un sigma determinado. Es decir, para 
+        # la primera columna se usará una N(0,sqrt(5)) y para la segunda N(0,sqrt(7))
+        out[i,:] = np.random.normal(loc=media, scale=np.sqrt(sigma), size=dim)
+        
+    return out
+
+
+def simula_recta(intervalo):
+    points = np.random.uniform(intervalo[0], intervalo[1], size=(2, 2))
+    x1 = points[0,0]
+    x2 = points[1,0]
+    y1 = points[0,1]
+    y2 = points[1,1]
+    # y = a*x + b
+    a = (y2-y1)/(x2-x1) # Calculo de la pendiente.
+    b = y1 - a*x1       # Calculo del termino independiente.
+    
+    return a, b
+
+
+################################################################################################
+######################################## 1.1 ###################################################
+################################################################################################
+
+# Obtenemos la nube de puntos según la función simula_unif
+lista_puntos_unif = simula_unif(50,2,[-50,50])
+# Obtenemos la nube de puntos según la función simula_gaus
+lista_puntos_gaus = simula_gaus(50,2,[5,7])
+
+#a) Mostramos puntos de simula_unif
+titulo = 'Puntos de simula_unif'
+plt.title(titulo)
+plt.scatter(lista_puntos_unif[:,0], lista_puntos_unif[:,1], c='c')
+plt.show()
+
+# b) Mostramos puntos de simula_gaus
+titulo = 'Puntos de simula_gaus'
+plt.title(titulo)
+plt.scatter(lista_puntos_gaus[:,0], lista_puntos_gaus[:,1], c='c')
+plt.show()
+
+# Comparamos puntos de simula_unif y gaus
+titulo = 'Puntos de simula_unif y simula_gaus'
+plt.title(titulo)
+plt.scatter(lista_puntos_gaus[:,0], lista_puntos_gaus[:,1], c='c')
+plt.scatter(lista_puntos_unif[:,0], lista_puntos_unif[:,1], c='r')
+plt.show()
+
+
+input("\n--- Pulsar intro para continuar con el ejercicio 1.2 ---\n")
+
+################################################################################################
+######################################## 1.2 ###################################################
+################################################################################################
+# a)
+# Generamos la muetsra de puntos mediante simula_unif
+muestra_de_puntos = simula_unif(100,2,[-50,50])
+# Generamos los coeficientes a,b de la recta y = ax + b
+a,b = simula_recta([-50,50])
+# Generamos dos puntos en el intervalo [-50,50] para generar la recta
+eje_x_recta = np.linspace(-50,50,2)
+# Calculamos las coordenadas del eje y para los dos puntos anteriores de la recta
+eje_y_recta = recta_y(a,b,eje_x_recta)
+# Calculamos las etiquetas asociadas a los puntos 2D
+lista_etiquetas = distancia_a_recta(a,b,muestra_de_puntos[:,0],muestra_de_puntos[:,1])
+# Hacemos corresponder cada etiqueta con su punto
+datos_completos = np.c_[muestra_de_puntos, lista_etiquetas]
+
+# Imprimimos los resultados
+titulo = 'Puntos según etiqueta'
+plt.title(titulo)
+plt.scatter(datos_completos[datos_completos[:,2]<0,0], datos_completos[datos_completos[:,2]<0,1], c='c')
+plt.scatter(datos_completos[datos_completos[:,2]>0,0], datos_completos[datos_completos[:,2]>0,1], c='r')
+plt.plot(eje_x_recta, eje_y_recta, 'k-')
+plt.show()
+
+# b)
+_negativos = datos_completos[ datos_completos[:,2]<0, :]
+_positivos = datos_completos[ datos_completos[:,2]>0, :]
+
+np.random.shuffle(_negativos)
+np.random.shuffle(_positivos)
+
+tope = int(_negativos.shape[0]*0.1)
+for i in range(0,tope):
+	_negativos[i,2] = -_negativos[i,2];
+
+tope = int(_negativos.shape[0]*0.1)
+for i in range(0,tope):
+	_positivos[i,2] = -_positivos[i,2];
+
+titulo = 'Puntos según etiqueta'
+plt.title(titulo)
+plt.scatter(_negativos[:,0], _negativos[:,1], c='c')
+plt.scatter(_positivos[:,0], _positivos[:,1], c='r')
+plt.plot(eje_x_recta, eje_y_recta, 'k-')
+plt.show()
+###############################################################################
+###############################################################################
+###############################################################################
+###############################################################################
+print('EJERCICIO BONUS\n')
+
+label4 = 1
+label8 = -1
+
+# Funcion para leer los datos
+def readData(file_x, file_y):
+	# Leemos los ficheros	
+	datax = np.load(file_x)
+	datay = np.load(file_y)
+	y = []
+	x = []	
+	# Solo guardamos los datos cuya clase sea la 4 o la 8
+	for i in range(0,datay.size):
+		if datay[i] == 4 or datay[i] == 8:
+			if datay[i] == 4:
+				y.append(label4)
+			else:
+				y.append(label8)
+			x.append(np.array([1, datax[i][0], datax[i][1]]))
+			
+	x = np.array(x, np.float64)
+	y = np.array(y, np.float64)
+	
+	return x, y
