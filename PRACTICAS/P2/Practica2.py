@@ -49,20 +49,23 @@ lista_puntos_gaus = simula_gaus(50,2,[5,7])
 #a) Mostramos puntos de simula_unif
 titulo = 'Puntos de simula_unif'
 plt.title(titulo)
-plt.scatter(lista_puntos_unif[:,0], lista_puntos_unif[:,1], c='r')
+plt.scatter(lista_puntos_unif[:,0], lista_puntos_unif[:,1], c='r', label='uniform')
+plt.legend()
 plt.show()
 
 # b) Mostramos puntos de simula_gaus
 titulo = 'Puntos de simula_gaus'
 plt.title(titulo)
-plt.scatter(lista_puntos_gaus[:,0], lista_puntos_gaus[:,1], c='c')
+plt.scatter(lista_puntos_gaus[:,0], lista_puntos_gaus[:,1], c='c', label='gaus')
+plt.legend()
 plt.show()
 
 # Comparamos puntos de simula_unif y gaus
 titulo = 'Puntos de simula_unif y simula_gaus'
 plt.title(titulo)
-plt.scatter(lista_puntos_gaus[:,0], lista_puntos_gaus[:,1], c='c')
-plt.scatter(lista_puntos_unif[:,0], lista_puntos_unif[:,1], c='r')
+plt.scatter(lista_puntos_gaus[:,0], lista_puntos_gaus[:,1], c='c', label='gaus')
+plt.scatter(lista_puntos_unif[:,0], lista_puntos_unif[:,1], c='r', label='unif')
+plt.legend()
 plt.show()
 
 input("\n--- Pulsar Intro para continuar con el ejercicio 1.2 ---\n")
@@ -77,9 +80,9 @@ distancia_a_recta = lambda a,b,x,y: np.sign(y-a*x-b)
 
 # a)
 # Generamos la muestra de puntos mediante simula_unif
-muestra_de_puntos = simula_unif(100,2,[-50,50])
+muestra_de_puntos = simula_unif(100,2,(-50,50))
 # Generamos los coeficientes a,b de la recta y = ax + b
-a,b = simula_recta([-50,50])
+a,b = simula_recta((-50,50))
 # Generamos dos puntos en el intervalo [-50,50] para generar la recta
 eje_x_recta = np.linspace(-50,50,2)
 # Calculamos las coordenadas del eje y para los dos puntos anteriores de la recta
@@ -91,9 +94,10 @@ datos_completos = np.c_[muestra_de_puntos, lista_etiquetas]
 # Imprimimos los resultados
 titulo = 'Puntos según etiqueta'
 plt.title(titulo)
-plt.scatter(datos_completos[datos_completos[:,2]<0,0], datos_completos[datos_completos[:,2]<0,1], c='c')
-plt.scatter(datos_completos[datos_completos[:,2]>0,0], datos_completos[datos_completos[:,2]>0,1], c='r')
-plt.plot(eje_x_recta, eje_y_recta, 'k-')
+plt.scatter(datos_completos[datos_completos[:,2]<0,0], datos_completos[datos_completos[:,2]<0,1], c='c', label='negativos')
+plt.scatter(datos_completos[datos_completos[:,2]>0,0], datos_completos[datos_completos[:,2]>0,1], c='r', label='positivos')
+plt.plot(eje_x_recta, eje_y_recta, 'k-',label='ax+b')
+plt.legend()
 plt.show()
 
 # b)
@@ -117,9 +121,10 @@ np.random.shuffle(datos_completos_ruido)
 # Imprimimos el resultado
 titulo = 'Puntos según etiqueta - 10% de ruido'
 plt.title(titulo)
-plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]<0,0], datos_completos_ruido[datos_completos_ruido[:,2]<0,1], c='c')
-plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]>0,0], datos_completos_ruido[datos_completos_ruido[:,2]>0,1], c='r')
-plt.plot(eje_x_recta, eje_y_recta, 'k-')
+plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]<0,0], datos_completos_ruido[datos_completos_ruido[:,2]<0,1], c='c', label='negativos')
+plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]>0,0], datos_completos_ruido[datos_completos_ruido[:,2]>0,1], c='r', label='positivos')
+plt.plot(eje_x_recta, eje_y_recta, 'k-',label='ax+b')
+plt.legend()
 plt.show()
 
 input("\n--- Pulsar Intro para continuar con el ejercicio 1.3 ---\n")
@@ -134,35 +139,49 @@ f2 = lambda x,y: 0.5*(x+10)*(x+10)+(y-20)*(y-20)-400
 f3 = lambda x,y: 0.5*(x-10)*(x-10)-(y+20)*(y+20)-400
 f4 = lambda x,y: y-20*x*x-5*x+3
 
-# Generamos 100 puntos en el intervalo [-50,50] para generar la función
-eje_x_recta = np.linspace(-50,50,100)
+f = []
+f.append(f1)
+f.append(f2)
+f.append(f3)
+f.append(f4)
 
-titulo = 'Puntos según etiqueta - 10% de ruido'
+titulo = 'Puntos según etiqueta fi'
 plt.title(titulo)
-plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]<0,0], datos_completos_ruido[datos_completos_ruido[:,2]<0,1], c='c')
-plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]>0,0], datos_completos_ruido[datos_completos_ruido[:,2]>0,1], c='r')
-plt.plot(eje_x_recta, eje_y_recta, 'k-')
+i=1
+for func in f:
+	# Generamos 100 puntos en el intervalo [-50,50] para generar la función
+	eje_x_recta = np.linspace(-50,50,100)
+	eje_y_recta = np.linspace(-50,50,100)
+	X,Y = np.meshgrid(eje_x_recta, eje_y_recta)
+	Z = func(X,Y)
+
+	plt.subplot(2,2,i)
+	plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]<0,0], datos_completos_ruido[datos_completos_ruido[:,2]<0,1], c='c')
+	plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]>0,0], datos_completos_ruido[datos_completos_ruido[:,2]>0,1], c='r')
+	plt.contour(X,Y,Z,[0])
+	i+=1
+
 plt.show()
 
-titulo = 'Puntos según etiqueta - 10% de ruido'
+nuevos_datos = datos_completos
+titulo = 'Puntos según etiqueta 2b - 10% de ruido'
 plt.title(titulo)
-plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]<0,0], datos_completos_ruido[datos_completos_ruido[:,2]<0,1], c='c')
-plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]>0,0], datos_completos_ruido[datos_completos_ruido[:,2]>0,1], c='r')
-plt.plot(eje_x_recta, eje_y_recta, 'k-')
-plt.show()
+i=1
+for func in f:
+	# Generamos 100 puntos en el intervalo [-50,50] para generar la función
+	eje_x_recta = np.linspace(-50,50,100)
+	eje_y_recta = np.linspace(-50,50,100)
+	X,Y = np.meshgrid(eje_x_recta, eje_y_recta)
+	Z = func(X,Y)
 
-titulo = 'Puntos según etiqueta - 10% de ruido'
-plt.title(titulo)
-plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]<0,0], datos_completos_ruido[datos_completos_ruido[:,2]<0,1], c='c')
-plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]>0,0], datos_completos_ruido[datos_completos_ruido[:,2]>0,1], c='r')
-plt.plot(eje_x_recta, eje_y_recta, 'k-')
-plt.show()
+	nuevos_datos[:,2] = np.sign( func(nuevos_datos[:,0], nuevos_datos[:,1]) )
 
-titulo = 'Puntos según etiqueta - 10% de ruido'
-plt.title(titulo)
-plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]<0,0], datos_completos_ruido[datos_completos_ruido[:,2]<0,1], c='c')
-plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]>0,0], datos_completos_ruido[datos_completos_ruido[:,2]>0,1], c='r')
-plt.plot(eje_x_recta, eje_y_recta, 'k-')
+	plt.subplot(2,2,i)
+	plt.scatter(nuevos_datos[nuevos_datos[:,2]<0,0], nuevos_datos[nuevos_datos[:,2]<0,1], c='c')
+	plt.scatter(nuevos_datos[nuevos_datos[:,2]>0,0], nuevos_datos[nuevos_datos[:,2]>0,1], c='r')
+	plt.contour(X,Y,Z,[0])
+	i+=1
+
 plt.show()
 
 ###############################################################################
