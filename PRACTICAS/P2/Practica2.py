@@ -193,22 +193,23 @@ input("\n--- Pulsar Intro para continuar con el ejercicio 2.1 ---\n")
 def Err(x,y,w):
 	error = 0
 	for i in range(x.shape[0]):
-		y_calculated = w.T@y[i]
+		y_calculated = np.sign( np.dot(w.T, x[i]) )
 		if y_calculated != y[i]:
 			error += 1
 
 	return error
 
 def ajusta_PLA(datos, label, max_iter, v_ini):
-	fin = True
-	w = np.c_[1, v_ini]
-	datos_copy = np.c_[np.ones(datos_copy.shape[0]), datos_copy]
+	fin = False
+	w = np.append(np.array([1]), v_ini)
+	datos_copy = np.c_[np.ones(datos.shape[0]), datos]
 	it = 0
 	error = []
 
-	while it < max_iter and !fin:
+	while it < max_iter and not fin:
+		it += 1
 		for i in range(datos_copy.shape[0]):
-			y_calculated = np.sign(w.T@datos_copy[i])
+			y_calculated = np.sign( np.dot(w.T, datos_copy[i]) )
 			if y_calculated != label[i]:
 				w = w+label[i]*datos_copy[i]
 			e = Err(datos_copy, label, w)
@@ -217,31 +218,35 @@ def ajusta_PLA(datos, label, max_iter, v_ini):
 				fin = True
 				break
 
+	w_max = np.max(w)
+	w[ w < 0.0] = 0.0
+	w /= w_max
+
 	return w, it, error
 
-	# Utilizamos muestra_de_puntos y lista_etiquetas
-	# a) w=0
-	w=np.zeros(muestra_de_puntos.shape[1])
+# Utilizamos muestra_de_puntos y lista_etiquetas
+# a) w=0
+w=np.zeros(muestra_de_puntos.shape[1])
+w, i, e= ajusta_PLA(muestra_de_puntos, lista_etiquetas, np.Inf, w)
+
+print('W alcanzado en ', i, 'iteraciones:\n', w)
+titulo = 'Evolución del error'
+plt.figure(titulo)
+plt.plot(e)
+plt.show()
+
+it = 0
+for i in range(10):
+	w=np.random.rand(muestra_de_puntos.shape[1])
 	w, i , e= ajusta_PLA(muestra_de_puntos, lista_etiquetas, np.Inf, w)
+	it += i
 
 	print('W alcanzado en ', i, 'iteraciones:\n', w)
 	titulo = 'Evolución del error'
 	plt.figure(titulo)
 	plt.plot(e)
 	plt.show()
-
-	it = 0
-	for i in range(10):
-		w=np.random.rand(muestra_de_puntos.shape[0])
-		w, i , e= ajusta_PLA(muestra_de_puntos, lista_etiquetas, np.Inf, w)
-		it += i
-
-		print('W alcanzado en ', i, 'iteraciones:\n', w)
-		titulo = 'Evolución del error'
-		plt.figure(titulo)
-		plt.plot(e)
-		plt.show()
-	print('Iteraciones medias hasta converger: ', it)
+print('Iteraciones medias hasta converger: ', it/10)
 
 ###############################################################################
 ###############################################################################
@@ -252,7 +257,7 @@ print('EJERCICIO BONUS\n')
 label4 = 1
 label8 = -1
 
-# Funcion para leer los datos
+# Función para leer los datos
 def readData(file_x, file_y):
 	# Leemos los ficheros	
 	datax = np.load(file_x)
