@@ -184,6 +184,65 @@ for func in f:
 
 plt.show()
 
+input("\n--- Pulsar Intro para continuar con el ejercicio 2.1 ---\n")
+
+################################################################################################
+######################################## 2.1 ###################################################
+################################################################################################
+
+def Err(x,y,w):
+	error = 0
+	for i in range(x.shape[0]):
+		y_calculated = w.T@y[i]
+		if y_calculated != y[i]:
+			error += 1
+
+	return error
+
+def ajusta_PLA(datos, label, max_iter, v_ini):
+	fin = True
+	w = np.c_[1, v_ini]
+	datos_copy = np.c_[np.ones(datos_copy.shape[0]), datos_copy]
+	it = 0
+	error = []
+
+	while it < max_iter and !fin:
+		for i in range(datos_copy.shape[0]):
+			y_calculated = np.sign(w.T@datos_copy[i])
+			if y_calculated != label[i]:
+				w = w+label[i]*datos_copy[i]
+			e = Err(datos_copy, label, w)
+			error.append(e)
+			if e == 0:
+				fin = True
+				break
+
+	return w, it, error
+
+	# Utilizamos muestra_de_puntos y lista_etiquetas
+	# a) w=0
+	w=np.zeros(muestra_de_puntos.shape[1])
+	w, i , e= ajusta_PLA(muestra_de_puntos, lista_etiquetas, np.Inf, w)
+
+	print('W alcanzado en ', i, 'iteraciones:\n', w)
+	titulo = 'Evolución del error'
+	plt.figure(titulo)
+	plt.plot(e)
+	plt.show()
+
+	it = 0
+	for i in range(10):
+		w=np.random.rand(muestra_de_puntos.shape[0])
+		w, i , e= ajusta_PLA(muestra_de_puntos, lista_etiquetas, np.Inf, w)
+		it += i
+
+		print('W alcanzado en ', i, 'iteraciones:\n', w)
+		titulo = 'Evolución del error'
+		plt.figure(titulo)
+		plt.plot(e)
+		plt.show()
+	print('Iteraciones medias hasta converger: ', it)
+
 ###############################################################################
 ###############################################################################
 ###############################################################################
