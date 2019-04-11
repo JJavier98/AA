@@ -138,86 +138,103 @@ f1 = lambda x,y: (x-10)*(x-10)+(y-20)*(y-20)-400
 f2 = lambda x,y: 0.5*(x+10)*(x+10)+(y-20)*(y-20)-400
 f3 = lambda x,y: 0.5*(x-10)*(x-10)-(y+20)*(y+20)-400
 f4 = lambda x,y: y-20*x*x-5*x+3
-
+# Las incorporamos a una lista para hacer más sencillo su uso en un bucle
 f = []
 f.append(f1)
 f.append(f2)
 f.append(f3)
 f.append(f4)
 
-titulo = 'Puntos según etiqueta fi'
+# Dibujamos las funciones con el etiquetado anterior
+# Vemos que da igual cómo de compleja sea la función que no divide bien los datos
+titulo = 'Puntos según etiqueta 2b - 10% de ruido'
 plt.title(titulo)
 i=1
 for func in f:
-	# Generamos 100 puntos en el intervalo [-50,50] para generar la función
+	# Generamos 100 puntos (x,y) en el intervalo [-50,50] para generar la función
 	eje_x_recta = np.linspace(-50,50,100)
 	eje_y_recta = np.linspace(-50,50,100)
 	X,Y = np.meshgrid(eje_x_recta, eje_y_recta)
+	# cCalculamos las coordenadas Z
 	Z = func(X,Y)
 
 	plt.subplot(2,2,i)
 	plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]<0,0], datos_completos_ruido[datos_completos_ruido[:,2]<0,1], c='c')
 	plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]>0,0], datos_completos_ruido[datos_completos_ruido[:,2]>0,1], c='r')
 	plt.contour(X,Y,Z,[0])
+	# Aumentamos el índice donde se colocará el gráfico en el subplot
 	i+=1
 
 plt.show()
 
+# Vamos a dibujar de nuevo las funciones pero etiquetando los puntos según su distancia a la función
 nuevos_datos = datos_completos
-titulo = 'Puntos según etiqueta 2b - 10% de ruido'
+titulo = 'Puntos según etiqueta fi'
 plt.title(titulo)
 i=1
 for func in f:
-	# Generamos 100 puntos en el intervalo [-50,50] para generar la función
+	# Generamos 100 puntos (x,y) en el intervalo [-50,50] para generar la función
 	eje_x_recta = np.linspace(-50,50,100)
 	eje_y_recta = np.linspace(-50,50,100)
 	X,Y = np.meshgrid(eje_x_recta, eje_y_recta)
 	Z = func(X,Y)
-
+	# Calculamos la etiqueta del punto
 	nuevos_datos[:,2] = np.sign( func(nuevos_datos[:,0], nuevos_datos[:,1]) )
 
 	plt.subplot(2,2,i)
 	plt.scatter(nuevos_datos[nuevos_datos[:,2]<0,0], nuevos_datos[nuevos_datos[:,2]<0,1], c='c')
 	plt.scatter(nuevos_datos[nuevos_datos[:,2]>0,0], nuevos_datos[nuevos_datos[:,2]>0,1], c='r')
 	plt.contour(X,Y,Z,[0])
+	# Aumentamos el índice donde se colocará el gráfico en el subplot
 	i+=1
 
 plt.show()
 
-input("\n--- Pulsar Intro para continuar con el ejercicio 2.1 ---\n")
+input("\n--- Pulsar Intro para continuar con el ejercicio 2.1 a) ---\n")
 
 ################################################################################################
 ######################################## 2.1 ###################################################
 ################################################################################################
 
+# Función que nos indicará el error obtenido en el cálculo de etiquetas
 def Err(x,y,w):
 	error = 0
 	for i in range(x.shape[0]):
+		# Calculamos la etiqueta con el w pasado
 		y_calculated = np.sign( np.dot(w.T, x[i]) )
+		# Si es distinta aumentamos error
 		if y_calculated != y[i]:
 			error += 1
 
 	return error
 
+# Función de Perceptrón devolverá los coeficientes del hiperplano que divide los datos según sus etiquetas
 def ajusta_PLA(datos, label, max_iter, v_ini):
 	fin = False
+	# Añadimos las columnas de 1s a w y a los datos para obtener los términos independientes
 	w = np.append(np.array([1]), v_ini)
 	datos_copy = np.c_[np.ones(datos.shape[0]), datos]
 	it = 0
 	error = []
 
+	# Iteramos hasta un máximo de iteraciones o hasta converger en error=0
 	while it < max_iter and not fin:
 		it += 1
 		for i in range(datos_copy.shape[0]):
+			# Calculamos su etiqueta
 			y_calculated = np.sign( np.dot(w.T, datos_copy[i]) )
+			# Si es distinta corregimos w
 			if y_calculated != label[i]:
 				w = w+label[i]*datos_copy[i]
-			e = Err(datos_copy, label, w)
-			error.append(e)
-			if e == 0:
-				fin = True
-				break
+				# Comprobamos el error con el nuevo w
+				e = Err(datos_copy, label, w)
+				error.append(e)
+				# Si el error es 0 hemos acabado
+				if e == 0:
+					fin = True
+					break
 
+	# Normalizamos los parámetros de w
 	w_max = np.max(w)
 	w[ w < 0.0] = 0.0
 	w /= w_max
@@ -227,26 +244,65 @@ def ajusta_PLA(datos, label, max_iter, v_ini):
 # Utilizamos muestra_de_puntos y lista_etiquetas
 # a) w=0
 w=np.zeros(muestra_de_puntos.shape[1])
+# Calculamos w, el número de iteraciones necesario y la lista de errores que hemos ido obteniendo
 w, i, e= ajusta_PLA(muestra_de_puntos, lista_etiquetas, np.Inf, w)
 
-print('W alcanzado en ', i, 'iteraciones:\n', w)
+print('W alcanzado en ', i, 'iteraciones con w_inicial=[0,...,0]:\n', w)
 titulo = 'Evolución del error'
 plt.figure(titulo)
-plt.plot(e)
+plt.plot(e, label='error')
+plt.legend()
+
 plt.show()
 
 it = 0
 for i in range(10):
+	# Repetimos lo anterior pero con un w inicializado aleatoriamente 
 	w=np.random.rand(muestra_de_puntos.shape[1])
-	w, i , e= ajusta_PLA(muestra_de_puntos, lista_etiquetas, np.Inf, w)
+	w, i, e= ajusta_PLA(muestra_de_puntos, lista_etiquetas, np.Inf, w)
+	it += i
+
+	print('W alcanzado en ', i, 'iteraciones con w_inicial=rand():\n', w)
+	titulo = 'Evolución del error'
+	plt.figure(titulo)
+	plt.plot(e, label='error')
+	plt.legend()
+	plt.show()
+print('Iteraciones medias hasta converger: ', it/10)
+
+input("\n--- Pulsar Intro para continuar con el ejercicio 2.1 b) ---\n")
+
+# b) Utilizamos datos_completos_ruido
+# Separamos el conjunto datos y el conjunto etiquetas
+datos = datos_completos_ruido[:,:-1]
+etiquetas = datos_completos_ruido[:,-1]
+
+# Repetimos lo que en el apartado anterior con los nuevos datos con ruido
+w=np.zeros(datos.shape[1])
+w, i, e= ajusta_PLA(datos, etiquetas, 500, w)
+
+print('W alcanzado en ', i, 'iteraciones:\n', w)
+titulo = 'Evolución del error'
+plt.figure(titulo)
+plt.plot(e, label='error')
+plt.legend()
+plt.show()
+
+it = 0
+for i in range(10):
+	w=np.random.rand(datos.shape[1])
+	w, i , e= ajusta_PLA(datos, etiquetas, 500, w)
 	it += i
 
 	print('W alcanzado en ', i, 'iteraciones:\n', w)
 	titulo = 'Evolución del error'
 	plt.figure(titulo)
-	plt.plot(e)
+	plt.plot(e, label='error')
+	plt.legend()
 	plt.show()
 print('Iteraciones medias hasta converger: ', it/10)
+
+input("\n--- Pulsar Intro para continuar con el ejercicio 2.2 ---\n")
 
 ###############################################################################
 ###############################################################################
