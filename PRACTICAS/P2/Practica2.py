@@ -304,6 +304,22 @@ print('Iteraciones medias hasta converger: ', it/10)
 
 input("\n--- Pulsar Intro para continuar con el ejercicio 2.2 ---\n")
 
+################################################################################################
+######################################## 2.2 ###################################################
+################################################################################################
+
+distancia_a_recta = lambda a,b,x,y: np.sign(y-a*x-b)
+def f_probabilistica(a,b,x,y):
+	if distancia_a_recta(a,b,x,y)<0:
+		return 0
+	else:
+		return 1
+		
+# Generamos la muestra de puntos mediante simula_unif
+muestra_de_puntos = simula_unif(100,2,(0,2))
+# Generamos los coeficientes a,b de la recta y = ax + b
+a,b = simula_recta((-50,50))
+
 ###############################################################################
 ###############################################################################
 ###############################################################################
