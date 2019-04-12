@@ -4,6 +4,7 @@ TRABAJO 2.
 Nombre Estudiante: 
 """
 import numpy as np
+from numpy import linalg
 import matplotlib.pyplot as plt
 
 
@@ -195,7 +196,7 @@ input("\n--- Pulsar Intro para continuar con el ejercicio 2.1 a) ---\n")
 ################################################################################################
 ######################################## 2.1 ###################################################
 ################################################################################################
-
+"""
 # Función que nos indicará el error obtenido en el cálculo de etiquetas
 def Err(x,y,w):
 	error = 0
@@ -303,22 +304,109 @@ for i in range(10):
 print('Iteraciones medias hasta converger: ', it/10)
 
 input("\n--- Pulsar Intro para continuar con el ejercicio 2.2 ---\n")
-
+"""
 ################################################################################################
 ######################################## 2.2 ###################################################
 ################################################################################################
 
+def logistic_Err(x,y,w):
+	return np.log(1+np.exp(-y@w.T@x))
+
+def lgr(X,Y,epsilon = 0.01, lr = 0.01):
+	"""
+	Gradiente Descendente Estocástico
+	Calculamos el vector de pesos W
+	Aceptamos como parámetros:
+		Un conjunto de datos (muestra) a partir de los cuales debemos obtener los valores pasados como segundo argumento
+		Un valor de error mínimo (epsilon) que marcará el final de la ejecución del algoritmo (por defecto será 1e-14)
+		Un learning-rate que por defecto será 0.001
+	"""
+	size_of_x = X.shape[0] # calculamos el número de filas que tiene X (el número de muestras)
+	minibatch_size = 64 # establecemos un tamaño de minibatch
+	minibatch_num = size_of_x // minibatch_size # calculamos el número de minibatchs en que podemos dividir X
+	cols_of_x = X.shape[1] # calculamos el número de columnas de X (su número de características)
+	error_antiguo = 999.0 # inicializamos a un valor suficientemente alto para asegurarnos que entra en la condición de actualización de su valor
+	continuar = True # inicializamos a true para que entre en el bucle
+	w_epoca_anterior = w_epoca_actual = np.zeros(cols_of_x)
+	matriz_completa = np.c_[X,Y]
+
+	# mientras la diferencia entre el anterior error calculado y el recién calculado sea mayor que 1e-14 continuamos realizando el algoritmo
+	while(continuar):
+		# Mezclamos los datos de la mustra y sus etiquetas para obtener minibatchs distintos en cada época
+		np.random.shuffle(matriz_completa)
+		# dividimos en etiquetas y datos de muestra
+		etiquetas = matriz_completa[:,3]
+		datos = matriz_completa[:,0:3]
+		w_epoca_actual = w_epoca_anterior
+		# recorremos todos los minibatchs en los que hemos dividido X
+		for i in range(minibatch_num):
+			# recorremos las características de X (sus columnas)
+			for j in range(cols_of_x):
+				# multiplicamos vectorialmente toda la submatriz de X que conforma un minibatch por su peso asociado
+				h_x = np.dot(datos[i*minibatch_size : (i+1)*minibatch_size, :],w_epoca_actual)
+				# restamos al valor obtenido su verdadero valor para ver cuanta precisión tenemos por ahora
+				diff = h_x - etiquetas[i*minibatch_size : (i+1)*minibatch_size]
+				# multiplicamos individualmente la característica correspondiente a la columna j, fila a fila del minibatch, por la diferencia anterior
+				mul = np.dot(datos[i*minibatch_size : (i+1)*minibatch_size , j], diff)
+				# realizamos la sumatoria de los valores obtenidos en el vector anterior (mul)
+				sumatoria = np.sum(mul)
+				# actualizamos w[j] (el peso de esa característica) restándole el valor anterior multiplicado por el learning rate
+				w_epoca_actual[j] = w_epoca_actual[j] - lr*sumatoria
+
+		"""
+		si el número de filas de x no es múltiplo del tamaño del minibach sobrarán elementos en x que no se recorran con los bucles anteriores
+			con esta condición nos aseguramos de recorrerlos
+		"""
+		if size_of_x % minibatch_size != 0:
+			# Calculamos cuantos elementos quedan por recorrer y,
+			# empezando por el principio de la muestra, le añadimos los datos que faltan para completar el minibatch
+			n = minibatch_num*minibatch_size
+			restantes = size_of_x - n
+			a = np.r_[ datos[n : size_of_x, :], datos[0:restantes, :] ]
+			b = np.r_[ etiquetas[n : size_of_x], etiquetas[0:restantes] ]
+
+			for j in range(cols_of_x):
+				h_x = np.dot(a,w_epoca_actual)
+				diff = h_x - b
+				mul = np.dot(a[:, j], diff)
+				sumatoria = np.sum(mul)
+				w_epoca_actual[j] = w_epoca_actual[j] - lr*sumatoria
+
+		# calculamos el error que obtenemos en la primera epoca a los minibatchs
+		error_actual = Err(datos,etiquetas,w_epoca_actual)
+
+		# si todavía no llegamos a la precisión requerida repetimos el algoritmo
+		if(error_antiguo > error_actual):
+			error_antiguo = error_actual
+			w_epoca_anterior = w_epoca_actual
+
+		w_dif = np.absolute(w_epoca_anterior - w_epoca_actual)
+		if(np.linalg.norm(w_dif) < epsilon):
+			continuar = False
+
+	return w_epoca_anterior
+
+
 distancia_a_recta = lambda a,b,x,y: np.sign(y-a*x-b)
-def f_probabilistica(a,b,x,y):
-	if distancia_a_recta(a,b,x,y)<0:
-		return 0
-	else:
-		return 1
-		
+# Generamos los coeficientes a,b de la recta y = ax + b
+a,b = simula_recta((0,2))
 # Generamos la muestra de puntos mediante simula_unif
 muestra_de_puntos = simula_unif(100,2,(0,2))
-# Generamos los coeficientes a,b de la recta y = ax + b
-a,b = simula_recta((-50,50))
+# Generamos dos puntos en el intervalo [0,2] para generar la recta
+x_y_domain = np.arange(2)
+puntos_recta_x = [0,2]
+puntos_recta_y = simula_unif(2,1,(0,2))
+# Generamos las etiquetas
+etiquetas = distancia_a_recta(a,b,muestra_de_puntos[:,0], muestra_de_puntos[:,1])
+
+# Imprimimos los resultados
+titulo = 'Puntos según etiqueta (0/1)'
+plt.title(titulo)
+plt.scatter(muestra_de_puntos[etiquetas<0,0], muestra_de_puntos[etiquetas<0,1], c='c', label='negativos')
+plt.scatter(muestra_de_puntos[etiquetas>0,0], muestra_de_puntos[etiquetas>0,1], c='r', label='positivos')
+plt.plot(puntos_recta_x, puntos_recta_y, 'k-',label='ax+b')
+plt.legend()
+plt.show()
 
 ###############################################################################
 ###############################################################################

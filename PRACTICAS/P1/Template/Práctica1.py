@@ -458,8 +458,6 @@ def sgd(X,Y,epsilon = 1e-14, lr = 0.001):
 	continuar = True # inicializamos a true para que entre en el bucle
 	w_epoca_actual = np.zeros(cols_of_x)
 	matriz_completa = np.c_[X,Y]
-	etiquetas = matriz_completa[:,3]
-	datos = matriz_completa[:,0:3]
 
 	# mientras la diferencia entre el anterior error calculado y el recién calculado sea mayor que 1e-14 continuamos realizando el algoritmo
 	while(continuar):
