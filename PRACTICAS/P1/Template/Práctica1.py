@@ -485,7 +485,7 @@ def sgd(X,Y,epsilon = 1e-14, lr = 0.001):
 		si el número de filas de x no es múltiplo del tamaño del minibach sobrarán elementos en x que no se recorran con los bucles anteriores
 			con esta condición nos aseguramos de recorrerlos
 		"""
-		if size_of_x % minibatch_size != 0:
+		if size_of_x % minibatch_size != 0 and size_of_x > minibatch_size:
 			# Calculamos cuantos elementos quedan por recorrer y,
 			# empezando por el principio de la muestra, le añadimos los datos que faltan para completar el minibatch
 			n = minibatch_num*minibatch_size

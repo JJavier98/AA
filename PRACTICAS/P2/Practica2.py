@@ -6,10 +6,12 @@ Nombre Estudiante:
 import numpy as np
 from numpy import linalg
 import matplotlib.pyplot as plt
+import scipy.optimize as sp
+from sklearn.preprocessing import normalize
 
 
 # Fijamos la semilla
-np.random.seed(1)
+np.random.seed(8)
 
 def simula_unif(N, dim, rango):
 	return np.random.uniform(rango[0],rango[1],(N,dim))
@@ -36,7 +38,6 @@ def simula_recta(intervalo):
     b = y1 - a*x1       # Calculo del termino independiente.
     
     return a, b
-
 
 ################################################################################################
 ######################################## 1.1 ###################################################
@@ -75,8 +76,9 @@ input("\n--- Pulsar Intro para continuar con el ejercicio 1.2 ---\n")
 ######################################## 1.2 ###################################################
 ################################################################################################
 
-# Declaramos funciones auxiliares para el cálculo de parámetros.
+# Coordenada y de los puntos de una recta
 recta_y = lambda a,b,x: a*x + b
+# Signo de la distancia de un punto a una recta
 distancia_a_recta = lambda a,b,x,y: np.sign(y-a*x-b)
 
 # a)
@@ -93,7 +95,7 @@ lista_etiquetas = distancia_a_recta(a,b,muestra_de_puntos[:,0],muestra_de_puntos
 # Hacemos corresponder cada etiqueta con su punto
 datos_completos = np.c_[muestra_de_puntos, lista_etiquetas]
 # Imprimimos los resultados
-titulo = 'Puntos según etiqueta'
+titulo = 'Puntos según etiqueta original'
 plt.title(titulo)
 plt.scatter(datos_completos[datos_completos[:,2]<0,0], datos_completos[datos_completos[:,2]<0,1], c='c', label='negativos')
 plt.scatter(datos_completos[datos_completos[:,2]>0,0], datos_completos[datos_completos[:,2]>0,1], c='r', label='positivos')
@@ -120,7 +122,7 @@ for i in range(0,tope):
 datos_completos_ruido = np.r_[_negativos, _positivos]
 np.random.shuffle(datos_completos_ruido)
 # Imprimimos el resultado
-titulo = 'Puntos según etiqueta - 10% de ruido'
+titulo = 'Puntos según etiqueta con 10% de ruido'
 plt.title(titulo)
 plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]<0,0], datos_completos_ruido[datos_completos_ruido[:,2]<0,1], c='c', label='negativos')
 plt.scatter(datos_completos_ruido[datos_completos_ruido[:,2]>0,0], datos_completos_ruido[datos_completos_ruido[:,2]>0,1], c='r', label='positivos')
@@ -156,7 +158,7 @@ for func in f:
 	eje_x_recta = np.linspace(-50,50,100)
 	eje_y_recta = np.linspace(-50,50,100)
 	X,Y = np.meshgrid(eje_x_recta, eje_y_recta)
-	# cCalculamos las coordenadas Z
+	# Calculamos las coordenadas Z
 	Z = func(X,Y)
 
 	plt.subplot(2,2,i)
@@ -168,9 +170,9 @@ for func in f:
 
 plt.show()
 
-# Vamos a dibujar de nuevo las funciones pero etiquetando los puntos según su distancia a la función
+# Vamos a dibujar de nuevo las funciones pero etiquetando los puntos según su distancia a la función que se evalúa en ese momento
 nuevos_datos = datos_completos
-titulo = 'Puntos según etiqueta fi'
+titulo = 'Puntos según la etiqueta asignada por f'
 plt.title(titulo)
 i=1
 for func in f:
@@ -196,7 +198,7 @@ input("\n--- Pulsar Intro para continuar con el ejercicio 2.1 a) ---\n")
 ################################################################################################
 ######################################## 2.1 ###################################################
 ################################################################################################
-"""
+
 # Función que nos indicará el error obtenido en el cálculo de etiquetas
 def Err(x,y,w):
 	error = 0
@@ -212,7 +214,7 @@ def Err(x,y,w):
 # Función de Perceptrón devolverá los coeficientes del hiperplano que divide los datos según sus etiquetas
 def ajusta_PLA(datos, label, max_iter, v_ini):
 	fin = False
-	# Añadimos las columnas de 1s a w y a los datos para obtener los términos independientes
+	# Añadimos las columnas de unos a w y a los datos para obtener los términos independientes
 	w = np.append(np.array([1]), v_ini)
 	datos_copy = np.c_[np.ones(datos.shape[0]), datos]
 	it = 0
@@ -220,6 +222,7 @@ def ajusta_PLA(datos, label, max_iter, v_ini):
 
 	# Iteramos hasta un máximo de iteraciones o hasta converger en error=0
 	while it < max_iter and not fin:
+		# Contamos como iteración el recorrer por completo el conjunto de datos
 		it += 1
 		for i in range(datos_copy.shape[0]):
 			# Calculamos su etiqueta
@@ -246,6 +249,10 @@ def ajusta_PLA(datos, label, max_iter, v_ini):
 # a) w=0
 w=np.zeros(muestra_de_puntos.shape[1])
 # Calculamos w, el número de iteraciones necesario y la lista de errores que hemos ido obteniendo
+# Indicamos como máximas iteraciones infinito porque los puntos son linealmente separables y sin ruido por lo que
+#	va a acabar convergiendo
+print('w inicial')
+print(w)
 w, i, e= ajusta_PLA(muestra_de_puntos, lista_etiquetas, np.Inf, w)
 
 print('W alcanzado en ', i, 'iteraciones con w_inicial=[0,...,0]:\n', w)
@@ -260,6 +267,10 @@ it = 0
 for i in range(10):
 	# Repetimos lo anterior pero con un w inicializado aleatoriamente 
 	w=np.random.rand(muestra_de_puntos.shape[1])
+	print('w inicial')
+	print(w)
+	# Indicamos como máximas iteraciones infinito porque los puntos son linealmente separables y sin ruido por lo que
+	#	va a acabar convergiendo
 	w, i, e= ajusta_PLA(muestra_de_puntos, lista_etiquetas, np.Inf, w)
 	it += i
 
@@ -280,9 +291,14 @@ etiquetas = datos_completos_ruido[:,-1]
 
 # Repetimos lo que en el apartado anterior con los nuevos datos con ruido
 w=np.zeros(datos.shape[1])
-w, i, e= ajusta_PLA(datos, etiquetas, 500, w)
+# Indicamos como máximas iteraciones 300 porque los puntos puede que NO sean linealmente separables ya que hay ruido y puede que
+#	no acabe convergiendo
 
-print('W alcanzado en ', i, 'iteraciones:\n', w)
+print('w inicial')
+print(w)
+w, i, e= ajusta_PLA(datos, etiquetas, 300, w)
+
+print('W alcanzado en ', i, 'iteraciones con w_inicial=[0,...,0]:\n', w)
 titulo = 'Evolución del error'
 plt.figure(titulo)
 plt.plot(e, label='error')
@@ -291,11 +307,16 @@ plt.show()
 
 it = 0
 for i in range(10):
+	# Repetimos lo anterior pero con un w inicializado aleatoriamente 
 	w=np.random.rand(datos.shape[1])
-	w, i , e= ajusta_PLA(datos, etiquetas, 500, w)
+	print('w inicial')
+	print(w)
+	# Indicamos como máximas iteraciones 300 porque los puntos puede que NO sean linealmente separables ya que hay ruido y puede que
+	#	no acabe convergiendo
+	w, i , e= ajusta_PLA(datos, etiquetas, 300, w)
 	it += i
 
-	print('W alcanzado en ', i, 'iteraciones:\n', w)
+	print('W alcanzado en ', i, 'iteraciones con w_inicial=rand():\n', w)
 	titulo = 'Evolución del error'
 	plt.figure(titulo)
 	plt.plot(e, label='error')
@@ -304,109 +325,132 @@ for i in range(10):
 print('Iteraciones medias hasta converger: ', it/10)
 
 input("\n--- Pulsar Intro para continuar con el ejercicio 2.2 ---\n")
-"""
+
 ################################################################################################
 ######################################## 2.2 ###################################################
 ################################################################################################
 
-def logistic_Err(x,y,w):
-	return np.log(1+np.exp(-y@w.T@x))
+# Funcione sigmoide
+def sigmoid(x):
+	return 1/(1+np.exp(-x))
 
-def lgr(X,Y,epsilon = 0.01, lr = 0.01):
-	"""
-	Gradiente Descendente Estocástico
-	Calculamos el vector de pesos W
-	Aceptamos como parámetros:
-		Un conjunto de datos (muestra) a partir de los cuales debemos obtener los valores pasados como segundo argumento
-		Un valor de error mínimo (epsilon) que marcará el final de la ejecución del algoritmo (por defecto será 1e-14)
-		Un learning-rate que por defecto será 0.001
-	"""
-	size_of_x = X.shape[0] # calculamos el número de filas que tiene X (el número de muestras)
-	minibatch_size = 64 # establecemos un tamaño de minibatch
-	minibatch_num = size_of_x // minibatch_size # calculamos el número de minibatchs en que podemos dividir X
-	cols_of_x = X.shape[1] # calculamos el número de columnas de X (su número de características)
-	error_antiguo = 999.0 # inicializamos a un valor suficientemente alto para asegurarnos que entra en la condición de actualización de su valor
-	continuar = True # inicializamos a true para que entre en el bucle
-	w_epoca_anterior = w_epoca_actual = np.zeros(cols_of_x)
-	matriz_completa = np.c_[X,Y]
+# Aplica la función sigmoide al producto vectorial de pesos por datos
+def h(x,w):
+	return sigmoid(np.dot(x,w))
 
-	# mientras la diferencia entre el anterior error calculado y el recién calculado sea mayor que 1e-14 continuamos realizando el algoritmo
-	while(continuar):
-		# Mezclamos los datos de la mustra y sus etiquetas para obtener minibatchs distintos en cada época
+# Función de pérdida (error)
+def loss(w, x, y):
+	H = h(x, w)
+	return -np.mean(y*np.log( H ) + (1-y)*np.log(1 - H ))
+
+"""
+def loss(w, X, Y):
+	sumatoria = 0
+	for i in range(len(Y)):
+		sumatoria += np.log(1 + np.exp(-Y[i] * np.dot(w, X[i].T)))
+	res = sumatoria / len(Y)
+	return res
+"""
+
+# Función gradiente, derivada de función pérdida
+def gradient(w, x, y):
+	return (1/y.shape[0])*x.T.dot( h(x,w)-y )
+
+# Regresión Logística con gradiente descendente
+def lgr(X,Y,epsilon = 0.01, lr = 0.01, epocas = 500, minibatch_size = 1):
+	# Creamos vector de pesos inicializado a cero
+	w = np.zeros( (X.shape[1]) )
+	# Juntamos datos y etiquetas
+	matriz_completa = np.c_[ X,Y ]
+	itera = 0
+	errores = []
+
+	# Realizamos tantas iteraciones como épocas indiquemos
+	for i in range(epocas):
+		# Guardamos una copia de w antes de modificarlo en esta época
+		w_epoca_anterior = np.copy(w)
+		# Mezclamos los datos
 		np.random.shuffle(matriz_completa)
-		# dividimos en etiquetas y datos de muestra
-		etiquetas = matriz_completa[:,3]
-		datos = matriz_completa[:,0:3]
-		w_epoca_actual = w_epoca_anterior
-		# recorremos todos los minibatchs en los que hemos dividido X
-		for i in range(minibatch_num):
-			# recorremos las características de X (sus columnas)
-			for j in range(cols_of_x):
-				# multiplicamos vectorialmente toda la submatriz de X que conforma un minibatch por su peso asociado
-				h_x = np.dot(datos[i*minibatch_size : (i+1)*minibatch_size, :],w_epoca_actual)
-				# restamos al valor obtenido su verdadero valor para ver cuanta precisión tenemos por ahora
-				diff = h_x - etiquetas[i*minibatch_size : (i+1)*minibatch_size]
-				# multiplicamos individualmente la característica correspondiente a la columna j, fila a fila del minibatch, por la diferencia anterior
-				mul = np.dot(datos[i*minibatch_size : (i+1)*minibatch_size , j], diff)
-				# realizamos la sumatoria de los valores obtenidos en el vector anterior (mul)
-				sumatoria = np.sum(mul)
-				# actualizamos w[j] (el peso de esa característica) restándole el valor anterior multiplicado por el learning rate
-				w_epoca_actual[j] = w_epoca_actual[j] - lr*sumatoria
+		etiquetas = np.reshape( matriz_completa[:,-1] ,(matriz_completa.shape[0]) )
+		datos = matriz_completa[:,0:-1]
+		for j in range(0, X.shape[0], minibatch_size):
+			# modificamos los pesos con el gradiente
+			grad = gradient(w, datos[j : j+minibatch_size, :], etiquetas[j : j+minibatch_size])
+			w = w - lr*grad
 
-		"""
-		si el número de filas de x no es múltiplo del tamaño del minibach sobrarán elementos en x que no se recorran con los bucles anteriores
-			con esta condición nos aseguramos de recorrerlos
-		"""
-		if size_of_x % minibatch_size != 0:
-			# Calculamos cuantos elementos quedan por recorrer y,
-			# empezando por el principio de la muestra, le añadimos los datos que faltan para completar el minibatch
-			n = minibatch_num*minibatch_size
-			restantes = size_of_x - n
-			a = np.r_[ datos[n : size_of_x, :], datos[0:restantes, :] ]
-			b = np.r_[ etiquetas[n : size_of_x], etiquetas[0:restantes] ]
+		# Guardamos el error obtenido por cada época
+		errores.append(loss(w,datos,etiquetas))
+		# Si cumplimos la condición de parada salimos
+		if(np.linalg.norm(w_epoca_anterior - w) < epsilon):
+			break
 
-			for j in range(cols_of_x):
-				h_x = np.dot(a,w_epoca_actual)
-				diff = h_x - b
-				mul = np.dot(a[:, j], diff)
-				sumatoria = np.sum(mul)
-				w_epoca_actual[j] = w_epoca_actual[j] - lr*sumatoria
+		itera = itera+1
 
-		# calculamos el error que obtenemos en la primera epoca a los minibatchs
-		error_actual = Err(datos,etiquetas,w_epoca_actual)
+	return w_epoca_anterior, errores, itera
 
-		# si todavía no llegamos a la precisión requerida repetimos el algoritmo
-		if(error_antiguo > error_actual):
-			error_antiguo = error_actual
-			w_epoca_anterior = w_epoca_actual
-
-		w_dif = np.absolute(w_epoca_anterior - w_epoca_actual)
-		if(np.linalg.norm(w_dif) < epsilon):
-			continuar = False
-
-	return w_epoca_anterior
-
-
-distancia_a_recta = lambda a,b,x,y: np.sign(y-a*x-b)
 # Generamos los coeficientes a,b de la recta y = ax + b
 a,b = simula_recta((0,2))
 # Generamos la muestra de puntos mediante simula_unif
 muestra_de_puntos = simula_unif(100,2,(0,2))
 # Generamos dos puntos en el intervalo [0,2] para generar la recta
-x_y_domain = np.arange(2)
 puntos_recta_x = [0,2]
-puntos_recta_y = simula_unif(2,1,(0,2))
+puntos_recta_y = a*puntos_recta_x[0]+b, a*puntos_recta_x[1]+b
 # Generamos las etiquetas
-etiquetas = distancia_a_recta(a,b,muestra_de_puntos[:,0], muestra_de_puntos[:,1])
+etiquetas_recta = distancia_a_recta(a,b,muestra_de_puntos[:,0], muestra_de_puntos[:,1])
+etiquetas_recta[etiquetas_recta == -1] = 0
 
 # Imprimimos los resultados
-titulo = 'Puntos según etiqueta (0/1)'
+titulo = 'Puntos según etiqueta recta (0/1)'
 plt.title(titulo)
-plt.scatter(muestra_de_puntos[etiquetas<0,0], muestra_de_puntos[etiquetas<0,1], c='c', label='negativos')
-plt.scatter(muestra_de_puntos[etiquetas>0,0], muestra_de_puntos[etiquetas>0,1], c='r', label='positivos')
+plt.scatter(muestra_de_puntos[etiquetas_recta==0,0], muestra_de_puntos[etiquetas_recta==0,1], c='c', label='negativos')
+plt.scatter(muestra_de_puntos[etiquetas_recta==1,0], muestra_de_puntos[etiquetas_recta==1,1], c='r', label='positivos')
 plt.plot(puntos_recta_x, puntos_recta_y, 'k-',label='ax+b')
 plt.legend()
 plt.show()
+
+# Añadimos una columna de unos al conjunto de entrenamiento
+train = np.c_[np.ones( (muestra_de_puntos.shape[0]) ), muestra_de_puntos]
+# Calculamos los pesos y obtenemos los errores y las iteraciones necesarias
+w, e, i = lgr(train, etiquetas_recta)
+print('w: ', w)
+
+# Imprimimos los datos anteriores con la recta calculada con w
+titulo = 'Puntos según etiqueta función (0/1)'
+plt.title(titulo)
+plt.scatter(muestra_de_puntos[etiquetas_recta==0,0], muestra_de_puntos[etiquetas_recta==0,1], c='c', label='negativos')
+plt.scatter(muestra_de_puntos[etiquetas_recta==1,0], muestra_de_puntos[etiquetas_recta==1,1], c='r', label='positivos')
+x = muestra_de_puntos[:,0]
+y = (-w[0]-w[1]*x)/w[2]
+plt.plot(x, y, 'k-',label='recta de regresión')
+plt.legend()
+plt.show()
+
+# Imprimimos la evolución del error
+titulo = 'Evolución del error al calcular los pesos tras ' + str(i) + ' iteraciones'
+plt.title(titulo)
+plt.plot(e)
+plt.xlabel('iteraciones')
+plt.ylabel('error')
+plt.show()
+
+# Calculamos el error dentro de la muestra con el vector de pesos hallado
+print('Ein -> ', loss(w, train, etiquetas_recta))
+
+# Calculamos el error medio obtenido en 1000 conjuntos test de 100 datos cada uno
+losses = []
+for i in range(1000):
+	X = simula_unif(100, 2, (0, 2))
+	Y = distancia_a_recta(a,b,X[:,0], X[:,1])
+	Y[Y == -1] = 0
+	X = np.c_[np.ones( (X.shape[0]) ), X]
+	losses.append(loss(w, X, Y))
+
+plt.title('Loss Measures')
+plt.xlabel('Iteration')
+plt.ylabel('Loss')
+plt.plot(losses)
+plt.show()
+print('Loss Mean:', np.mean(losses))
 
 ###############################################################################
 ###############################################################################
